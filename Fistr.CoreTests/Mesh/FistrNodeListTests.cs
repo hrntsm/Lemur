@@ -20,7 +20,7 @@ namespace Fistr.Core.Mesh.Tests
             var nodeList = new FistrNodeList();
             nodeList.AddNode(100, 0, 0, 0);
             nodeList.AddNode(0, 0, 0);
-            Assert.Equal(2, nodeList.Nodes.Count);
+            Assert.Equal(2, nodeList.Nodes.Length);
             Assert.Equal(101, nodeList.Nodes[1].Id);
         }
 
@@ -35,7 +35,7 @@ namespace Fistr.Core.Mesh.Tests
                 new FistrNode(3, 1, 1, 0)
             ];
             nodeList.AddNodeRange(nodes);
-            Assert.Equal(3, nodeList.Nodes.Count);
+            Assert.Equal(3, nodeList.Nodes.Length);
         }
 
         [Fact]
@@ -71,7 +71,7 @@ namespace Fistr.Core.Mesh.Tests
             nodeList.AddNodeRange(nodes);
             string msh = nodeList.ToMsh();
             var expected = new StringBuilder();
-            expected.AppendLine("!NODE");
+            expected.AppendLine("!NODE, NGRP=NGRP_AUTO");
             expected.AppendLine(nodes[0].ToMsh());
             expected.AppendLine(nodes[1].ToMsh());
             expected.AppendLine(nodes[2].ToMsh());

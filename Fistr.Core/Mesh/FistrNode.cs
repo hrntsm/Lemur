@@ -2,7 +2,7 @@ using System.Globalization;
 
 namespace Fistr.Core.Mesh
 {
-    public class FistrNode : IFistrMesh
+    public class FistrNode
     {
         public int Id { get; set; }
         public double X { get; set; }

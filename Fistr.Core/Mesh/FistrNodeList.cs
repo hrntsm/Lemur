@@ -5,18 +5,26 @@ using System.Text;
 
 namespace Fistr.Core.Mesh
 {
-    public class FistrNodeList : IFistrMesh
+    public class FistrNodeList
     {
-        public List<FistrNode> Nodes { get; }
+        public FistrNode[] Nodes
+        {
+            get
+            {
+                return _nodes.ToArray();
+            }
+        }
+
+        private readonly List<FistrNode> _nodes;
 
         public FistrNodeList()
         {
-            Nodes = new List<FistrNode>();
+            _nodes = new List<FistrNode>();
         }
 
         public void AddNode(double x, double y, double z)
         {
-            int id = Nodes.Max(n => n.Id) + 1;
+            int id = _nodes.Max(n => n.Id) + 1;
             AddNode(id, x, y, z);
         }
 
@@ -29,7 +37,7 @@ namespace Fistr.Core.Mesh
         public void AddNode(FistrNode node)
         {
             CheckIndex(node.Id);
-            Nodes.Add(node);
+            _nodes.Add(node);
         }
 
         private void CheckIndex(int id)
@@ -39,7 +47,7 @@ namespace Fistr.Core.Mesh
                 throw new ArgumentException("Node id must be greater than 0");
             }
 
-            if (Nodes.Exists(n => n.Id == id))
+            if (_nodes.Exists(n => n.Id == id))
             {
                 throw new ArgumentException($"Node with id {id} already exists");
             }
@@ -56,8 +64,8 @@ namespace Fistr.Core.Mesh
         public string ToMsh()
         {
             var sb = new StringBuilder();
-            sb.AppendLine("!NODE");
-            foreach (FistrNode node in Nodes)
+            sb.AppendLine("!NODE, NGRP=NGRP_AUTO");
+            foreach (FistrNode node in _nodes)
             {
                 sb.AppendLine(node.ToMsh());
             }
