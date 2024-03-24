@@ -1,10 +1,7 @@
 using System;
-using System.Collections.Generic;
 
 using Grasshopper;
 using Grasshopper.Kernel;
-
-using Rhino.Geometry;
 
 namespace FistrGH
 {
@@ -43,44 +40,5 @@ namespace FistrGH
         protected override System.Drawing.Bitmap Icon => null;
 
         public override Guid ComponentGuid => new Guid("26ee9dc0-a3fc-4f4c-a1aa-f200f1f58411");
-    }
-
-    public class FistrMesh
-    {
-        public FistrMeshType MeshType;
-        public List<Point3d> Nodes;
-
-        public FistrMesh(FistrMeshType meshType, List<Point3d> nodes)
-        {
-            MeshType = meshType;
-            Nodes = nodes;
-        }
-    }
-
-    public enum FistrMeshType
-    {
-        Line111,
-        Line112,
-        Plane231,
-        Plane232,
-        Plane241,
-        Plane242,
-        Solid301,
-        Solid341,
-        Solid342,
-        Solid351,
-        Solid352,
-        Solid361,
-        Solid362,
-        Interface541,
-        Interface542,
-        Beam611,
-        Beam641,
-        Shell731,
-        Shell732,
-        Shell741,
-        Shell743,
-        Shell761,
-        Shell781
     }
 }

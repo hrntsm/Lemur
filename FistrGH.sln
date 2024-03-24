@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.002.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FistrGH", "Fistr.GH\Fistr.GH.csproj", "{700B53C0-5BF1-41DF-9C51-0B3BBB5D7F6A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fistr.GH", "Fistr.GH\Fistr.GH.csproj", "{700B53C0-5BF1-41DF-9C51-0B3BBB5D7F6A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fistr.Core", "Fistr.Core\Fistr.Core.csproj", "{E4B4C7C7-9756-43A5-88B9-928A024B335D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fistr.Core", "Fistr.Core\Fistr.Core.csproj", "{E4B4C7C7-9756-43A5-88B9-928A024B335D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fistr.CoreTests", "Fistr.CoreTests\Fistr.CoreTests.csproj", "{4A44109E-B377-4845-BFF4-54FD97FFFA5C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{E4B4C7C7-9756-43A5-88B9-928A024B335D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E4B4C7C7-9756-43A5-88B9-928A024B335D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E4B4C7C7-9756-43A5-88B9-928A024B335D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A44109E-B377-4845-BFF4-54FD97FFFA5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A44109E-B377-4845-BFF4-54FD97FFFA5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A44109E-B377-4845-BFF4-54FD97FFFA5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A44109E-B377-4845-BFF4-54FD97FFFA5C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
