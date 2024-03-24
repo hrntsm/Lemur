@@ -1,13 +1,12 @@
 using System;
 
-using Grasshopper;
 using Grasshopper.Kernel;
 
 namespace FistrGH
 {
-    public class fistr_ghComponent : GH_Component
+    public class Execute : GH_Component
     {
-        public fistr_ghComponent()
+        public Execute()
           : base("fistr_gh Component", "Nickname",
             "Description of component",
             "Category", "Subcategory")
