@@ -1,18 +1,21 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
 namespace Fistr.Core.Mesh
 {
-    public class FistrNodeList
+    public class FistrNodeList : IList<FistrNode>
     {
-        public FistrNode[] Nodes
+        public bool IsReadOnly => true;
+
+        public int Count => _nodes.Count;
+
+        public FistrNode this[int index]
         {
-            get
-            {
-                return _nodes.ToArray();
-            }
+            get => _nodes[index];
+            set => _nodes[index] = value;
         }
 
         private readonly List<FistrNode> _nodes;
@@ -20,24 +23,6 @@ namespace Fistr.Core.Mesh
         public FistrNodeList()
         {
             _nodes = new List<FistrNode>();
-        }
-
-        public void AddNode(double x, double y, double z)
-        {
-            int id = _nodes.Max(n => n.Id) + 1;
-            AddNode(id, x, y, z);
-        }
-
-        public void AddNode(int id, double x, double y, double z)
-        {
-            var node = new FistrNode(id, x, y, z);
-            AddNode(node);
-        }
-
-        public void AddNode(FistrNode node)
-        {
-            CheckIndex(node.Id);
-            _nodes.Add(node);
         }
 
         private void CheckIndex(int id)
@@ -53,12 +38,75 @@ namespace Fistr.Core.Mesh
             }
         }
 
-        public void AddNodeRange(IEnumerable<FistrNode> nodes)
+        public IEnumerator<FistrNode> GetEnumerator()
+        {
+            return _nodes.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        public int IndexOf(FistrNode item)
+        {
+            return _nodes.IndexOf(item);
+        }
+
+        public void Insert(int index, FistrNode item)
+        {
+            _nodes.Insert(index, item);
+        }
+
+        public void RemoveAt(int index)
+        {
+            _nodes.RemoveAt(index);
+        }
+
+        public void Add(FistrNode item)
+        {
+            CheckIndex(item.Id);
+            _nodes.Add(item);
+        }
+
+        public void Add(double x, double y, double z)
+        {
+            int id = _nodes.Max(n => n.Id) + 1;
+            Add(id, x, y, z);
+        }
+
+        public void Add(int id, double x, double y, double z)
+        {
+            var node = new FistrNode(id, x, y, z);
+            Add(node);
+        }
+
+        public void AddRange(IEnumerable<FistrNode> nodes)
         {
             foreach (FistrNode node in nodes)
             {
-                AddNode(node);
+                Add(node);
             }
+        }
+
+        public void Clear()
+        {
+            _nodes.Clear();
+        }
+
+        public bool Contains(FistrNode item)
+        {
+            return _nodes.Contains(item);
+        }
+
+        public void CopyTo(FistrNode[] array, int arrayIndex)
+        {
+            _nodes.CopyTo(array, arrayIndex);
+        }
+
+        public bool Remove(FistrNode item)
+        {
+            return _nodes.Remove(item);
         }
 
         public string ToMsh()
