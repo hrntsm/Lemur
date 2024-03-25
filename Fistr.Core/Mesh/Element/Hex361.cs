@@ -51,7 +51,7 @@ namespace Fistr.Core.Mesh.Element
                 case 0 when surfaceNodeIds[1] == 3 && surfaceNodeIds[2] == 4 && surfaceNodeIds[3] == 7:
                     return 6;
                 default:
-                    throw new ArgumentException("Surface node not found.");
+                    throw new ArgumentException("Invalid surface node order.");
             }
         }
     }

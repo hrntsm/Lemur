@@ -72,13 +72,13 @@ namespace Fistr.Core.Mesh.Element
             switch (surfaceNodeIds[0])
             {
                 case 0 when surfaceNodeIds[1] == 1 && surfaceNodeIds[2] == 3 && surfaceNodeIds[3] == 4:
-                    return 2;
-                case 1 when surfaceNodeIds[1] == 2 && surfaceNodeIds[2] == 4 && surfaceNodeIds[3] == 5:
                     return 3;
-                case 0 when surfaceNodeIds[1] == 2 && surfaceNodeIds[2] == 3 && surfaceNodeIds[3] == 5:
+                case 1 when surfaceNodeIds[1] == 2 && surfaceNodeIds[2] == 4 && surfaceNodeIds[3] == 5:
                     return 4;
+                case 0 when surfaceNodeIds[1] == 2 && surfaceNodeIds[2] == 3 && surfaceNodeIds[3] == 5:
+                    return 5;
                 default:
-                    throw new ArgumentException("Surface node not found.");
+                    throw new ArgumentException("Invalid surface node order.");
             }
         }
     }

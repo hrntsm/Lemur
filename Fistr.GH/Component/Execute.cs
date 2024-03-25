@@ -7,9 +7,9 @@ namespace FistrGH
     public class Execute : GH_Component
     {
         public Execute()
-          : base("fistr_gh Component", "Nickname",
-            "Description of component",
-            "Category", "Subcategory")
+          : base("Execute", "Exe",
+            "Run Fistr analysis",
+            "FistrGH", "FistrGH")
         {
         }
 
