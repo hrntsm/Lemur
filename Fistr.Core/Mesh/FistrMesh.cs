@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 using Fistr.Core.Mesh.Element;
@@ -8,24 +10,38 @@ namespace Fistr.Core.Mesh
 {
     public class FistrMesh
     {
+        public FistrNodeList Nodes { get; }
+        public FistrElementList[] Elements
+        {
+            get
+            {
+                return _elements.ToArray();
+            }
+        }
+
         private readonly string _header;
-        private readonly FistrNodeList _nodes;
         private readonly List<FistrElementList> _elements;
 
         public FistrMesh(string header)
         {
             _header = header;
-            _nodes = new FistrNodeList();
+            Nodes = new FistrNodeList();
             _elements = new List<FistrElementList>();
         }
 
         public void AddNode(FistrNode node)
         {
-            _nodes.AddNode(node);
+            Nodes.Add(node);
+        }
+
+        public void AddNodes(IEnumerable<FistrNode> nodes)
+        {
+            Nodes.AddRange(nodes);
         }
 
         public void AddElement(FistrElementBase element)
         {
+            CheckNodeExistence(element);
             FistrElementList list = _elements.Find(e => e.ElementType == element.ElementType);
             if (list == null)
             {
@@ -35,12 +51,24 @@ namespace Fistr.Core.Mesh
             list.AddElement(element);
         }
 
+        private void CheckNodeExistence(FistrElementBase element)
+        {
+            IEnumerable<int> nodeIds = Nodes.Select(n => n.Id);
+            foreach (int nodeId in element.NodeIds)
+            {
+                if (!nodeIds.Contains(nodeId))
+                {
+                    throw new ArgumentException($"NodeID:{nodeId} does not exist in this mesh node list.");
+                }
+            }
+        }
+
         public string ToMsh()
         {
             var sb = new StringBuilder();
             sb.AppendLine("!HEADER");
             sb.AppendLine(" " + _header);
-            sb.Append(_nodes.ToMsh());
+            sb.Append(Nodes.ToMsh());
             int startId = 1;
             foreach (FistrElementList elementList in _elements)
             {
