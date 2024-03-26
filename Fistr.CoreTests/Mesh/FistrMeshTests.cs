@@ -65,7 +65,8 @@ namespace Fistr.Core.Mesh
                 "!HEADER\r\n" +
                 " Test\r\n" +
                 mesh.Nodes.ToMsh() +
-                mesh.Elements[0].ToMsh(1);
+                mesh.Elements[0].ToMsh(1) +
+                "!END\r\n";
             Assert.Equal(expected, mesh.ToMsh());
         }
 
@@ -78,12 +79,18 @@ namespace Fistr.Core.Mesh
                 new(1, 0.0, 0.0, 0.0),
                 new(2, 1.0, 0.0, 0.0),
                 new(3, 1.0, 1.0, 0.0),
-                new(4, 0.0, 1.0, 0.0)
+                new(4, 0.0, 1.0, 0.0),
+                new(5, 0.0, 0.0, 1.0),
+                new(6, 1.0, 0.0, 1.0),
+                new(7, 1.0, 1.0, 1.0),
+                new(8, 0.0, 1.0, 1.0)
             };
-            var element = new Tetra341([1, 2, 3, 4]);
+            var tetra = new Tetra341([1, 2, 3, 4]);
+            var hex = new Hex361([1, 2, 3, 4, 5, 6, 7, 8]);
 
             mesh.AddNodes(nodes);
-            mesh.AddElement(element);
+            mesh.AddElement(tetra);
+            mesh.AddElement(hex);
 
             mesh.Serialize("./test.msh");
         }

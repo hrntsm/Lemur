@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 
 using Fistr.Core.Mesh.Element;
+using Fistr.Core.Mesh.Group;
 
 namespace Fistr.Core.Mesh
 {
@@ -18,6 +19,9 @@ namespace Fistr.Core.Mesh
                 return _elements.ToArray();
             }
         }
+        public FistrGroupBase[] NodeGroups { get; }
+        public FistrGroupBase[] ElementGroups { get; }
+        public FistrGroupBase[] SurfaceGroups { get; }
 
         private readonly string _header;
         private readonly List<FistrElementList> _elements;
@@ -66,8 +70,10 @@ namespace Fistr.Core.Mesh
         public string ToMsh()
         {
             var sb = new StringBuilder();
-            sb.AppendLine("!HEADER");
-            sb.AppendLine(" " + _header);
+            sb.Append("!HEADER");
+            sb.Append(Environment.NewLine);
+            sb.Append(" " + _header);
+            sb.Append(Environment.NewLine);
             sb.Append(Nodes.ToMsh());
             int startId = 1;
             foreach (FistrElementList elementList in _elements)
@@ -76,6 +82,8 @@ namespace Fistr.Core.Mesh
                 startId += elementList.Count;
             }
 
+            sb.Append("!END");
+            sb.Append(Environment.NewLine);
             return sb.ToString();
         }
 

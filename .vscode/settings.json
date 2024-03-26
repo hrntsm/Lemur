@@ -1,8 +1,12 @@
 {
     "dotnet.defaultSolution": "fistr_gh.sln",
     "cSpell.words": [
+        "EGROUP",
+        "EGRP",
         "Fistr",
+        "NGROUP",
         "NGRP",
-        "EGRP"
+        "SGROUP",
+        "SGRP"
     ]
 }

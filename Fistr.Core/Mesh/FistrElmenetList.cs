@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
@@ -56,7 +57,7 @@ namespace Fistr.Core.Mesh
         {
             if (item.ElementType != ElementType)
             {
-                throw new System.ArgumentException("Element type mismatch.");
+                throw new ArgumentException("Element type mismatch.");
             }
             _elements.Insert(index, item);
         }
