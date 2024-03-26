@@ -50,5 +50,10 @@ namespace Fistr.Core.Mesh.Element
                     throw new ArgumentException("Invalid surface node order.");
             }
         }
+
+        public Tetra342 ToQuadric(FistrNodeList nodes)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
