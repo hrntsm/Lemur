@@ -4,12 +4,12 @@ using System.Text;
 
 namespace Fistr.Core.Mesh.Group
 {
-    public class FistrGroup : FistrGroupBase
+    public class EGroup : GroupBase
     {
         public int[] Ids { get; }
 
-        public FistrGroup(FistrGroupType type, string name, int[] ids)
-         : base(type, name)
+        public EGroup(string name, int[] ids)
+         : base(GroupType.Element, name)
         {
             Ids = ids;
         }
@@ -17,17 +17,7 @@ namespace Fistr.Core.Mesh.Group
         public override string ToMsh()
         {
             var sb = new StringBuilder();
-            switch (Type)
-            {
-                case FistrGroupType.Node:
-                    sb.Append($"!NGROUP, NGRP={Name}");
-                    break;
-                case FistrGroupType.Element:
-                    sb.Append($"!EGROUP, EGRP={Name}");
-                    break;
-                default:
-                    throw new ArgumentException("Invalid group type");
-            }
+            sb.AppendLine($"!EGROUP, EGRP={Name}");
             int count = 0;
             foreach (int id in Ids)
             {
@@ -44,6 +34,7 @@ namespace Fistr.Core.Mesh.Group
                 }
             }
 
+            sb.Append(Environment.NewLine);
             return sb.ToString();
         }
     }

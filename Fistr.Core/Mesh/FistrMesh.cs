@@ -19,18 +19,38 @@ namespace Fistr.Core.Mesh
                 return _elements.ToArray();
             }
         }
-        public FistrGroupBase[] NodeGroups { get; }
-        public FistrGroupBase[] ElementGroups { get; }
-        public FistrGroupBase[] SurfaceGroups { get; }
+        public GroupBase[] NodeGroups
+        {
+            get
+            {
+                return _groups.Where(g => g.Type == GroupType.Node).ToArray();
+            }
+        }
+        public GroupBase[] ElementGroups
+        {
+            get
+            {
+                return _groups.Where(g => g.Type == GroupType.Element).ToArray();
+            }
+        }
+        public GroupBase[] SurfaceGroups
+        {
+            get
+            {
+                return _groups.Where(g => g.Type == GroupType.Surface).ToArray();
+            }
+        }
 
         private readonly string _header;
         private readonly List<FistrElementList> _elements;
+        private readonly List<GroupBase> _groups;
 
         public FistrMesh(string header)
         {
             _header = header;
             Nodes = new FistrNodeList();
             _elements = new List<FistrElementList>();
+            _groups = new List<GroupBase>();
         }
 
         public void AddNode(FistrNode node)
@@ -55,6 +75,12 @@ namespace Fistr.Core.Mesh
             list.AddElement(element);
         }
 
+        public void AddGroup(GroupBase group)
+        {
+            CheckGroupExistence(group);
+            _groups.Add(group);
+        }
+
         private void CheckNodeExistence(FistrElementBase element)
         {
             IEnumerable<int> nodeIds = Nodes.Select(n => n.Id);
@@ -67,13 +93,50 @@ namespace Fistr.Core.Mesh
             }
         }
 
+        private void CheckGroupExistence(GroupBase group)
+        {
+            IEnumerable<int> nodeIds = Nodes.Select(n => n.Id);
+            IEnumerable<int> elementIds = _elements.SelectMany(e => e.SelectMany(el => el.NodeIds));
+
+            switch (group.Type)
+            {
+                case GroupType.Node when group is NGroup nGroup:
+                    foreach (int id in nGroup.Ids)
+                    {
+                        if (!nodeIds.Contains(id))
+                        {
+                            throw new ArgumentException($"NodeID:{id} does not exist in this mesh node list.");
+                        }
+                    }
+                    break;
+                case GroupType.Element when group is EGroup eGroup:
+                    foreach (int id in eGroup.Ids)
+                    {
+                        if (!elementIds.Contains(id))
+                        {
+                            throw new ArgumentException($"ElementID:{id} does not exist in this mesh element list.");
+                        }
+                    }
+                    break;
+                case GroupType.Surface when group is SGroup sGroup:
+                    foreach (int id in sGroup.Ids.Keys)
+                    {
+                        if (!elementIds.Contains(id))
+                        {
+                            throw new ArgumentException($"ElementID:{id} does not exist in this mesh element list.");
+                        }
+                    }
+                    break;
+                default:
+                    throw new ArgumentException("Invalid group type");
+            }
+        }
+
         public string ToMsh()
         {
             var sb = new StringBuilder();
-            sb.Append("!HEADER");
-            sb.Append(Environment.NewLine);
-            sb.Append(" " + _header);
-            sb.Append(Environment.NewLine);
+            sb.AppendLine("!HEADER");
+            sb.AppendLine(" " + _header);
             sb.Append(Nodes.ToMsh());
             int startId = 1;
             foreach (FistrElementList elementList in _elements)
@@ -82,9 +145,37 @@ namespace Fistr.Core.Mesh
                 startId += elementList.Count;
             }
 
-            sb.Append("!END");
-            sb.Append(Environment.NewLine);
+            WriteGroup(sb);
+
+            sb.AppendLine("!END");
             return sb.ToString();
+        }
+
+        private void WriteGroup(StringBuilder sb)
+        {
+            if (NodeGroups != null)
+            {
+                foreach (GroupBase group in NodeGroups)
+                {
+                    sb.Append(group.ToMsh());
+                }
+            }
+
+            if (ElementGroups != null)
+            {
+                foreach (GroupBase group in ElementGroups)
+                {
+                    sb.Append(group.ToMsh());
+                }
+            }
+
+            if (SurfaceGroups != null)
+            {
+                foreach (GroupBase group in SurfaceGroups)
+                {
+                    sb.Append(group.ToMsh());
+                }
+            }
         }
 
         public void Serialize(string path)

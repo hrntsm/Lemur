@@ -1,6 +1,6 @@
 namespace Fistr.Core.Mesh.Group
 {
-    public enum FistrGroupType
+    public enum GroupType
     {
         Node,
         Element,

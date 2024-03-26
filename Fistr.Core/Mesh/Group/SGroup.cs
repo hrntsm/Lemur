@@ -5,12 +5,12 @@ using System.Text;
 
 namespace Fistr.Core.Mesh.Group
 {
-    public class FistrSurfaceGroup : FistrGroupBase
+    public class SGroup : GroupBase
     {
         public Dictionary<int, int> Ids { get; }
 
-        public FistrSurfaceGroup(string name, Dictionary<int, int> ids)
-            : base(FistrGroupType.Surface, name)
+        public SGroup(string name, Dictionary<int, int> ids)
+            : base(GroupType.Surface, name)
         {
             Ids = ids;
         }
@@ -18,13 +18,13 @@ namespace Fistr.Core.Mesh.Group
         public override string ToMsh()
         {
             var sb = new StringBuilder();
-            sb.Append($"!SGROUP, SGRP={Name}");
+            sb.AppendLine($"!SGROUP, SGRP={Name}");
             int count = 0;
             foreach (KeyValuePair<int, int> id in Ids)
             {
                 sb.Append(id.Key.ToString(CultureInfo.InvariantCulture).PadLeft(9, ' '));
                 sb.Append(',');
-                sb.Append(id.Value.ToString(CultureInfo.InvariantCulture).PadLeft(4, ' '));
+                sb.Append(id.Value.ToString(CultureInfo.InvariantCulture).PadLeft(3, ' '));
                 sb.Append(',');
                 if (count % 5 == 4)
                 {
@@ -37,6 +37,7 @@ namespace Fistr.Core.Mesh.Group
                 }
             }
 
+            sb.Append(Environment.NewLine);
             return sb.ToString();
         }
     }

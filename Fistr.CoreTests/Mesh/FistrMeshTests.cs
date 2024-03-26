@@ -1,4 +1,5 @@
 using Fistr.Core.Mesh.Element;
+using Fistr.Core.Mesh.Group;
 
 using Xunit;
 
@@ -83,7 +84,11 @@ namespace Fistr.Core.Mesh
                 new(5, 0.0, 0.0, 1.0),
                 new(6, 1.0, 0.0, 1.0),
                 new(7, 1.0, 1.0, 1.0),
-                new(8, 0.0, 1.0, 1.0)
+                new(8, 0.0, 1.0, 1.0),
+                new(9, 0.5, 0.5, 0.5),
+                new(10, 0.5, 0.5, 1.0),
+                new(11, 0.5, 0.5, 0.0),
+                new(12, 0.5, 0.0, 0.5),
             };
             var tetra = new Tetra341([1, 2, 3, 4]);
             var hex = new Hex361([1, 2, 3, 4, 5, 6, 7, 8]);
@@ -91,6 +96,10 @@ namespace Fistr.Core.Mesh
             mesh.AddNodes(nodes);
             mesh.AddElement(tetra);
             mesh.AddElement(hex);
+
+            mesh.AddGroup(new NGroup("ng1", [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]));
+            mesh.AddGroup(new EGroup("eg1", [1, 2]));
+            mesh.AddGroup(new SGroup("sg1", new Dictionary<int, int> { { 1, 1 }, { 2, 2 } }));
 
             mesh.Serialize("./test.msh");
         }

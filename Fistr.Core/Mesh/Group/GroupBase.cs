@@ -1,11 +1,11 @@
 namespace Fistr.Core.Mesh.Group
 {
-    public abstract class FistrGroupBase
+    public abstract class GroupBase
     {
-        public FistrGroupType Type { get; }
+        public GroupType Type { get; }
         public string Name { get; }
 
-        public FistrGroupBase(FistrGroupType type, string name)
+        public GroupBase(GroupType type, string name)
         {
             Type = type;
             Name = name;
