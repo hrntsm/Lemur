@@ -458,4 +458,4 @@ $RECYCLE.BIN/
 *.log
 
 ## add by me
-Fistr.GH/Lib/*
+**/Lib/*

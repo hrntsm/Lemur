@@ -1,16 +1,29 @@
 using System.Globalization;
 using System.Text;
 
+
 namespace Fistr.Core.Mesh.Element
 {
     public abstract class FistrElementBase
     {
-        public FistrElementType ElementType { get; }
-        public int[] NodeIds { get; }
+        public FistrElementType ElementType { get; private set; }
+        public int Id { get; private set; }
+        public int[] NodeIds { get; private set; }
 
         public FistrElementBase(FistrElementType elementType, int[] nodeIds)
         {
+            Ctor(elementType, -1, nodeIds);
+        }
+
+        public FistrElementBase(FistrElementType elementType, int id, int[] nodeIds)
+        {
+            Ctor(elementType, id, nodeIds);
+        }
+
+        private void Ctor(FistrElementType elementType, int id, int[] nodeIds)
+        {
             ElementType = elementType;
+            Id = id;
             CheckNodeLength(nodeIds.Length);
             NodeIds = nodeIds;
         }
@@ -29,5 +42,6 @@ namespace Fistr.Core.Mesh.Element
             }
             return sb.ToString();
         }
+
     }
 }

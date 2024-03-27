@@ -8,4 +8,11 @@
     <AnalysisLevel>latest-recommended</AnalysisLevel>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Reference Include="Iguana">
+      <HintPath>Lib\iguana\Iguana.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
 </Project>

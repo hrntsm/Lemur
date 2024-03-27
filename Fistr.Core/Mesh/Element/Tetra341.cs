@@ -1,11 +1,18 @@
 using System;
 
+using Iguana.IguanaMesh.ITypes;
+
 namespace Fistr.Core.Mesh.Element
 {
     public class Tetra341 : FistrElementBase
     {
         public Tetra341(int[] nodeIds)
          : base(FistrElementType.Tetra341, nodeIds)
+        {
+        }
+
+        public Tetra341(int id, int[] nodeIds)
+         : base(FistrElementType.Tetra341, id, nodeIds)
         {
         }
 
@@ -54,6 +61,19 @@ namespace Fistr.Core.Mesh.Element
         public Tetra342 ToQuadric(FistrNodeList nodes)
         {
             throw new NotImplementedException();
+        }
+
+        public static Tetra341 FromIguanaElement(ITetrahedronElement element)
+        {
+            int id = element.Key;
+            int[] nodeIds = new int[]
+            {
+                element.Vertices[3],
+                element.Vertices[1],
+                element.Vertices[0],
+                element.Vertices[2]
+            };
+            return new Tetra341(id, nodeIds);
         }
     }
 }
