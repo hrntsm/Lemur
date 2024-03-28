@@ -7,7 +7,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/Fistr.GH/Fistr.GH.csproj",
+                "${workspaceFolder}/LemurGH/LemurGH.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],

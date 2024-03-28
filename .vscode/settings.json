@@ -1,5 +1,5 @@
 {
-    "dotnet.defaultSolution": "fistr_gh.sln",
+    "dotnet.defaultSolution": "Lemur.sln",
     "cSpell.words": [
         "EGROUP",
         "EGRP",
