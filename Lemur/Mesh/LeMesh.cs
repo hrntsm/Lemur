@@ -144,11 +144,25 @@ namespace Lemur.Mesh
                 sb.Append(elementList.ToMsh(startId));
                 startId += elementList.Count;
             }
-
+            WriteMaterial(sb);
             WriteGroup(sb);
 
             sb.AppendLine("!END");
             return sb.ToString();
+        }
+
+        private void WriteMaterial(StringBuilder sb)
+        {
+            sb.AppendLine("!MATERIAL, NAME=M1, ITEM=2");
+            sb.AppendLine("!ITEM=1, SUBITEM=2");
+            sb.AppendLine("210000.0, 0.3");
+            sb.AppendLine("!ITEM=2, SUBITEM=1");
+            sb.AppendLine("7.85e-6");
+            foreach (LeElementList elementList in _elements)
+            {
+                string eGroup = elementList.ElementType + "_AUTO";
+                sb.AppendLine($"!SECTION, TYPE=SOLID, EGRP={eGroup}, MATERIAL=STEEL");
+            }
         }
 
         private void WriteGroup(StringBuilder sb)

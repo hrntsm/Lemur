@@ -25,10 +25,6 @@
       <HintPath>Lib\iguana\Iguana.dll</HintPath>
       <Private>false</Private>
     </Reference>
-    <Reference Include="IguanaMeshGH">
-      <HintPath>Lib\iguana\IguanaMesh.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
   </ItemGroup>
 
   <ItemGroup>

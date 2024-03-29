@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
 
-using Lemur.Mesh;
-using Lemur.Mesh.Element;
-
 using Grasshopper.Kernel;
 
 using Iguana.IguanaMesh.ITypes;
+
+using Lemur.Mesh;
+using Lemur.Mesh.Element;
 
 namespace LemurGH.Component
 {
@@ -27,6 +27,7 @@ namespace LemurGH.Component
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
+            pManager.AddGenericParameter("LeMesh", "LeMesh", "Lemur mesh object", GH_ParamAccess.item);
         }
 
         protected override void SolveInstance(IGH_DataAccess DA)
@@ -43,6 +44,7 @@ namespace LemurGH.Component
             ConvertINodeToFNode(leMesh, iMesh);
             ConvertIElementToFElement(leMesh, iMesh);
 
+            DA.SetData(0, leMesh);
         }
 
         private static void ConvertINodeToFNode(LeMesh leMesh, IMesh iMesh)
