@@ -6,25 +6,32 @@ namespace Lemur
 {
     public class LeHecmwControl
     {
-        private readonly string _meshFile;
-        private readonly string _controlFile;
-        private readonly string _resultName;
+        private string _meshFile;
+        private string _controlFile;
+        private string _resultName;
+
+        public LeHecmwControl()
+        {
+            string name = "lemur";
+            SetValues(name + ".msh", name + ".cnt", name);
+        }
 
         public LeHecmwControl(string name)
         {
-            _meshFile = name + ".msh";
-            _controlFile = name + ".cnt";
-            _resultName = name;
+            SetValues(name + ".msh", name + ".cnt", name);
         }
 
         public LeHecmwControl(string meshFile, string controlFile)
         {
-            _meshFile = meshFile;
-            _controlFile = controlFile;
-            _resultName = "lemur";
+            SetValues(meshFile, controlFile, "lemur");
         }
 
         public LeHecmwControl(string meshFile, string controlFile, string resultName)
+        {
+            SetValues(meshFile, controlFile, resultName);
+        }
+
+        private void SetValues(string meshFile, string controlFile, string resultName)
         {
             _meshFile = meshFile;
             _controlFile = controlFile;

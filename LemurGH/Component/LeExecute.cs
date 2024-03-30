@@ -12,10 +12,10 @@ using Lemur.Mesh;
 
 namespace LemurGH.Component
 {
-    public class Execute : GH_Component
+    public class LeExecute : GH_Component
     {
-        public Execute()
-          : base("Execute", "Execute",
+        public LeExecute()
+          : base("LeExecute", "LeExe",
             "Execute Lemur component",
             "Lemur", "Lemur")
         {
@@ -23,10 +23,10 @@ namespace LemurGH.Component
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
-            pManager.AddBooleanParameter("Exe", "Exe", "Execute analysis", GH_ParamAccess.item);
-            pManager.AddGenericParameter("LeMesh", "LeMesh", "Input Lemur Mesh", GH_ParamAccess.item);
-            pManager.AddGenericParameter("LeCnt", "LeCnt", "Input Lemur Control settings", GH_ParamAccess.item);
+            pManager.AddGenericParameter("LeAssemble", "LeAsm", "Input Lemur Mesh", GH_ParamAccess.item);
+            pManager.AddIntegerParameter("Thread", "Thread", "Number of OpenMP threads. -1 means auto.", GH_ParamAccess.item, -1);
             pManager.AddTextParameter("Dir", "Dir", "Directory path to save results", GH_ParamAccess.item);
+            pManager.AddBooleanParameter("Run", "Run", "Execute analysis", GH_ParamAccess.item);
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
@@ -37,37 +37,33 @@ namespace LemurGH.Component
         protected override void SolveInstance(IGH_DataAccess DA)
         {
             bool exe = false;
-            object leMeshInput = null;
-            object leCntInput = null;
+            object leAsmInput = null;
+            int thread = -1;
             string dir = string.Empty;
-            if (!DA.GetData(0, ref exe)) return;
-            if (!DA.GetData(1, ref leMeshInput)) return;
-            if (!DA.GetData(2, ref leCntInput)) return;
-            if (!DA.GetData(3, ref dir)) return;
+            if (!DA.GetData(0, ref leAsmInput)) return;
+            if (!DA.GetData(1, ref thread)) return;
+            if (!DA.GetData(2, ref dir)) return;
+            if (!DA.GetData(3, ref exe)) return;
 
             if (exe)
             {
-                var leMeshObj = (GH_ObjectWrapper)leMeshInput;
-                var leMesh = (LeMesh)leMeshObj.Value;
-                leMesh?.Serialize(dir);
-
-                var leCntObj = (GH_ObjectWrapper)leCntInput;
-                var leCnt = (LeControl)leCntObj.Value;
-                leCnt?.Serialize(dir);
-
-                var leHecmwControl = new LeHecmwControl("lemur");
-                leHecmwControl.Serialize(dir);
-
-                ExecuteAnalysis(dir);
+                var leAsmObj = (GH_ObjectWrapper)leAsmInput;
+                var leAsm = (LeAssemble)leAsmObj.Value;
+                leAsm?.Serialize(dir);
+                ExecuteAnalysis(dir, thread);
             }
         }
 
-        private static void ExecuteAnalysis(string dir)
+        private static void ExecuteAnalysis(string dir, int thread)
         {
             string assemblePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             string fistrPath = Path.Combine(assemblePath, "Lib", "fistr_serial", "fistr1.exe");
             var fistr = new Process();
             fistr.StartInfo.FileName = fistrPath;
+            if (thread != -1)
+            {
+                fistr.StartInfo.Arguments = $"-t {thread}";
+            }
             fistr.StartInfo.WorkingDirectory = dir;
             fistr.Start();
         }
