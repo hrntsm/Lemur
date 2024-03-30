@@ -53,6 +53,14 @@ namespace Lemur.Mesh
             _groups = new List<GroupBase>();
         }
 
+        public LeMesh(LeMesh other)
+        {
+            _header = other._header;
+            Nodes = new LeNodeList(other.Nodes);
+            _elements = new List<LeElementList>(other._elements);
+            _groups = new List<GroupBase>(other._groups);
+        }
+
         public void AddNode(LeNode node)
         {
             Nodes.Add(node);
@@ -200,6 +208,20 @@ namespace Lemur.Mesh
         public void Serialize(string dir, string name)
         {
             File.WriteAllText(Path.Combine(dir, name), ToMsh());
+
+        }
+
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine($"LeMesh:");
+            sb.AppendLine($"- Nodes={Nodes.Count}");
+            sb.AppendLine($"- Elements:");
+            foreach (LeElementList elementList in _elements)
+            {
+                sb.AppendLine($"  - {elementList.ElementType}={elementList.Count}");
+            }
+            return sb.ToString();
         }
     }
 }

@@ -7,7 +7,10 @@ using Lemur;
 using Lemur.Control;
 using Lemur.Mesh;
 
-namespace LemurGH
+using LemurGH.Param;
+using LemurGH.Goo;
+
+namespace LemurGH.Component
 {
     public class ConstructLeAssemble : GH_Component
     {
@@ -20,7 +23,7 @@ namespace LemurGH
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
-            pManager.AddGenericParameter("LeMesh", "LeMesh", "Input Lemur Mesh", GH_ParamAccess.item);
+            pManager.AddParameter(new Param_LeMesh(), "LeMesh", "LeMesh", "Input Lemur Mesh", GH_ParamAccess.item);
             pManager.AddGenericParameter("LeCnt", "LeCnt", "Input Lemur Control settings", GH_ParamAccess.item);
         }
 
@@ -30,14 +33,12 @@ namespace LemurGH
         }
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            object leMeshInput = null;
+            GH_LeMesh leMeshInput = null;
             object leCntInput = null;
             if (!DA.GetData(0, ref leMeshInput)) return;
             if (!DA.GetData(1, ref leCntInput)) return;
 
-            var leMeshObj = (GH_ObjectWrapper)leMeshInput;
-            var leMesh = (LeMesh)leMeshObj.Value;
-
+            LeMesh leMesh = leMeshInput.Value;
             var leCntObj = (GH_ObjectWrapper)leCntInput;
             var leCnt = (LeControl)leCntObj.Value;
 

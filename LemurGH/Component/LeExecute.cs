@@ -7,8 +7,6 @@ using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 
 using Lemur;
-using Lemur.Control;
-using Lemur.Mesh;
 
 namespace LemurGH.Component
 {

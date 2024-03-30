@@ -25,6 +25,11 @@ namespace Lemur.Mesh
             _nodes = new List<LeNode>();
         }
 
+        public LeNodeList(LeNodeList other)
+        {
+            _nodes = new List<LeNode>(other._nodes);
+        }
+
         private void CheckIndex(int id)
         {
             if (id <= 0)
