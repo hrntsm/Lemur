@@ -161,7 +161,7 @@ namespace Lemur.Mesh
             foreach (LeElementList elementList in _elements)
             {
                 string eGroup = elementList.ElementType + "_AUTO";
-                sb.AppendLine($"!SECTION, TYPE=SOLID, EGRP={eGroup}, MATERIAL=STEEL");
+                sb.AppendLine($"!SECTION, TYPE=SOLID, EGRP={eGroup}, MATERIAL=M1");
             }
         }
 
@@ -192,9 +192,14 @@ namespace Lemur.Mesh
             }
         }
 
-        public void Serialize(string path)
+        public void Serialize(string dir)
         {
-            File.WriteAllText(path, ToMsh());
+            Serialize(dir, "lemur.msh");
+        }
+
+        public void Serialize(string dir, string name)
+        {
+            File.WriteAllText(Path.Combine(dir, name), ToMsh());
         }
     }
 }
