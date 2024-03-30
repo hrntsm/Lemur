@@ -54,5 +54,26 @@ namespace Lemur.Mesh.Element
                     throw new ArgumentException("Invalid surface node order.");
             }
         }
+
+        public override int[] GetSurfaceNodesFromId(int id)
+        {
+            switch (id)
+            {
+                case 1:
+                    return new int[] { NodeIds[0], NodeIds[1], NodeIds[2], NodeIds[3] };
+                case 2:
+                    return new int[] { NodeIds[4], NodeIds[5], NodeIds[6], NodeIds[7] };
+                case 3:
+                    return new int[] { NodeIds[0], NodeIds[1], NodeIds[4], NodeIds[5] };
+                case 4:
+                    return new int[] { NodeIds[1], NodeIds[2], NodeIds[5], NodeIds[6] };
+                case 5:
+                    return new int[] { NodeIds[2], NodeIds[3], NodeIds[6], NodeIds[7] };
+                case 6:
+                    return new int[] { NodeIds[0], NodeIds[3], NodeIds[4], NodeIds[7] };
+                default:
+                    throw new ArgumentException("Invalid surface id.");
+            }
+        }
     }
 }

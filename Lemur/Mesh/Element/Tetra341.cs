@@ -58,6 +58,23 @@ namespace Lemur.Mesh.Element
             }
         }
 
+        public override int[] GetSurfaceNodesFromId(int id)
+        {
+            switch (id)
+            {
+                case 1:
+                    return new int[] { NodeIds[0], NodeIds[1], NodeIds[2] };
+                case 2:
+                    return new int[] { NodeIds[0], NodeIds[1], NodeIds[3] };
+                case 3:
+                    return new int[] { NodeIds[1], NodeIds[2], NodeIds[3] };
+                case 4:
+                    return new int[] { NodeIds[0], NodeIds[2], NodeIds[3] };
+                default:
+                    throw new ArgumentException("Invalid surface id.");
+            }
+        }
+
         public Tetra342 ToQuadric(LeNodeList nodes)
         {
             throw new NotImplementedException();

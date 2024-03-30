@@ -16,5 +16,10 @@ namespace Lemur.Mesh.Element
         {
             throw new System.NotImplementedException();
         }
+
+        public override int[] GetSurfaceNodesFromId(int id)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
