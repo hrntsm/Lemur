@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using Grasshopper.Kernel;
 
@@ -10,6 +11,8 @@ using Lemur.Mesh.Element;
 
 using LemurGH.Param;
 using LemurGH.Type;
+
+using Rhino.Geometry;
 
 namespace LemurGH.Component
 {
@@ -31,6 +34,7 @@ namespace LemurGH.Component
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
             pManager.AddParameter(new Param_LeMesh(), "LeMesh", "LeMesh", "Lemur mesh object", GH_ParamAccess.item);
+            pManager.AddMeshParameter("Mesh", "Mesh", "Mesh object", GH_ParamAccess.item);
         }
 
         protected override void SolveInstance(IGH_DataAccess DA)
@@ -47,7 +51,38 @@ namespace LemurGH.Component
             ConvertINodeToFNode(leMesh, iMesh);
             ConvertIElementToFElement(leMesh, iMesh);
 
+            Mesh mesh = GetFaceMesh(leMesh);
+
             DA.SetData(0, new GH_LeMesh(leMesh));
+            DA.SetData(1, mesh);
+        }
+
+        private static Mesh GetFaceMesh(LeMesh leMesh)
+        {
+            (int, int)[] aa = leMesh.FaceMesh;
+            var elements = new List<LeElementBase>();
+            foreach (LeElementList elementList in leMesh.Elements)
+            {
+                elements.AddRange(elementList);
+            }
+
+            var mesh = new Mesh();
+            mesh.Vertices.AddVertices(leMesh.Nodes.Select(n => new Point3d(n.X, n.Y, n.Z)));
+            foreach ((int, int) a in aa)
+            {
+                LeElementBase e = elements.FirstOrDefault(elem => elem.Id == a.Item1);
+                int[] nodes = e?.GetSurfaceNodesFromId(a.Item2);
+                if (nodes != null)
+                {
+                    if (nodes.Length == 3)
+                        mesh.Faces.AddFace(new MeshFace(nodes[0] - 1, nodes[1] - 1, nodes[2] - 1));
+                    else if (nodes.Length == 4)
+                        mesh.Faces.AddFace(new MeshFace(nodes[0] - 1, nodes[1] - 1, nodes[2] - 1, nodes[3] - 1));
+                }
+            }
+            mesh.UnifyNormals();
+            mesh.Normals.ComputeNormals();
+            return mesh;
         }
 
         private static void ConvertINodeToFNode(LeMesh leMesh, IMesh iMesh)

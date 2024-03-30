@@ -26,7 +26,7 @@ namespace Lemur.Mesh.Element
                 case 4:
                     return GetSurfaceIdQuad(ids);
                 default:
-                    throw new ArgumentException("Prism351 surface requires 3 or 4 nodes.");
+                    return -1;
             }
         }
 
@@ -40,7 +40,7 @@ namespace Lemur.Mesh.Element
 
             if (surfaceNodeIds[0] == -1 || surfaceNodeIds[1] == -1 || surfaceNodeIds[2] == -1)
             {
-                throw new ArgumentException("Surface nodes not found.");
+                return -1;
             }
             Array.Sort(surfaceNodeIds);
 
@@ -51,7 +51,7 @@ namespace Lemur.Mesh.Element
                 case 3 when surfaceNodeIds[1] == 4 && surfaceNodeIds[2] == 5:
                     return 2;
                 default:
-                    throw new ArgumentException("Surface node not found.");
+                    return -1;
             }
         }
 
@@ -65,7 +65,7 @@ namespace Lemur.Mesh.Element
 
             if (surfaceNodeIds[0] == -1 || surfaceNodeIds[1] == -1 || surfaceNodeIds[2] == -1 || surfaceNodeIds[3] == -1)
             {
-                throw new ArgumentException("Surface nodes not found.");
+                return -1;
             }
             Array.Sort(surfaceNodeIds);
 
@@ -78,7 +78,7 @@ namespace Lemur.Mesh.Element
                 case 0 when surfaceNodeIds[1] == 2 && surfaceNodeIds[2] == 3 && surfaceNodeIds[3] == 5:
                     return 5;
                 default:
-                    throw new ArgumentException("Invalid surface node order.");
+                    return -1;
             }
         }
 
@@ -91,11 +91,11 @@ namespace Lemur.Mesh.Element
                 case 2:
                     return new int[] { NodeIds[3], NodeIds[4], NodeIds[5] };
                 case 3:
-                    return new int[] { NodeIds[0], NodeIds[1], NodeIds[3], NodeIds[4] };
+                    return new int[] { NodeIds[0], NodeIds[1], NodeIds[4], NodeIds[3] };
                 case 4:
-                    return new int[] { NodeIds[1], NodeIds[2], NodeIds[4], NodeIds[5] };
+                    return new int[] { NodeIds[1], NodeIds[2], NodeIds[5], NodeIds[4] };
                 case 5:
-                    return new int[] { NodeIds[0], NodeIds[2], NodeIds[3], NodeIds[5] };
+                    return new int[] { NodeIds[2], NodeIds[0], NodeIds[3], NodeIds[5] };
                 default:
                     throw new ArgumentException("Invalid surface id.");
             }

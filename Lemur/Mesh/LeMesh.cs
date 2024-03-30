@@ -19,6 +19,13 @@ namespace Lemur.Mesh
                 return _elements.ToArray();
             }
         }
+        public (int, int)[] FaceMesh
+        {
+            get
+            {
+                return ComputeFaceMesh();
+            }
+        }
         public GroupBase[] NodeGroups
         {
             get
@@ -127,7 +134,7 @@ namespace Lemur.Mesh
                     }
                     break;
                 case GroupType.Surface when group is SGroup sGroup:
-                    foreach (int id in sGroup.Ids.Keys)
+                    foreach (int id in sGroup.Ids.Select(i => i.Item1))
                     {
                         if (!elementIds.Contains(id))
                         {
@@ -208,7 +215,57 @@ namespace Lemur.Mesh
         public void Serialize(string dir, string name)
         {
             File.WriteAllText(Path.Combine(dir, name), ToMsh());
+        }
 
+        private (int, int)[] ComputeFaceMesh()
+        {
+            var elements = new List<LeElementBase>();
+            foreach (LeElementList elementList in _elements)
+            {
+                elements.AddRange(elementList);
+            }
+
+            var face = new List<(int, int)>();
+            foreach (LeElementBase element in elements)
+            {
+                int faceCount;
+                switch (element)
+                {
+                    case Tetra341 _:
+                    case Tetra342 _:
+                        faceCount = 4;
+                        break;
+                    case Prism351 _:
+                    case Prism352 _:
+                        faceCount = 5;
+                        break;
+                    case Hex361 _:
+                    case Hex362 _:
+                        faceCount = 6;
+                        break;
+                    default:
+                        throw new ArgumentException("Invalid element type.");
+                }
+
+                for (int i = 1; i <= faceCount; i++)
+                {
+                    int faceShareCount = 0;
+                    int[] surfaceNodeIds = element.GetSurfaceNodesFromId(i);
+                    foreach (LeElementBase e in elements)
+                    {
+                        if (e.GetSurfaceId(surfaceNodeIds) != -1)
+                        {
+                            faceShareCount++;
+                        }
+                    }
+                    if (faceShareCount == 1)
+                    {
+                        face.Add((element.Id, i));
+                    }
+                }
+            }
+
+            return face.ToArray();
         }
     }
 }

@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 
@@ -7,9 +6,9 @@ namespace Lemur.Mesh.Group
 {
     public class SGroup : GroupBase
     {
-        public Dictionary<int, int> Ids { get; }
+        public (int, int)[] Ids { get; }
 
-        public SGroup(string name, Dictionary<int, int> ids)
+        public SGroup(string name, (int, int)[] ids)
             : base(GroupType.Surface, name)
         {
             Ids = ids;
@@ -20,11 +19,11 @@ namespace Lemur.Mesh.Group
             var sb = new StringBuilder();
             sb.AppendLine($"!SGROUP, SGRP={Name}");
             int count = 0;
-            foreach (KeyValuePair<int, int> id in Ids)
+            foreach ((int, int) id in Ids)
             {
-                sb.Append(id.Key.ToString(CultureInfo.InvariantCulture).PadLeft(9, ' '));
+                sb.Append(id.Item1.ToString(CultureInfo.InvariantCulture).PadLeft(9, ' '));
                 sb.Append(',');
-                sb.Append(id.Value.ToString(CultureInfo.InvariantCulture).PadLeft(3, ' '));
+                sb.Append(id.Item2.ToString(CultureInfo.InvariantCulture).PadLeft(3, ' '));
                 sb.Append(',');
                 if (count % 5 == 4)
                 {

@@ -21,7 +21,7 @@ namespace Lemur.Mesh.Element
         {
             if (ids.Length != 4)
             {
-                throw new ArgumentException("Hex361 surface requires 4 nodes.");
+                return -1;
             }
 
             int[] surfaceNodeIds = new int[4];
@@ -32,7 +32,7 @@ namespace Lemur.Mesh.Element
 
             if (surfaceNodeIds[0] == -1 || surfaceNodeIds[1] == -1 || surfaceNodeIds[2] == -1 || surfaceNodeIds[3] == -1)
             {
-                throw new ArgumentException("Surface nodes not found.");
+                return -1;
             }
             Array.Sort(surfaceNodeIds);
 
@@ -51,7 +51,7 @@ namespace Lemur.Mesh.Element
                 case 0 when surfaceNodeIds[1] == 3 && surfaceNodeIds[2] == 4 && surfaceNodeIds[3] == 7:
                     return 6;
                 default:
-                    throw new ArgumentException("Invalid surface node order.");
+                    return -1;
             }
         }
 
@@ -64,13 +64,13 @@ namespace Lemur.Mesh.Element
                 case 2:
                     return new int[] { NodeIds[4], NodeIds[5], NodeIds[6], NodeIds[7] };
                 case 3:
-                    return new int[] { NodeIds[0], NodeIds[1], NodeIds[4], NodeIds[5] };
+                    return new int[] { NodeIds[0], NodeIds[1], NodeIds[5], NodeIds[4] };
                 case 4:
-                    return new int[] { NodeIds[1], NodeIds[2], NodeIds[5], NodeIds[6] };
+                    return new int[] { NodeIds[1], NodeIds[2], NodeIds[6], NodeIds[5] };
                 case 5:
-                    return new int[] { NodeIds[2], NodeIds[3], NodeIds[6], NodeIds[7] };
+                    return new int[] { NodeIds[2], NodeIds[3], NodeIds[7], NodeIds[6] };
                 case 6:
-                    return new int[] { NodeIds[0], NodeIds[3], NodeIds[4], NodeIds[7] };
+                    return new int[] { NodeIds[3], NodeIds[0], NodeIds[4], NodeIds[7] };
                 default:
                     throw new ArgumentException("Invalid surface id.");
             }

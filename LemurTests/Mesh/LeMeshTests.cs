@@ -99,7 +99,7 @@ namespace Lemur.Mesh
 
             mesh.AddGroup(new NGroup("ng1", [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]));
             mesh.AddGroup(new EGroup("eg1", [1, 2]));
-            mesh.AddGroup(new SGroup("sg1", new Dictionary<int, int> { { 1, 1 }, { 2, 2 } }));
+            mesh.AddGroup(new SGroup("sg1", [(1, 1), (2, 2)]));
 
             mesh.Serialize("./test.msh");
         }
