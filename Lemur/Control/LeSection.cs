@@ -11,6 +11,12 @@ namespace Lemur.Control
         {
         }
 
+        public LeSection(LeSection other)
+        {
+            Form341Type = other.Form341Type;
+            Form361Type = other.Form361Type;
+        }
+
         public string ToCnt()
         {
             var sb = new StringBuilder();

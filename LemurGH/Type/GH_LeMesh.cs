@@ -1,8 +1,10 @@
+using System.Text;
+
 using Grasshopper.Kernel.Types;
 
 using Lemur.Mesh;
 
-namespace LemurGH.Goo
+namespace LemurGH.Type
 {
     public class GH_LeMesh : GH_Goo<LeMesh>
     {
@@ -50,7 +52,19 @@ namespace LemurGH.Goo
                 return base.CastFrom(source);
             }
         }
-        public override string ToString() => Value.ToString();
+
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine($"LeMesh:");
+            sb.AppendLine($"- {Value.Nodes.Count} nodes");
+            sb.AppendLine($"- Element:");
+            foreach (LeElementList elementList in Value.Elements)
+            {
+                sb.AppendLine($"  - {elementList.Count} {elementList.ElementType} elements");
+            }
+            return sb.ToString();
+        }
 
         public class GH_LeMeshProxy : GH_GooProxy<GH_LeMesh>
         {

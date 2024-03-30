@@ -23,6 +23,18 @@ namespace Lemur.Control
             LeSection = new LeSection();
         }
 
+        public LeControl(LeControl other)
+        {
+            Version = other.Version;
+            SolutionType = other.SolutionType;
+            LeWrites = new LeWrite[other.LeWrites.Length];
+            for (int i = 0; i < other.LeWrites.Length; i++)
+            {
+                LeWrites[i] = new LeWrite(other.LeWrites[i]);
+            }
+            LeSection = new LeSection(other.LeSection);
+        }
+
         public string ToCnt()
         {
             var sb = new StringBuilder();

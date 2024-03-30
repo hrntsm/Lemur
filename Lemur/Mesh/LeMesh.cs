@@ -210,18 +210,5 @@ namespace Lemur.Mesh
             File.WriteAllText(Path.Combine(dir, name), ToMsh());
 
         }
-
-        public override string ToString()
-        {
-            var sb = new StringBuilder();
-            sb.AppendLine($"LeMesh:");
-            sb.AppendLine($"- Nodes={Nodes.Count}");
-            sb.AppendLine($"- Elements:");
-            foreach (LeElementList elementList in _elements)
-            {
-                sb.AppendLine($"  - {elementList.ElementType}={elementList.Count}");
-            }
-            return sb.ToString();
-        }
     }
 }

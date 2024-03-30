@@ -4,9 +4,11 @@ using System.IO;
 using System.Reflection;
 
 using Grasshopper.Kernel;
-using Grasshopper.Kernel.Types;
 
 using Lemur;
+
+using LemurGH.Param;
+using LemurGH.Type;
 
 namespace LemurGH.Component
 {
@@ -21,7 +23,7 @@ namespace LemurGH.Component
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
-            pManager.AddGenericParameter("LeAssemble", "LeAsm", "Input Lemur Mesh", GH_ParamAccess.item);
+            pManager.AddParameter(new Param_LeAssemble(), "LeAssemble", "LeAsm", "Input Lemur Mesh", GH_ParamAccess.item);
             pManager.AddIntegerParameter("Thread", "Thread", "Number of OpenMP threads. -1 means auto.", GH_ParamAccess.item, -1);
             pManager.AddTextParameter("Dir", "Dir", "Directory path to save results", GH_ParamAccess.item);
             pManager.AddBooleanParameter("Run", "Run", "Execute analysis", GH_ParamAccess.item);
@@ -34,19 +36,18 @@ namespace LemurGH.Component
 
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            bool exe = false;
-            object leAsmInput = null;
+            GH_LeAssemble ghLeAssemble = null;
             int thread = -1;
             string dir = string.Empty;
-            if (!DA.GetData(0, ref leAsmInput)) return;
+            bool run = false;
+            if (!DA.GetData(0, ref ghLeAssemble)) return;
             if (!DA.GetData(1, ref thread)) return;
             if (!DA.GetData(2, ref dir)) return;
-            if (!DA.GetData(3, ref exe)) return;
+            if (!DA.GetData(3, ref run)) return;
 
-            if (exe)
+            if (run)
             {
-                var leAsmObj = (GH_ObjectWrapper)leAsmInput;
-                var leAsm = (LeAssemble)leAsmObj.Value;
+                LeAssemble leAsm = ghLeAssemble.Value;
                 leAsm?.Serialize(dir);
                 ExecuteAnalysis(dir, thread);
             }

@@ -31,6 +31,13 @@ namespace Lemur.Control
             LeOutputTypes = leOutputTypes;
         }
 
+        public LeWrite(LeWrite other)
+        {
+            LeWriteType = other.LeWriteType;
+            Frequency = other.Frequency;
+            LeOutputTypes = other.LeOutputTypes;
+        }
+
         private void CheckLeOutputTypes(LeOutputType[] leOutputTypes)
         {
             switch (LeWriteType)

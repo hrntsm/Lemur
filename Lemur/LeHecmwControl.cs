@@ -31,6 +31,11 @@ namespace Lemur
             SetValues(meshFile, controlFile, resultName);
         }
 
+        public LeHecmwControl(LeHecmwControl other)
+        {
+            SetValues(other._meshFile, other._controlFile, other._resultName);
+        }
+
         private void SetValues(string meshFile, string controlFile, string resultName)
         {
             _meshFile = meshFile;
@@ -49,28 +54,28 @@ namespace Lemur
             sb.AppendLine($"# for solver");
             sb.AppendLine($"#");
             sb.AppendLine($"!MESH, NAME=fstrMSH,TYPE=HECMW-ENTIRE");
-            sb.AppendLine($"{_meshFile}");
+            sb.AppendLine($" {_meshFile}");
             sb.AppendLine($"#");
             sb.AppendLine($"# for visualizer");
             sb.AppendLine($"#");
             sb.AppendLine($"!MESH, NAME=mesh,TYPE=HECMW-ENTIRE");
-            sb.AppendLine($"{_meshFile}");
+            sb.AppendLine($" {_meshFile}");
             sb.AppendLine($"#");
             sb.AppendLine($"# for solver");
             sb.AppendLine($"#");
             sb.AppendLine($"!CONTROL,NAME=fstrCNT");
-            sb.AppendLine($"{_controlFile}");
+            sb.AppendLine($" {_controlFile}");
             sb.AppendLine($"!RESTART,NAME=restart_out,IO=OUT");
-            sb.AppendLine($"{_resultName}.restart");
+            sb.AppendLine($" {_resultName}.restart");
             sb.AppendLine($"!RESULT,NAME=fstrRES,IO=OUT");
-            sb.AppendLine($"{_resultName}.res");
+            sb.AppendLine($" {_resultName}.res");
             sb.AppendLine($"#");
             sb.AppendLine($"# for visualizer");
             sb.AppendLine($"#");
             sb.AppendLine($"!RESULT,NAME=result,IO=IN");
-            sb.AppendLine($"{_resultName}.res");
+            sb.AppendLine($" {_resultName}.res");
             sb.AppendLine($"!RESULT,NAME=vis_out,IO=OUT");
-            sb.AppendLine($"{_resultName}.vis");
+            sb.AppendLine($" {_resultName}.vis");
 
             return sb.ToString();
         }

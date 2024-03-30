@@ -1,14 +1,13 @@
 using System;
 
 using Grasshopper.Kernel;
-using Grasshopper.Kernel.Types;
 
 using Lemur;
 using Lemur.Control;
 using Lemur.Mesh;
 
 using LemurGH.Param;
-using LemurGH.Goo;
+using LemurGH.Type;
 
 namespace LemurGH.Component
 {
@@ -24,28 +23,27 @@ namespace LemurGH.Component
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
             pManager.AddParameter(new Param_LeMesh(), "LeMesh", "LeMesh", "Input Lemur Mesh", GH_ParamAccess.item);
-            pManager.AddGenericParameter("LeCnt", "LeCnt", "Input Lemur Control settings", GH_ParamAccess.item);
+            pManager.AddParameter(new Param_LeControl(), "LeCnt", "LeCnt", "Input Lemur Control settings", GH_ParamAccess.item);
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddGenericParameter("LeAsm", "LeAsm", "Lemur Assemble", GH_ParamAccess.item);
+            pManager.AddParameter(new Param_LeAssemble(), "LeAsm", "LeAsm", "Lemur Assemble", GH_ParamAccess.item);
         }
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            GH_LeMesh leMeshInput = null;
-            object leCntInput = null;
-            if (!DA.GetData(0, ref leMeshInput)) return;
-            if (!DA.GetData(1, ref leCntInput)) return;
+            GH_LeMesh ghLeMesh = null;
+            GH_LeControl ghLeCnt = null;
+            if (!DA.GetData(0, ref ghLeMesh)) return;
+            if (!DA.GetData(1, ref ghLeCnt)) return;
 
-            LeMesh leMesh = leMeshInput.Value;
-            var leCntObj = (GH_ObjectWrapper)leCntInput;
-            var leCnt = (LeControl)leCntObj.Value;
+            LeMesh leMesh = ghLeMesh.Value;
+            LeControl leCnt = ghLeCnt.Value;
 
             var leHecmwControl = new LeHecmwControl();
 
             var leAsm = new LeAssemble(leMesh, leCnt, leHecmwControl);
-            DA.SetData(0, leAsm);
+            DA.SetData(0, new GH_LeAssemble(leAsm));
         }
 
         public override Guid ComponentGuid => new Guid("e56e1bc6-a56a-4978-8575-527cf6cec17f");

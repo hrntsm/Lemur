@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using Grasshopper.Kernel;
 
-using LemurGH.Goo;
+using LemurGH.Type;
 
 namespace LemurGH.Param
 {

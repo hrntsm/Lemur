@@ -9,7 +9,7 @@ using Lemur.Mesh;
 using Lemur.Mesh.Element;
 
 using LemurGH.Param;
-using LemurGH.Goo;
+using LemurGH.Type;
 
 namespace LemurGH.Component
 {

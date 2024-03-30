@@ -16,6 +16,13 @@ namespace Lemur
             LeHecmwControl = leHecmwControl;
         }
 
+        public LeAssemble(LeAssemble other)
+        {
+            LeMesh = new LeMesh(other.LeMesh);
+            LeControl = new LeControl(other.LeControl);
+            LeHecmwControl = new LeHecmwControl(other.LeHecmwControl);
+        }
+
         public void Serialize(string dir)
         {
             LeMesh?.Serialize(dir);
