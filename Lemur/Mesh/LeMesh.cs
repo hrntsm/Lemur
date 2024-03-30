@@ -225,47 +225,45 @@ namespace Lemur.Mesh
                 elements.AddRange(elementList);
             }
 
-            var face = new List<(int, int)>();
+            var nodeFace = new Dictionary<string, List<(int, int)>>();
             foreach (LeElementBase element in elements)
             {
-                int faceCount;
-                switch (element)
+                for (int i = 1; i <= element.FaceCount; i++)
                 {
-                    case Tetra341 _:
-                    case Tetra342 _:
-                        faceCount = 4;
-                        break;
-                    case Prism351 _:
-                    case Prism352 _:
-                        faceCount = 5;
-                        break;
-                    case Hex361 _:
-                    case Hex362 _:
-                        faceCount = 6;
-                        break;
-                    default:
-                        throw new ArgumentException("Invalid element type.");
-                }
+                    int[] faceNodeIds = element.GetSurfaceNodesFromId(i);
+                    Array.Sort(faceNodeIds);
+                    string key = CreateKey(faceNodeIds);
+                    if (!nodeFace.TryGetValue(key, out List<(int, int)> value))
+                    {
+                        value = new List<(int, int)>();
+                        nodeFace[key] = value;
+                    }
 
-                for (int i = 1; i <= faceCount; i++)
+                    value.Add((element.Id, i));
+                }
+            }
+
+            var face = new List<(int, int)>();
+            foreach (KeyValuePair<string, List<(int, int)>> pair in nodeFace)
+            {
+                if (pair.Value.Count == 1)
                 {
-                    int faceShareCount = 0;
-                    int[] surfaceNodeIds = element.GetSurfaceNodesFromId(i);
-                    foreach (LeElementBase e in elements)
-                    {
-                        if (e.GetSurfaceId(surfaceNodeIds) != -1)
-                        {
-                            faceShareCount++;
-                        }
-                    }
-                    if (faceShareCount == 1)
-                    {
-                        face.Add((element.Id, i));
-                    }
+                    face.Add(pair.Value[0]);
                 }
             }
 
             return face.ToArray();
+        }
+
+        private static string CreateKey(int[] faceNodeIds)
+        {
+            var sb = new StringBuilder();
+            foreach (int id in faceNodeIds)
+            {
+                sb.Append(id);
+                sb.Append(',');
+            }
+            return sb.ToString();
         }
     }
 }

@@ -4,6 +4,8 @@ namespace Lemur.Mesh.Element
 {
     public class Tetra342 : LeElementBase
     {
+        public override int FaceCount => 4;
+
         public Tetra342(int[] nodeIds)
          : base(LeElementType.Tetra342, nodeIds)
         {

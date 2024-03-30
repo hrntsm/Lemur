@@ -4,6 +4,8 @@ namespace Lemur.Mesh.Element
 {
     public class Hex361 : LeElementBase
     {
+        public override int FaceCount => 6;
+
         public Hex361(int[] nodeIds)
          : base(LeElementType.Hex361, nodeIds)
         {

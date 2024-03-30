@@ -4,6 +4,8 @@ namespace Lemur.Mesh.Element
 {
     public class Prism351 : LeElementBase
     {
+        public override int FaceCount => 5;
+
         public Prism351(int[] nodeIds)
          : base(LeElementType.Prism351, nodeIds)
         {
