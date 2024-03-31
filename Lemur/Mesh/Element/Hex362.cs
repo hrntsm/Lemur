@@ -1,8 +1,13 @@
+using System.Collections.Generic;
+
 namespace Lemur.Mesh.Element
 {
-    public class Hex362 : LeElementBase
+    public class Hex362 : LeSolidElementBase
     {
-        public override int FaceCount => 6;
+        public override Dictionary<int, int[]> GetFace()
+        {
+            throw new System.NotImplementedException();
+        }
 
         public Hex362(LeElementType elementType, int[] nodeIds)
          : base(elementType, nodeIds)

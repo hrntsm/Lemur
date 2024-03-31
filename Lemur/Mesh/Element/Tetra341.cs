@@ -1,12 +1,22 @@
 using System;
+using System.Collections.Generic;
 
 using Iguana.IguanaMesh.ITypes;
 
 namespace Lemur.Mesh.Element
 {
-    public class Tetra341 : LeElementBase
+    public class Tetra341 : LeSolidElementBase
     {
-        public override int FaceCount => 4;
+        public override Dictionary<int, int[]> GetFace()
+        {
+            return new Dictionary<int, int[]>
+        {
+            { 1, new int[] { NodeIds[0], NodeIds[1], NodeIds[2] } },
+            { 2, new int[] { NodeIds[0], NodeIds[1], NodeIds[3] } },
+            { 3, new int[] { NodeIds[1], NodeIds[2], NodeIds[3] } },
+            { 4, new int[] { NodeIds[2], NodeIds[0], NodeIds[3] } }
+        };
+        }
 
         public Tetra341(int[] nodeIds)
          : base(LeElementType.Tetra341, nodeIds)
@@ -62,19 +72,9 @@ namespace Lemur.Mesh.Element
 
         public override int[] GetSurfaceNodesFromId(int id)
         {
-            switch (id)
-            {
-                case 1:
-                    return new int[] { NodeIds[0], NodeIds[1], NodeIds[2] };
-                case 2:
-                    return new int[] { NodeIds[0], NodeIds[1], NodeIds[3] };
-                case 3:
-                    return new int[] { NodeIds[1], NodeIds[2], NodeIds[3] };
-                case 4:
-                    return new int[] { NodeIds[2], NodeIds[0], NodeIds[3] };
-                default:
-                    throw new ArgumentException("Invalid surface id.");
-            }
+            return id >= 1 && id <= 4
+             ? GetFace()[id]
+             : throw new ArgumentException("Invalid surface id.");
         }
 
         public Tetra342 ToQuadric(LeNodeList nodes)

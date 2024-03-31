@@ -9,7 +9,6 @@ namespace Lemur.Mesh.Element
         public LeElementType ElementType { get; private set; }
         public int Id { get; private set; }
         public int[] NodeIds { get; private set; }
-        public abstract int FaceCount { get; }
 
         public LeElementBase(LeElementType elementType, int[] nodeIds)
         {

@@ -1,8 +1,13 @@
+using System.Collections.Generic;
+
 namespace Lemur.Mesh.Element
 {
-    public class Prism352 : LeElementBase
+    public class Prism352 : LeSolidElementBase
     {
-        public override int FaceCount => 5;
+        public override Dictionary<int, int[]> GetFace()
+        {
+            throw new System.NotImplementedException();
+        }
 
         public Prism352(LeElementType elementType, int[] nodeIds)
          : base(elementType, nodeIds)

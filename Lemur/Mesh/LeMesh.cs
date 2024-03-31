@@ -226,7 +226,7 @@ namespace Lemur.Mesh
             }
 
             var nodeFace = new Dictionary<string, List<(int, int)>>();
-            foreach (LeElementBase element in elements)
+            foreach (LeSolidElementBase element in elements.Where(e => e is LeSolidElementBase).Cast<LeSolidElementBase>())
             {
                 for (int i = 1; i <= element.FaceCount; i++)
                 {

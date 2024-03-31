@@ -1,10 +1,20 @@
 using System;
+using System.Collections.Generic;
 
 namespace Lemur.Mesh.Element
 {
-    public class Prism351 : LeElementBase
+    public class Prism351 : LeSolidElementBase
     {
-        public override int FaceCount => 5;
+        public override Dictionary<int, int[]> GetFace()
+        {
+            return new Dictionary<int, int[]>{
+            {1, new int[] { NodeIds[0], NodeIds[1], NodeIds[2] }},
+            {2, new int[] { NodeIds[3], NodeIds[4], NodeIds[5] }},
+            {3, new int[] { NodeIds[0], NodeIds[1], NodeIds[4], NodeIds[3] }},
+            {4, new int[] { NodeIds[1], NodeIds[2], NodeIds[5], NodeIds[4] }},
+            {5, new int[] { NodeIds[2], NodeIds[0], NodeIds[3], NodeIds[5] }}
+        };
+        }
 
         public Prism351(int[] nodeIds)
          : base(LeElementType.Prism351, nodeIds)
@@ -86,21 +96,9 @@ namespace Lemur.Mesh.Element
 
         public override int[] GetSurfaceNodesFromId(int id)
         {
-            switch (id)
-            {
-                case 1:
-                    return new int[] { NodeIds[0], NodeIds[1], NodeIds[2] };
-                case 2:
-                    return new int[] { NodeIds[3], NodeIds[4], NodeIds[5] };
-                case 3:
-                    return new int[] { NodeIds[0], NodeIds[1], NodeIds[4], NodeIds[3] };
-                case 4:
-                    return new int[] { NodeIds[1], NodeIds[2], NodeIds[5], NodeIds[4] };
-                case 5:
-                    return new int[] { NodeIds[2], NodeIds[0], NodeIds[3], NodeIds[5] };
-                default:
-                    throw new ArgumentException("Invalid surface id.");
-            }
+            return id >= 1 && id <= 5
+             ? GetFace()[id]
+             : throw new ArgumentException("Invalid surface id.");
         }
     }
 }
