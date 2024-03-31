@@ -4,13 +4,13 @@ namespace Lemur.Mesh.Element
 {
     public class Hex362 : LeSolidElementBase
     {
+        public override LeElementType ElementType => LeElementType.Hex362;
         public override Dictionary<int, int[]> GetFace()
         {
             throw new System.NotImplementedException();
         }
 
-        public Hex362(LeElementType elementType, int[] nodeIds)
-         : base(elementType, nodeIds)
+        public Hex362(int[] nodeIds) : base(nodeIds)
         {
         }
 

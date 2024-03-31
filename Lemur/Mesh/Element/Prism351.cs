@@ -5,6 +5,7 @@ namespace Lemur.Mesh.Element
 {
     public class Prism351 : LeSolidElementBase
     {
+        public override LeElementType ElementType => LeElementType.Prism351;
         public override Dictionary<int, int[]> GetFace()
         {
             return new Dictionary<int, int[]>{
@@ -16,8 +17,7 @@ namespace Lemur.Mesh.Element
         };
         }
 
-        public Prism351(int[] nodeIds)
-         : base(LeElementType.Prism351, nodeIds)
+        public Prism351(int[] nodeIds) : base(nodeIds)
         {
         }
 

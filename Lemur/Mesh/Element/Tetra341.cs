@@ -7,6 +7,7 @@ namespace Lemur.Mesh.Element
 {
     public class Tetra341 : LeSolidElementBase
     {
+        public override LeElementType ElementType => LeElementType.Tetra341;
         public override Dictionary<int, int[]> GetFace()
         {
             return new Dictionary<int, int[]>
@@ -18,13 +19,11 @@ namespace Lemur.Mesh.Element
         };
         }
 
-        public Tetra341(int[] nodeIds)
-         : base(LeElementType.Tetra341, nodeIds)
+        public Tetra341(int[] nodeIds) : base(nodeIds)
         {
         }
 
-        public Tetra341(int id, int[] nodeIds)
-         : base(LeElementType.Tetra341, id, nodeIds)
+        public Tetra341(int id, int[] nodeIds) : base(id, nodeIds)
         {
         }
 

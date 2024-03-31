@@ -6,23 +6,22 @@ namespace Lemur.Mesh.Element
 {
     public abstract class LeElementBase
     {
-        public LeElementType ElementType { get; private set; }
+        public abstract LeElementType ElementType { get; }
         public int Id { get; private set; }
         public int[] NodeIds { get; private set; }
 
-        public LeElementBase(LeElementType elementType, int[] nodeIds)
+        public LeElementBase(int[] nodeIds)
         {
-            Ctor(elementType, -1, nodeIds);
+            Ctor(-1, nodeIds);
         }
 
-        public LeElementBase(LeElementType elementType, int id, int[] nodeIds)
+        public LeElementBase(int id, int[] nodeIds)
         {
-            Ctor(elementType, id, nodeIds);
+            Ctor(id, nodeIds);
         }
 
-        private void Ctor(LeElementType elementType, int id, int[] nodeIds)
+        private void Ctor(int id, int[] nodeIds)
         {
-            ElementType = elementType;
             Id = id;
             CheckNodeLength(nodeIds.Length);
             NodeIds = nodeIds;

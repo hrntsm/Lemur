@@ -5,6 +5,7 @@ namespace Lemur.Mesh.Element
 {
     public class Hex361 : LeSolidElementBase
     {
+        public override LeElementType ElementType => LeElementType.Hex361;
         public override Dictionary<int, int[]> GetFace()
         {
             return new Dictionary<int, int[]>{
@@ -17,8 +18,7 @@ namespace Lemur.Mesh.Element
             };
         }
 
-        public Hex361(int[] nodeIds)
-         : base(LeElementType.Hex361, nodeIds)
+        public Hex361(int[] nodeIds) : base(nodeIds)
         {
         }
 

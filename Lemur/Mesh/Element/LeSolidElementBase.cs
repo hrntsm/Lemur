@@ -7,13 +7,13 @@ namespace Lemur.Mesh.Element
         public abstract Dictionary<int, int[]> GetFace();
         public int FaceCount { get { return GetFace().Count; } }
 
-        protected LeSolidElementBase(LeElementType elementType, int[] nodeIds)
-         : base(elementType, nodeIds)
+        protected LeSolidElementBase(int[] nodeIds)
+         : base(nodeIds)
         {
         }
 
-        protected LeSolidElementBase(LeElementType elementType, int id, int[] nodeIds)
-         : base(elementType, id, nodeIds)
+        protected LeSolidElementBase(int id, int[] nodeIds)
+         : base(id, nodeIds)
         {
         }
     }

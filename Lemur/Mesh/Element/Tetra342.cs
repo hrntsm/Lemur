@@ -5,13 +5,13 @@ namespace Lemur.Mesh.Element
 {
     public class Tetra342 : LeSolidElementBase
     {
+        public override LeElementType ElementType => LeElementType.Tetra342;
         public override Dictionary<int, int[]> GetFace()
         {
             throw new NotImplementedException();
         }
 
-        public Tetra342(int[] nodeIds)
-         : base(LeElementType.Tetra342, nodeIds)
+        public Tetra342(int[] nodeIds) : base(nodeIds)
         {
         }
 
