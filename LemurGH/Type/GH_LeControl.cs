@@ -63,6 +63,13 @@ namespace LemurGH.Type
             {
                 sb.AppendLine($"  - {leWrite.LeWriteType}");
             }
+            // sb.AppendLine($"- LeSection:");
+            // sb.AppendLine($"  - {Value.LeSection}");
+            sb.AppendLine($"- LeBC:");
+            foreach (LeBoundaryCondition leBC in Value.LeBoundaryConditions)
+            {
+                sb.AppendLine($"  - TargetGroup:{leBC.TargetGroupName}, Type:{leBC.Type}");
+            }
             return sb.ToString();
         }
 

@@ -2,6 +2,8 @@
     "dotnet.defaultSolution": "Lemur.sln",
     "cSpell.words": [
         "BBAR",
+        "CLOAD",
+        "DLOAD",
         "EGROUP",
         "EGRP",
         "ELEMCHECK",
@@ -12,6 +14,7 @@
         "FBAR",
         "Fistr",
         "FTRACTION",
+        "GRPID",
         "Hecmw",
         "ISTRAIN",
         "ISTRESS",

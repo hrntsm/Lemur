@@ -1,4 +1,4 @@
-using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
@@ -10,6 +10,9 @@ namespace Lemur.Control
         public LeSolutionType SolutionType { get; }
         public LeWrite[] LeWrites { get; }
         public LeSection LeSection { get; }
+        public LeBoundaryCondition[] LeBoundaryConditions => _leBC.ToArray();
+
+        private readonly List<LeBoundaryCondition> _leBC;
 
         public LeControl()
         {
@@ -21,6 +24,7 @@ namespace Lemur.Control
                 new LeWrite(LeWriteType.LOG),
             };
             LeSection = new LeSection();
+            _leBC = new List<LeBoundaryCondition>();
         }
 
         public LeControl(LeControl other)
@@ -33,6 +37,17 @@ namespace Lemur.Control
                 LeWrites[i] = new LeWrite(other.LeWrites[i]);
             }
             LeSection = new LeSection(other.LeSection);
+            _leBC = new List<LeBoundaryCondition>(other.LeBoundaryConditions);
+        }
+
+        public void AddBC(LeBoundaryCondition leBC)
+        {
+            _leBC.Add(leBC);
+        }
+
+        public void ClearBC()
+        {
+            _leBC.Clear();
         }
 
         public string ToCnt()
@@ -50,6 +65,11 @@ namespace Lemur.Control
 
             // 多分フォーマットがあってなくてFistrでエラーになる
             // sb.AppendLine(LeSection.ToCnt());
+
+            foreach (LeBoundaryCondition leBC in _leBC)
+            {
+                sb.AppendLine(leBC.ToCnt());
+            }
 
             sb.AppendLine(VtkOutput());
             sb.AppendLine($"!END");
