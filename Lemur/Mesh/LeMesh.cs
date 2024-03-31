@@ -230,7 +230,7 @@ namespace Lemur.Mesh
             {
                 for (int i = 1; i <= element.FaceCount; i++)
                 {
-                    int[] faceNodeIds = element.GetSurfaceNodesFromId(i);
+                    int[] faceNodeIds = element.FaceToNodes(i);
                     Array.Sort(faceNodeIds);
                     string key = CreateKey(faceNodeIds);
                     if (!nodeFace.TryGetValue(key, out List<(int, int)> value))

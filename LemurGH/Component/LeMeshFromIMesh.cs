@@ -65,13 +65,14 @@ namespace LemurGH.Component
             {
                 elements.AddRange(elementList);
             }
+            IEnumerable<LeSolidElementBase> solids = elements.Where(e => e is LeSolidElementBase).Cast<LeSolidElementBase>();
 
             var mesh = new Mesh();
             mesh.Vertices.AddVertices(leMesh.Nodes.Select(n => new Point3d(n.X, n.Y, n.Z)));
             foreach ((int, int) a in aa)
             {
-                LeElementBase e = elements.FirstOrDefault(elem => elem.Id == a.Item1);
-                int[] nodes = e?.GetSurfaceNodesFromId(a.Item2);
+                LeSolidElementBase solid = solids.FirstOrDefault(elem => elem.Id == a.Item1);
+                int[] nodes = solid?.FaceToNodes(a.Item2);
                 if (nodes != null)
                 {
                     if (nodes.Length == 3)

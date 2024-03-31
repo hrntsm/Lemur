@@ -28,9 +28,6 @@ namespace Lemur.Mesh.Element
         }
 
         protected abstract void CheckNodeLength(int length);
-        public abstract int GetSurfaceId(int[] ids);
-        public abstract int[] GetSurfaceNodesFromId(int id);
-
         public string ToMsh(int id)
         {
             var sb = new StringBuilder();

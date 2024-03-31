@@ -19,43 +19,6 @@ namespace Lemur.Mesh.Element.Tests
         }
 
         [Fact]
-        public void GetSurfaceIdTest()
-        {
-            var element = new Tetra341([1, 2, 3, 4]);
-            Assert.Equal(1, element.GetSurfaceId([1, 2, 3]));
-            Assert.Equal(1, element.GetSurfaceId([1, 3, 2]));
-            Assert.Equal(1, element.GetSurfaceId([2, 1, 3]));
-            Assert.Equal(1, element.GetSurfaceId([2, 3, 1]));
-            Assert.Equal(1, element.GetSurfaceId([3, 1, 2]));
-            Assert.Equal(1, element.GetSurfaceId([3, 2, 1]));
-
-            Assert.Equal(2, element.GetSurfaceId([1, 2, 4]));
-            Assert.Equal(3, element.GetSurfaceId([2, 3, 4]));
-            Assert.Equal(4, element.GetSurfaceId([1, 3, 4]));
-        }
-
-        [Fact]
-        public void GetSurfaceIdWithInvalidNodeLengthTest()
-        {
-            var element = new Tetra341([1, 2, 3, 4]);
-            Assert.Throws<ArgumentException>(() => element.GetSurfaceId([1, 2]));
-        }
-
-        [Fact]
-        public void GetSurfaceIdWithInvalidSurfaceNodesTest()
-        {
-            var element = new Tetra341([1, 2, 3, 4]);
-            Assert.Throws<ArgumentException>(() => element.GetSurfaceId([1, 2, 5]));
-        }
-
-        [Fact]
-        public void GetSurfaceIdWithInvalidSurfaceNodeOrderTest()
-        {
-            var element = new Tetra341([1, 2, 3, 4]);
-            Assert.Throws<ArgumentException>(() => element.GetSurfaceId([2, 3, 3]));
-        }
-
-        [Fact]
         public void ToMshTest()
         {
             var element1 = new Tetra341([1, 2, 3, 4]);
