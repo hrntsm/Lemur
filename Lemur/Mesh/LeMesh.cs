@@ -22,10 +22,12 @@ namespace Lemur.Mesh
         public NGroup[] NodeGroups => _groups.Where(g => g.Type == LeGroupType.Node).Cast<NGroup>().ToArray();
         public EGroup[] ElementGroups => _groups.Where(g => g.Type == LeGroupType.Element).Cast<EGroup>().ToArray();
         public SGroup[] SurfaceGroups => _groups.Where(g => g.Type == LeGroupType.Surface).Cast<SGroup>().ToArray();
+        public LeMaterial[] Materials => _materials.ToArray();
 
         private readonly string _header;
         private readonly List<LeElementList> _elements;
         private readonly List<LeGroupBase> _groups;
+        private readonly List<LeMaterial> _materials;
 
         public LeMesh(string header)
         {
@@ -33,6 +35,7 @@ namespace Lemur.Mesh
             Nodes = new LeNodeList();
             _elements = new List<LeElementList>();
             _groups = new List<LeGroupBase>();
+            _materials = new List<LeMaterial>();
         }
 
         public LeMesh(LeMesh other)
@@ -41,6 +44,7 @@ namespace Lemur.Mesh
             Nodes = new LeNodeList(other.Nodes);
             _elements = new List<LeElementList>(other._elements);
             _groups = new List<LeGroupBase>(other._groups);
+            _materials = new List<LeMaterial>(other._materials);
         }
 
         public void AddNode(LeNode node)
@@ -78,6 +82,16 @@ namespace Lemur.Mesh
         public void ClearGroup()
         {
             _groups.Clear();
+        }
+
+        public void AddMaterial(LeMaterial material)
+        {
+            _materials.Add(material);
+        }
+
+        public void ClearMaterial()
+        {
+            _materials.Clear();
         }
 
         private void CheckNodeExistence(LeElementBase element)
@@ -136,35 +150,32 @@ namespace Lemur.Mesh
             var sb = new StringBuilder();
             sb.AppendLine("!HEADER");
             sb.AppendLine(" " + _header);
-            sb.Append(Nodes.ToMsh());
+            sb.AppendLine(Nodes.ToMsh());
             int startId = 1;
             foreach (LeElementList elementList in _elements)
             {
-                sb.Append(elementList.ToMsh(startId));
+                sb.AppendLine(elementList.ToMsh(startId));
                 startId += elementList.Count;
             }
-            WriteMaterial(sb);
-            WriteGroup(sb);
+            AppendGroup(sb);
+            AppendMaterial(sb);
 
             sb.AppendLine("!END");
             return sb.ToString();
         }
 
-        private void WriteMaterial(StringBuilder sb)
+        private void AppendMaterial(StringBuilder sb)
         {
-            sb.AppendLine("!MATERIAL, NAME=M1, ITEM=2");
-            sb.AppendLine("!ITEM=1, SUBITEM=2");
-            sb.AppendLine("210000.0, 0.3");
-            sb.AppendLine("!ITEM=2, SUBITEM=1");
-            sb.AppendLine("7.85e-6");
-            foreach (LeElementList elementList in _elements)
+            if (_materials.Count > 0)
             {
-                string eGroup = elementList.ElementType + "_AUTO";
-                sb.AppendLine($"!SECTION, TYPE=SOLID, EGRP={eGroup}, MATERIAL=M1");
+                foreach (LeMaterial material in _materials)
+                {
+                    sb.AppendLine(material.ToMsh());
+                }
             }
         }
 
-        private void WriteGroup(StringBuilder sb)
+        private void AppendGroup(StringBuilder sb)
         {
             if (NodeGroups != null)
             {

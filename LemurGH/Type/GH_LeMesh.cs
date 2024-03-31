@@ -18,8 +18,8 @@ namespace LemurGH.Type
         {
         }
 
-        public GH_LeMesh(GH_LeMesh leMesh)
-         : base(leMesh.Value)
+        public GH_LeMesh(GH_LeMesh other)
+         : base(other.Value)
         {
         }
 
@@ -61,7 +61,23 @@ namespace LemurGH.Type
             sb.AppendLine($"- {Value.Nodes.Count} nodes");
             AppendElement(sb);
             AppendGroup(sb);
+            AppendMaterial(sb);
             return sb.ToString();
+        }
+
+        private void AppendMaterial(StringBuilder sb)
+        {
+            sb.AppendLine($"- Material:");
+            if (Value.Materials != null)
+            {
+                foreach (LeMaterial material in Value.Materials)
+                {
+                    string targets = material.TargetEGroups != null
+                        ? string.Join(", ", material.TargetEGroups)
+                        : "None";
+                    sb.AppendLine($"  - {material.Name}: {targets}");
+                }
+            }
         }
 
         private void AppendGroup(StringBuilder sb)

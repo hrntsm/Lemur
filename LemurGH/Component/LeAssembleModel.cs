@@ -27,6 +27,7 @@ namespace LemurGH.Component
         {
             pManager.AddParameter(new Param_LeMesh(), "LeMesh", "LeMesh", "Input Lemur Mesh", GH_ParamAccess.item);
             pManager.AddParameter(new Param_LeGroup(), "LeGrp", "LeGrp", "Input Lemur Group settings", GH_ParamAccess.list);
+            pManager.AddParameter(new Param_LeMaterial(), "LeMat", "LeMat", "Input Lemur Material settings", GH_ParamAccess.list);
             pManager.AddParameter(new Param_LeControl(), "LeCnt", "LeCnt", "Input Lemur Control settings", GH_ParamAccess.item);
         }
 
@@ -38,28 +39,41 @@ namespace LemurGH.Component
         {
             GH_LeMesh ghLeMesh = null;
             var ghLeGroups = new List<GH_LeGroup>();
+            var ghLeMat = new List<GH_LeMaterial>();
             GH_LeControl ghLeCnt = null;
             if (!DA.GetData(0, ref ghLeMesh)) return;
             if (!DA.GetDataList(1, ghLeGroups)) return;
-            if (!DA.GetData(2, ref ghLeCnt)) return;
+            if (!DA.GetDataList(2, ghLeMat)) return;
+            if (!DA.GetData(3, ref ghLeCnt)) return;
 
             LeMesh leMesh = ghLeMesh.Value;
             var leGroups = ghLeGroups.Select(x => x.Value).ToList();
+            var leMats = ghLeMat.Select(x => x.Value).ToList();
             LeControl leCnt = ghLeCnt.Value;
 
-            SetLMeshToGroup(leMesh, leGroups);
+            SetLeMeshToGroup(leMesh, leGroups);
+            SetLeMeshToMaterial(leMesh, leMats);
             var leHecmwControl = new LeHecmwControl();
 
             var leAsm = new LeAssemble(leMesh, leCnt, leHecmwControl);
             DA.SetData(0, new GH_LeAssemble(leAsm));
         }
 
-        private static void SetLMeshToGroup(LeMesh leMesh, List<LeGroupBase> leGroups)
+        private static void SetLeMeshToGroup(LeMesh leMesh, List<LeGroupBase> leGroups)
         {
             leMesh.ClearGroup();
             foreach (LeGroupBase leGroup in leGroups.Where(leGroup => leGroup != null))
             {
                 leMesh.AddGroup(leGroup);
+            }
+        }
+
+        private static void SetLeMeshToMaterial(LeMesh leMesh, List<LeMaterial> leMats)
+        {
+            leMesh.ClearMaterial();
+            foreach (LeMaterial leMat in leMats.Where(leMat => leMat != null))
+            {
+                leMesh.AddMaterial(leMat);
             }
         }
 
