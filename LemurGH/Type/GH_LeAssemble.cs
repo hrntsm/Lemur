@@ -1,3 +1,5 @@
+using System.Text;
+
 using Grasshopper.Kernel.Types;
 
 using Lemur;
@@ -50,7 +52,13 @@ namespace LemurGH.Type
                 return base.CastFrom(source);
             }
         }
-        public override string ToString() => Value.ToString();
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine(new GH_LeMesh(Value.LeMesh).ToString());
+            sb.AppendLine(new GH_LeControl(Value.LeControl).ToString());
+            return sb.ToString();
+        }
 
         public class GH_LeAssembleProxy : GH_GooProxy<GH_LeAssemble>
         {

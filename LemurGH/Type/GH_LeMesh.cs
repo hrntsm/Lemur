@@ -3,6 +3,7 @@ using System.Text;
 using Grasshopper.Kernel.Types;
 
 using Lemur.Mesh;
+using Lemur.Mesh.Group;
 
 namespace LemurGH.Type
 {
@@ -58,12 +59,47 @@ namespace LemurGH.Type
             var sb = new StringBuilder();
             sb.AppendLine($"LeMesh:");
             sb.AppendLine($"- {Value.Nodes.Count} nodes");
+            AppendElement(sb);
+            AppendGroup(sb);
+            return sb.ToString();
+        }
+
+        private void AppendGroup(StringBuilder sb)
+        {
+            sb.AppendLine($"- Group:");
+            if (Value.NodeGroups != null)
+            {
+                sb.AppendLine($"  - Node Group:");
+                foreach (NGroup group in Value.NodeGroups)
+                {
+                    sb.AppendLine($"    - {group.Name}: {group.Ids.Length} nodes");
+                }
+            }
+            if (Value.ElementGroups != null)
+            {
+                sb.AppendLine($"  - Element Group:");
+                foreach (EGroup group in Value.ElementGroups)
+                {
+                    sb.AppendLine($"    - {group.Name}: {group.Ids.Length} elements");
+                }
+            }
+            if (Value.SurfaceGroups != null)
+            {
+                sb.AppendLine($"  - Surface Group:");
+                foreach (SGroup group in Value.SurfaceGroups)
+                {
+                    sb.AppendLine($"    - {group.Name}: {group.Ids.Length} faces");
+                }
+            }
+        }
+
+        private void AppendElement(StringBuilder sb)
+        {
             sb.AppendLine($"- Element:");
             foreach (LeElementList elementList in Value.Elements)
             {
                 sb.AppendLine($"  - {elementList.Count} {elementList.ElementType} elements");
             }
-            return sb.ToString();
         }
 
         public class GH_LeMeshProxy : GH_GooProxy<GH_LeMesh>

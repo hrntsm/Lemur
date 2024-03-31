@@ -11,16 +11,14 @@ using Lemur.Mesh.Element;
 using LemurGH.Param;
 using LemurGH.Type;
 
-using Rhino.Geometry;
-
-namespace LemurGH.Component
+namespace LemurGH.Component.Mesh
 {
     public class LeMeshFromIMesh : GH_Component
     {
         public LeMeshFromIMesh()
           : base("LeMeshFromIMesh", "LeFI",
             "Create Lemur mesh from Iguana mesh",
-            "Lemur", "Lemur")
+            "Lemur", "Mesh")
         {
         }
 
@@ -51,7 +49,7 @@ namespace LemurGH.Component
             ConvertIElementToFElement(leMesh, iMesh);
 
             leMesh.ComputeNodeFaceDataStructure();
-            Mesh mesh = Utils.Preview.LeFaceToRhinoMesh(leMesh, leMesh.FaceMesh);
+            Rhino.Geometry.Mesh mesh = Utils.Preview.LeFaceToRhinoMesh(leMesh, leMesh.FaceMesh);
 
             DA.SetData(0, new GH_LeMesh(leMesh));
             DA.SetData(1, mesh);

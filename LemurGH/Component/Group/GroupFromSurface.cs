@@ -15,10 +15,10 @@ using Rhino.Geometry;
 
 namespace LemurGH.Component.Group
 {
-    public class ConstructGroupFromSurface : GH_Component
+    public class GroupFromSurface : GH_Component
     {
-        public ConstructGroupFromSurface()
-          : base("ConstructGroupFromSurface", "ConGrpSurf",
+        public GroupFromSurface()
+          : base("GroupFromSurface", "ConGrpSurf",
             "Construct Lemur Group from surface",
             "Lemur", "Group")
         {
@@ -26,12 +26,11 @@ namespace LemurGH.Component.Group
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
-            pManager.AddTextParameter("Name", "Name", "Group name", GH_ParamAccess.item, string.Empty);
+            pManager.AddTextParameter("Name", "Name", "Group name", GH_ParamAccess.item);
             pManager.AddParameter(new Param_LeMesh(), "LeMesh", "LeMesh", "LeMesh", GH_ParamAccess.item);
             pManager.AddSurfaceParameter("Surface", "Srf", "Surface", GH_ParamAccess.item);
             pManager.AddIntegerParameter("GroupType", "Type", "0:Node, 1:Element, 2:Surface", GH_ParamAccess.item, 0);
             pManager.AddNumberParameter("Tolerance", "Tol", "Tolerance", GH_ParamAccess.item, 1e-6);
-            Params.Input[0].Optional = true;
             Params.Input[3].Optional = true;
             Params.Input[4].Optional = true;
         }
@@ -44,15 +43,15 @@ namespace LemurGH.Component.Group
 
         protected override void SolveInstance(IGH_DataAccess DA)
         {
+            string name = string.Empty;
             GH_LeMesh ghLeMesh = null;
             Surface surface = null;
+            if (!DA.GetData(0, ref name)) return;
             if (!DA.GetData(1, ref ghLeMesh)) return;
             if (!DA.GetData(2, ref surface)) return;
 
-            string name = string.Empty;
             int type = 0;
             double tol = 1e-6;
-            DA.GetData(0, ref name);
             DA.GetData(3, ref type);
             DA.GetData(4, ref tol);
 
@@ -93,7 +92,7 @@ namespace LemurGH.Component.Group
                     break;
             }
 
-            DA.SetData(0, group);
+            DA.SetData(0, new GH_LeGroup(group));
             DA.SetData(1, geometry);
         }
 

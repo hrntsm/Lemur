@@ -19,9 +19,9 @@ namespace Lemur.Mesh
         /// key:nodeId, value:(elementId, faceId)[]
         /// </summary>
         public Dictionary<int, (int, int)[]> NodeFaces { get; private set; }
-        public LeGroupBase[] NodeGroups => _groups.Where(g => g.Type == LeGroupType.Node).ToArray();
-        public LeGroupBase[] ElementGroups => _groups.Where(g => g.Type == LeGroupType.Element).ToArray();
-        public LeGroupBase[] SurfaceGroups => _groups.Where(g => g.Type == LeGroupType.Surface).ToArray();
+        public NGroup[] NodeGroups => _groups.Where(g => g.Type == LeGroupType.Node).Cast<NGroup>().ToArray();
+        public EGroup[] ElementGroups => _groups.Where(g => g.Type == LeGroupType.Element).Cast<EGroup>().ToArray();
+        public SGroup[] SurfaceGroups => _groups.Where(g => g.Type == LeGroupType.Surface).Cast<SGroup>().ToArray();
 
         private readonly string _header;
         private readonly List<LeElementList> _elements;
@@ -67,8 +67,17 @@ namespace Lemur.Mesh
 
         public void AddGroup(LeGroupBase group)
         {
+            if (group == null)
+            {
+                throw new ArgumentNullException(nameof(group));
+            }
             CheckGroupExistence(group);
             _groups.Add(group);
+        }
+
+        public void ClearGroup()
+        {
+            _groups.Clear();
         }
 
         private void CheckNodeExistence(LeElementBase element)
@@ -86,7 +95,7 @@ namespace Lemur.Mesh
         private void CheckGroupExistence(LeGroupBase group)
         {
             IEnumerable<int> nodeIds = Nodes.Select(n => n.Id);
-            IEnumerable<int> elementIds = _elements.SelectMany(e => e.SelectMany(el => el.NodeIds));
+            IEnumerable<int> elementIds = AllElements.Select(e => e.Id);
 
             switch (group.Type)
             {

@@ -7,14 +7,14 @@ using Lemur.Control;
 using LemurGH.Param;
 using LemurGH.Type;
 
-namespace LemurGH.Component
+namespace LemurGH.Component.Control
 {
     public class ConstructLeControl : GH_Component
     {
         public ConstructLeControl()
           : base("ConstructLeControl", "ConLeCnt",
             "Construct Lemur Control settings",
-            "Lemur", "Lemur")
+            "Lemur", "Control")
         {
         }
 
