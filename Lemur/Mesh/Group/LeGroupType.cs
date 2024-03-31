@@ -1,6 +1,6 @@
 namespace Lemur.Mesh.Group
 {
-    public enum GroupType
+    public enum LeGroupType
     {
         Node,
         Element,

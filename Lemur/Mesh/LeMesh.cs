@@ -12,52 +12,27 @@ namespace Lemur.Mesh
     public class LeMesh
     {
         public LeNodeList Nodes { get; }
-        public LeElementList[] Elements
-        {
-            get
-            {
-                return _elements.ToArray();
-            }
-        }
-        public (int, int)[] FaceMesh
-        {
-            get
-            {
-                return ComputeFaceMesh();
-            }
-        }
-        public GroupBase[] NodeGroups
-        {
-            get
-            {
-                return _groups.Where(g => g.Type == GroupType.Node).ToArray();
-            }
-        }
-        public GroupBase[] ElementGroups
-        {
-            get
-            {
-                return _groups.Where(g => g.Type == GroupType.Element).ToArray();
-            }
-        }
-        public GroupBase[] SurfaceGroups
-        {
-            get
-            {
-                return _groups.Where(g => g.Type == GroupType.Surface).ToArray();
-            }
-        }
+        public LeElementList[] Elements => _elements.ToArray();
+        public LeElementBase[] AllElements => _elements.SelectMany(e => e).ToArray();
+        public (int, int)[] FaceMesh => ComputeFaceMesh();
+        /// <summary>
+        /// key:nodeId, value:(elementId, faceId)[]
+        /// </summary>
+        public Dictionary<int, (int, int)[]> NodeFaces { get; private set; }
+        public LeGroupBase[] NodeGroups => _groups.Where(g => g.Type == LeGroupType.Node).ToArray();
+        public LeGroupBase[] ElementGroups => _groups.Where(g => g.Type == LeGroupType.Element).ToArray();
+        public LeGroupBase[] SurfaceGroups => _groups.Where(g => g.Type == LeGroupType.Surface).ToArray();
 
         private readonly string _header;
         private readonly List<LeElementList> _elements;
-        private readonly List<GroupBase> _groups;
+        private readonly List<LeGroupBase> _groups;
 
         public LeMesh(string header)
         {
             _header = header;
             Nodes = new LeNodeList();
             _elements = new List<LeElementList>();
-            _groups = new List<GroupBase>();
+            _groups = new List<LeGroupBase>();
         }
 
         public LeMesh(LeMesh other)
@@ -65,7 +40,7 @@ namespace Lemur.Mesh
             _header = other._header;
             Nodes = new LeNodeList(other.Nodes);
             _elements = new List<LeElementList>(other._elements);
-            _groups = new List<GroupBase>(other._groups);
+            _groups = new List<LeGroupBase>(other._groups);
         }
 
         public void AddNode(LeNode node)
@@ -90,7 +65,7 @@ namespace Lemur.Mesh
             list.AddElement(element);
         }
 
-        public void AddGroup(GroupBase group)
+        public void AddGroup(LeGroupBase group)
         {
             CheckGroupExistence(group);
             _groups.Add(group);
@@ -108,14 +83,14 @@ namespace Lemur.Mesh
             }
         }
 
-        private void CheckGroupExistence(GroupBase group)
+        private void CheckGroupExistence(LeGroupBase group)
         {
             IEnumerable<int> nodeIds = Nodes.Select(n => n.Id);
             IEnumerable<int> elementIds = _elements.SelectMany(e => e.SelectMany(el => el.NodeIds));
 
             switch (group.Type)
             {
-                case GroupType.Node when group is NGroup nGroup:
+                case LeGroupType.Node when group is NGroup nGroup:
                     foreach (int id in nGroup.Ids)
                     {
                         if (!nodeIds.Contains(id))
@@ -124,7 +99,7 @@ namespace Lemur.Mesh
                         }
                     }
                     break;
-                case GroupType.Element when group is EGroup eGroup:
+                case LeGroupType.Element when group is EGroup eGroup:
                     foreach (int id in eGroup.Ids)
                     {
                         if (!elementIds.Contains(id))
@@ -133,7 +108,7 @@ namespace Lemur.Mesh
                         }
                     }
                     break;
-                case GroupType.Surface when group is SGroup sGroup:
+                case LeGroupType.Surface when group is SGroup sGroup:
                     foreach (int id in sGroup.Ids.Select(i => i.Item1))
                     {
                         if (!elementIds.Contains(id))
@@ -184,7 +159,7 @@ namespace Lemur.Mesh
         {
             if (NodeGroups != null)
             {
-                foreach (GroupBase group in NodeGroups)
+                foreach (LeGroupBase group in NodeGroups)
                 {
                     sb.Append(group.ToMsh());
                 }
@@ -192,7 +167,7 @@ namespace Lemur.Mesh
 
             if (ElementGroups != null)
             {
-                foreach (GroupBase group in ElementGroups)
+                foreach (LeGroupBase group in ElementGroups)
                 {
                     sb.Append(group.ToMsh());
                 }
@@ -200,7 +175,7 @@ namespace Lemur.Mesh
 
             if (SurfaceGroups != null)
             {
-                foreach (GroupBase group in SurfaceGroups)
+                foreach (LeGroupBase group in SurfaceGroups)
                 {
                     sb.Append(group.ToMsh());
                 }
@@ -217,6 +192,36 @@ namespace Lemur.Mesh
             File.WriteAllText(Path.Combine(dir, name), ToMsh());
         }
 
+        public void ComputeNodeFaceDataStructure()
+        {
+            var elements = new List<LeElementBase>();
+            foreach (LeElementList elementList in _elements)
+            {
+                elements.AddRange(elementList);
+            }
+
+            var nodeFaces = new Dictionary<int, List<(int, int)>>();
+            foreach (LeSolidElementBase element in elements.Where(e => e is LeSolidElementBase).Cast<LeSolidElementBase>())
+            {
+                Dictionary<int, int[]> nf = element.NodeFaces;
+                foreach (KeyValuePair<int, int[]> pair in nf)
+                {
+                    if (!nodeFaces.TryGetValue(pair.Key, out List<(int, int)> value))
+                    {
+                        value = new List<(int, int)>();
+                        nodeFaces[pair.Key] = value;
+                    }
+                    value.AddRange(pair.Value.Select(faceId => (element.Id, faceId)));
+                }
+            }
+
+            NodeFaces = nodeFaces.ToDictionary(pair => pair.Key, pair => pair.Value.ToArray());
+        }
+
+        /// <summary>
+        /// Compute face mesh from solid elements.
+        /// </summary>
+        /// <returns>(element id, face id)[]</returns>
         private (int, int)[] ComputeFaceMesh()
         {
             var elements = new List<LeElementBase>();

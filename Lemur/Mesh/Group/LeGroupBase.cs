@@ -1,11 +1,11 @@
 namespace Lemur.Mesh.Group
 {
-    public abstract class GroupBase
+    public abstract class LeGroupBase
     {
-        public GroupType Type { get; }
+        public LeGroupType Type { get; }
         public string Name { get; }
 
-        public GroupBase(GroupType type, string name)
+        public LeGroupBase(LeGroupType type, string name)
         {
             Type = type;
             Name = name;

@@ -6,8 +6,17 @@ namespace Lemur.Mesh.Element
     public abstract class LeSolidElementBase : LeElementBase
     {
         public int FaceCount { get { return FaceNodes.Count; } }
+        /// <summary>
+        /// Dictionary of face ids to node ids.
+        /// </summary>
+        /// <value>key:faceId, value:nodeIds</value>
         public abstract Dictionary<int, int[]> FaceNodes { get; }
         public abstract int[][] NodeFacesArray { get; }
+
+        /// <summary>
+        /// Dictionary of node ids to face ids.
+        /// </summary>
+        /// <value> key:nodeId, value:FaceIds</value>
         public Dictionary<int, int[]> NodeFaces
         {
             get

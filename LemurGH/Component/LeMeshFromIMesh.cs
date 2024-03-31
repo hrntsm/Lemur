@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 using Grasshopper.Kernel;
 
@@ -51,39 +50,11 @@ namespace LemurGH.Component
             ConvertINodeToFNode(leMesh, iMesh);
             ConvertIElementToFElement(leMesh, iMesh);
 
-            Mesh mesh = GetFaceMesh(leMesh);
+            leMesh.ComputeNodeFaceDataStructure();
+            Mesh mesh = Utils.Preview.LeFaceToRhinoMesh(leMesh, leMesh.FaceMesh);
 
             DA.SetData(0, new GH_LeMesh(leMesh));
             DA.SetData(1, mesh);
-        }
-
-        private static Mesh GetFaceMesh(LeMesh leMesh)
-        {
-            (int, int)[] aa = leMesh.FaceMesh;
-            var elements = new List<LeElementBase>();
-            foreach (LeElementList elementList in leMesh.Elements)
-            {
-                elements.AddRange(elementList);
-            }
-            IEnumerable<LeSolidElementBase> solids = elements.Where(e => e is LeSolidElementBase).Cast<LeSolidElementBase>();
-
-            var mesh = new Mesh();
-            mesh.Vertices.AddVertices(leMesh.Nodes.Select(n => new Point3d(n.X, n.Y, n.Z)));
-            foreach ((int, int) a in aa)
-            {
-                LeSolidElementBase solid = solids.FirstOrDefault(elem => elem.Id == a.Item1);
-                int[] nodes = solid?.FaceToNodes(a.Item2);
-                if (nodes != null)
-                {
-                    if (nodes.Length == 3)
-                        mesh.Faces.AddFace(new MeshFace(nodes[0] - 1, nodes[1] - 1, nodes[2] - 1));
-                    else if (nodes.Length == 4)
-                        mesh.Faces.AddFace(new MeshFace(nodes[0] - 1, nodes[1] - 1, nodes[2] - 1, nodes[3] - 1));
-                }
-            }
-            mesh.UnifyNormals();
-            mesh.Normals.ComputeNormals();
-            return mesh;
         }
 
         private static void ConvertINodeToFNode(LeMesh leMesh, IMesh iMesh)
@@ -108,11 +79,9 @@ namespace LemurGH.Component
                         break;
                 }
             }
-
         }
 
         protected override System.Drawing.Bitmap Icon => null;
-
         public override Guid ComponentGuid => new Guid("26ee9dc0-a3fc-4f4c-a1aa-f200f1f58411");
     }
 }

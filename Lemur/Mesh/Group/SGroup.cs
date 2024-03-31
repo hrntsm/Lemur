@@ -4,12 +4,12 @@ using System.Text;
 
 namespace Lemur.Mesh.Group
 {
-    public class SGroup : GroupBase
+    public class SGroup : LeGroupBase
     {
         public (int, int)[] Ids { get; }
 
         public SGroup(string name, (int, int)[] ids)
-            : base(GroupType.Surface, name)
+            : base(LeGroupType.Surface, name)
         {
             Ids = ids;
         }
