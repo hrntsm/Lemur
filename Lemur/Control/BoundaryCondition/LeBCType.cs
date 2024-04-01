@@ -1,4 +1,4 @@
-namespace Lemur.Control
+namespace Lemur.Control.BoundaryCondition
 {
     public enum LeBCType
     {

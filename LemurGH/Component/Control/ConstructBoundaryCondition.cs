@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Grasshopper.Kernel;
 
 using Lemur.Control;
+using Lemur.Control.BoundaryCondition;
 
 using LemurGH.Param;
 using LemurGH.Type;

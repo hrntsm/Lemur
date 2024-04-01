@@ -1,4 +1,4 @@
-namespace Lemur.Control
+namespace Lemur.Control.Section
 {
     public enum LeForm361Type
     {

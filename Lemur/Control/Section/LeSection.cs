@@ -1,6 +1,6 @@
 using System.Text;
 
-namespace Lemur.Control
+namespace Lemur.Control.Section
 {
     public class LeSection
     {

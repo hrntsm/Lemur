@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using System.Text;
 
-namespace Lemur.Control
+namespace Lemur.Control.Output
 {
     public class LeWrite
     {

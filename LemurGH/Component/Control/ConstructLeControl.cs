@@ -5,6 +5,7 @@ using System.Linq;
 using Grasshopper.Kernel;
 
 using Lemur.Control;
+using Lemur.Control.BoundaryCondition;
 
 using LemurGH.Param;
 using LemurGH.Type;

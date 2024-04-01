@@ -1,4 +1,4 @@
-namespace Lemur.Control
+namespace Lemur.Control.Output
 {
     public enum LeWriteType
     {

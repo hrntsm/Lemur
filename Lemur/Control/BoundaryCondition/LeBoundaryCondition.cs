@@ -1,7 +1,7 @@
 using System.Globalization;
 using System.Text;
 
-namespace Lemur.Control
+namespace Lemur.Control.BoundaryCondition
 {
     public class LeBoundaryCondition
     {

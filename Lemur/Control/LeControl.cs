@@ -2,6 +2,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
+using Lemur.Control.BoundaryCondition;
+using Lemur.Control.Output;
+using Lemur.Control.Section;
+
 namespace Lemur.Control
 {
     public class LeControl

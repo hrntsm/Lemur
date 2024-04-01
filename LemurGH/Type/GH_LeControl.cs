@@ -3,6 +3,8 @@ using System.Text;
 using Grasshopper.Kernel.Types;
 
 using Lemur.Control;
+using Lemur.Control.BoundaryCondition;
+using Lemur.Control.Output;
 
 namespace LemurGH.Type
 {
