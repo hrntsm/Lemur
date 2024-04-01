@@ -2,6 +2,7 @@
     "dotnet.defaultSolution": "Lemur.sln",
     "cSpell.words": [
         "BBAR",
+        "CGSTAB",
         "CLOAD",
         "DLOAD",
         "EGROUP",
@@ -15,11 +16,14 @@
         "Fistr",
         "fstr",
         "FTRACTION",
+        "GMRES",
         "GRPID",
         "Hecmw",
         "ISTRAIN",
         "ISTRESS",
+        "ITERLOG",
         "KMETIS",
+        "mkl",
         "mpiexec",
         "MSMPI",
         "NFORCE",
@@ -31,12 +35,15 @@
         "NSTRESS",
         "NTRACTION",
         "PMETIS",
+        "PRECOND",
         "PRINC",
         "PRINCV",
         "RELVEL",
         "SGROUP",
         "SGRP",
+        "SSOR",
         "STATICEIGEN",
+        "TIMELOG",
         "Topologic"
     ]
 }

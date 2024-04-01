@@ -5,6 +5,8 @@ using System.Text;
 using Lemur.Control.BoundaryCondition;
 using Lemur.Control.Output;
 using Lemur.Control.Section;
+using Lemur.Control.Solution;
+using Lemur.Control.Solver;
 
 namespace Lemur.Control
 {
@@ -15,12 +17,13 @@ namespace Lemur.Control
         public LeWrite[] LeWrites { get; }
         public LeSection LeSection { get; }
         public LeBoundaryCondition[] LeBoundaryConditions => _leBC.ToArray();
+        public LeSolver LeSolver { get; }
 
         private readonly List<LeBoundaryCondition> _leBC;
 
-        public LeControl()
+        public LeControl(LeSolutionType solutionType, LeSolver leSolver)
         {
-            SolutionType = LeSolutionType.STATIC;
+            SolutionType = solutionType;
             LeWrites = new LeWrite[]
             {
                 new LeWrite(LeWriteType.VISUAL),
@@ -29,6 +32,7 @@ namespace Lemur.Control
             };
             LeSection = new LeSection();
             _leBC = new List<LeBoundaryCondition>();
+            LeSolver = leSolver;
         }
 
         public LeControl(LeControl other)
@@ -42,6 +46,7 @@ namespace Lemur.Control
             }
             LeSection = new LeSection(other.LeSection);
             _leBC = new List<LeBoundaryCondition>(other.LeBoundaryConditions);
+            LeSolver = new LeSolver(other.LeSolver);
         }
 
         public void AddBC(LeBoundaryCondition leBC)
@@ -75,6 +80,7 @@ namespace Lemur.Control
                 sb.AppendLine(leBC.ToCnt());
             }
 
+            sb.AppendLine(LeSolver.ToCnt());
             sb.AppendLine(VtkOutput());
             sb.AppendLine($"!END");
             return sb.ToString();
