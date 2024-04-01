@@ -6,6 +6,7 @@ using Grasshopper.Kernel;
 
 using Lemur;
 using Lemur.Control;
+using Lemur.Hecmw;
 using Lemur.Mesh;
 using Lemur.Mesh.Group;
 

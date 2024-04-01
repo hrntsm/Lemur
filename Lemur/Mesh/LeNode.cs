@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Globalization;
 
 namespace Lemur.Mesh
@@ -8,6 +9,7 @@ namespace Lemur.Mesh
         public double X { get; set; }
         public double Y { get; set; }
         public double Z { get; set; }
+        public Dictionary<string, double[]> Results { get; private set; } = new Dictionary<string, double[]>();
 
         public LeNode(int id, double x, double y, double z)
         {

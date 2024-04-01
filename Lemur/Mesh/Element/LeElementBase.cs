@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 
@@ -9,6 +10,7 @@ namespace Lemur.Mesh.Element
         public abstract LeElementType ElementType { get; }
         public int Id { get; private set; }
         public int[] NodeIds { get; private set; }
+        public Dictionary<string, double[]> Results { get; private set; } = new Dictionary<string, double[]>();
 
         public LeElementBase(int[] nodeIds)
         {
