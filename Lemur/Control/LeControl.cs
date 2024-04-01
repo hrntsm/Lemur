@@ -3,6 +3,7 @@ using System.IO;
 using System.Text;
 
 using Lemur.Control.BoundaryCondition;
+using Lemur.Control.Contact;
 using Lemur.Control.Output;
 using Lemur.Control.Section;
 using Lemur.Control.Solution;
@@ -18,12 +19,13 @@ namespace Lemur.Control
         public LeWrite[] LeWrites { get; }
         public LeSection LeSection { get; }
         public LeBoundaryCondition[] LeBoundaryConditions => _leBC.ToArray();
+        public LeContactControl LeContactControl { get; }
         public LeStep LeStep { get; }
         public LeSolver LeSolver { get; }
 
         private readonly List<LeBoundaryCondition> _leBC;
 
-        public LeControl(LeSolutionType solutionType, LeStep leStep, LeSolver leSolver)
+        public LeControl(LeSolutionType solutionType, LeContactControl leContact, LeStep leStep, LeSolver leSolver)
         {
             SolutionType = solutionType;
             LeWrites = new LeWrite[]
@@ -34,6 +36,7 @@ namespace Lemur.Control
             };
             LeSection = new LeSection();
             _leBC = new List<LeBoundaryCondition>();
+            LeContactControl = leContact;
             LeStep = leStep;
             LeSolver = leSolver;
         }
@@ -49,6 +52,7 @@ namespace Lemur.Control
             }
             LeSection = new LeSection(other.LeSection);
             _leBC = new List<LeBoundaryCondition>(other.LeBoundaryConditions);
+            LeContactControl = new LeContactControl(other.LeContactControl);
             LeStep = new LeStep(other.LeStep);
             LeSolver = new LeSolver(other.LeSolver);
         }
@@ -107,7 +111,7 @@ namespace Lemur.Control
             {
                 sb.AppendLine(leBC.ToCnt());
             }
-
+            sb.AppendLine(LeContactControl.ToCnt());
             sb.AppendLine(LeStep.ToCnt());
             sb.AppendLine(LeSolver.ToCnt());
             sb.AppendLine(VtkOutput());

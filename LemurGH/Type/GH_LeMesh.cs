@@ -61,8 +61,18 @@ namespace LemurGH.Type
             sb.AppendLine($"- {Value.Nodes.Count} nodes");
             AppendElement(sb);
             AppendGroup(sb);
+            AppendContact(sb);
             AppendMaterial(sb);
             return sb.ToString();
+        }
+
+        private void AppendContact(StringBuilder sb)
+        {
+            sb.AppendLine($"- Contact:");
+            if (Value.Contact != null)
+            {
+                sb.AppendLine($"  - {Value.Contact.Name}: {Value.Contact.Slave} -> {Value.Contact.Master}");
+            }
         }
 
         private void AppendMaterial(StringBuilder sb)

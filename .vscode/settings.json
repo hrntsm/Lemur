@@ -1,6 +1,7 @@
 {
     "dotnet.defaultSolution": "Lemur.sln",
     "cSpell.words": [
+        "ALAGRANGE",
         "BBAR",
         "CGSTAB",
         "CLOAD",
@@ -15,6 +16,7 @@
         "ESTRESS",
         "FBAR",
         "Fistr",
+        "FSLID",
         "fstr",
         "FTRACTION",
         "GMRES",
@@ -43,6 +45,8 @@
         "RELVEL",
         "SGROUP",
         "SGRP",
+        "SLAGRANGE",
+        "SSLID",
         "SSOR",
         "STATICEIGEN",
         "SUBSTEPS",

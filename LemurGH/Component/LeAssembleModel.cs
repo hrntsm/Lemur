@@ -28,6 +28,7 @@ namespace LemurGH.Component
         {
             pManager.AddParameter(new Param_LeMesh(), "LeMesh", "LeMesh", "Input Lemur Mesh", GH_ParamAccess.item);
             pManager.AddParameter(new Param_LeGroup(), "LeGrp", "LeGrp", "Input Lemur Group settings", GH_ParamAccess.list);
+            pManager.AddParameter(new Param_LeContactMesh(), "LeCntMsh", "LeCntMsh", "Input Lemur Contact Mesh settings", GH_ParamAccess.item);
             pManager.AddParameter(new Param_LeMaterial(), "LeMat", "LeMat", "Input Lemur Material settings", GH_ParamAccess.list);
             pManager.AddParameter(new Param_LeControl(), "LeCnt", "LeCnt", "Input Lemur Control settings", GH_ParamAccess.item);
         }
@@ -40,20 +41,25 @@ namespace LemurGH.Component
         {
             GH_LeMesh ghLeMesh = null;
             var ghLeGroups = new List<GH_LeGroup>();
+            GH_LeContactMesh ghLeCntMsh = null;
             var ghLeMat = new List<GH_LeMaterial>();
             GH_LeControl ghLeCnt = null;
             if (!DA.GetData(0, ref ghLeMesh)) return;
             if (!DA.GetDataList(1, ghLeGroups)) return;
-            if (!DA.GetDataList(2, ghLeMat)) return;
-            if (!DA.GetData(3, ref ghLeCnt)) return;
+            if (!DA.GetData(2, ref ghLeCntMsh)) return;
+            if (!DA.GetDataList(3, ghLeMat)) return;
+            if (!DA.GetData(4, ref ghLeCnt)) return;
 
             LeMesh leMesh = ghLeMesh.Value;
             var leGroups = ghLeGroups.Select(x => x.Value).ToList();
+            LeContactMesh leContactMsh = ghLeCntMsh.Value;
             var leMats = ghLeMat.Select(x => x.Value).ToList();
             LeControl leCnt = ghLeCnt.Value;
 
             SetLeMeshToGroup(leMesh, leGroups);
             SetLeMeshToMaterial(leMesh, leMats);
+            leMesh.AddContact(leContactMsh);
+
             var leHecmwControl = new LeHecmwControl();
 
             var leAsm = new LeAssemble(leMesh, leCnt, leHecmwControl);

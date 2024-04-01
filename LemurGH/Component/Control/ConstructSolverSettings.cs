@@ -57,6 +57,7 @@ namespace LemurGH.Component.Control
 
             var solver = new LeSolver((LeSolverMethod)method, (LePrecondition)precond, maxIter, residual);
             DA.SetData(0, new GH_LeSolver(solver));
+            Message = $"{(LeSolverMethod)method}, {(LePrecondition)precond}";
         }
 
         public override Guid ComponentGuid => new Guid("1408200f-99cb-4ef4-89ab-775fdc13fc45");

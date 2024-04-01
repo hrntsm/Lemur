@@ -23,6 +23,7 @@ namespace Lemur.Mesh
         public EGroup[] ElementGroups => _groups.Where(g => g.Type == LeGroupType.Element).Cast<EGroup>().ToArray();
         public SGroup[] SurfaceGroups => _groups.Where(g => g.Type == LeGroupType.Surface).Cast<SGroup>().ToArray();
         public LeMaterial[] Materials => _materials.ToArray();
+        public LeContactMesh Contact { get; private set; }
 
         private readonly string _header;
         private readonly List<LeElementList> _elements;
@@ -94,6 +95,12 @@ namespace Lemur.Mesh
             _materials.Clear();
         }
 
+        public void AddContact(LeContactMesh contact)
+        {
+            Contact = contact
+             ?? throw new ArgumentNullException(nameof(contact));
+        }
+
         private void CheckNodeExistence(LeElementBase element)
         {
             IEnumerable<int> nodeIds = Nodes.Select(n => n.Id);
@@ -158,6 +165,7 @@ namespace Lemur.Mesh
                 startId += elementList.Count;
             }
             AppendGroup(sb);
+            sb.AppendLine(Contact?.ToMsh());
             AppendMaterial(sb);
 
             sb.AppendLine("!END");

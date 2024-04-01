@@ -6,6 +6,7 @@ using Lemur.Control;
 using Lemur.Control.BoundaryCondition;
 using Lemur.Control.Output;
 
+
 namespace LemurGH.Type
 {
     public class GH_LeControl : GH_Goo<LeControl>
@@ -72,6 +73,8 @@ namespace LemurGH.Type
             {
                 sb.AppendLine($"  - TargetGroup:{leBC.TargetGroupName}, Type:{leBC.Type}");
             }
+            sb.AppendLine($"- LeContactControl");
+            sb.AppendLine($"  - {Value.LeContactControl.Algorithm}, {Value.LeContactControl.Interaction}, Pair:{Value.LeContactControl.TargetContactPair}");
             sb.AppendLine($"- LeStep:");
             sb.AppendLine($"  - SubSteps: {Value.LeStep.SubSteps}, MaxIter: {Value.LeStep.MaxIter}, Converg: {Value.LeStep.Convergence}");
             sb.AppendLine($"- LeSolver:");
