@@ -8,6 +8,7 @@ using Lemur.Control;
 using Lemur.Control.BoundaryCondition;
 using Lemur.Control.Solution;
 using Lemur.Control.Solver;
+using Lemur.Control.Step;
 
 using LemurGH.Param;
 using LemurGH.Type;
@@ -27,6 +28,7 @@ namespace LemurGH.Component.Control
         {
             pManager.AddIntegerParameter("SolutionType", "SolType", "0:STATIC, 1:NLSTATIC, 3:EIGEN", GH_ParamAccess.item, 0);
             pManager.AddParameter(new Param_LeBC(), "BoundaryConditions", "BC", "Boundary Conditions", GH_ParamAccess.list);
+            pManager.AddParameter(new Param_LeStep(), "Step", "Stp", "Step", GH_ParamAccess.item);
             pManager.AddParameter(new Param_LeSolver(), "Solver", "Solver", "Solver", GH_ParamAccess.item);
         }
 
@@ -39,19 +41,23 @@ namespace LemurGH.Component.Control
         {
             int solType = 0;
             var ghBCList = new List<GH_LeBC>();
+            var ghStep = new GH_LeStep();
             var ghSolver = new GH_LeSolver();
             if (!DA.GetData(0, ref solType)) return;
             if (!DA.GetDataList(1, ghBCList)) return;
-            if (!DA.GetData(2, ref ghSolver)) return;
+            if (!DA.GetData(2, ref ghStep)) return;
+            if (!DA.GetData(3, ref ghSolver)) return;
 
             var leBCList = ghBCList.Select(x => x.Value).ToList();
             LeSolver leSolver = ghSolver.Value;
+            LeStep leStep = ghStep.Value;
 
-            var leCnt = new LeControl((LeSolutionType)solType, leSolver);
+            var leCnt = new LeControl((LeSolutionType)solType, leStep, leSolver);
             foreach (LeBoundaryCondition leBC in leBCList)
             {
                 leCnt.AddBC(leBC);
             }
+            leCnt.UpdateStepGroupIds();
 
             DA.SetData(0, new GH_LeControl(leCnt));
         }

@@ -7,6 +7,7 @@ using Lemur.Control.Output;
 using Lemur.Control.Section;
 using Lemur.Control.Solution;
 using Lemur.Control.Solver;
+using Lemur.Control.Step;
 
 namespace Lemur.Control
 {
@@ -17,11 +18,12 @@ namespace Lemur.Control
         public LeWrite[] LeWrites { get; }
         public LeSection LeSection { get; }
         public LeBoundaryCondition[] LeBoundaryConditions => _leBC.ToArray();
+        public LeStep LeStep { get; }
         public LeSolver LeSolver { get; }
 
         private readonly List<LeBoundaryCondition> _leBC;
 
-        public LeControl(LeSolutionType solutionType, LeSolver leSolver)
+        public LeControl(LeSolutionType solutionType, LeStep leStep, LeSolver leSolver)
         {
             SolutionType = solutionType;
             LeWrites = new LeWrite[]
@@ -32,6 +34,7 @@ namespace Lemur.Control
             };
             LeSection = new LeSection();
             _leBC = new List<LeBoundaryCondition>();
+            LeStep = leStep;
             LeSolver = leSolver;
         }
 
@@ -46,6 +49,7 @@ namespace Lemur.Control
             }
             LeSection = new LeSection(other.LeSection);
             _leBC = new List<LeBoundaryCondition>(other.LeBoundaryConditions);
+            LeStep = new LeStep(other.LeStep);
             LeSolver = new LeSolver(other.LeSolver);
         }
 
@@ -57,6 +61,30 @@ namespace Lemur.Control
         public void ClearBC()
         {
             _leBC.Clear();
+        }
+
+        public void UpdateStepGroupIds()
+        {
+            var groupIds = new List<int>[] { new List<int>(), new List<int>(), new List<int>() };
+            foreach (LeBoundaryCondition leBC in _leBC)
+            {
+                switch (leBC.Type)
+                {
+                    case LeBCType.BOUNDARY:
+                        if (!groupIds[0].Contains(leBC.Id))
+                        {
+                            groupIds[0].Add(leBC.Id);
+                        }
+                        break;
+                    default:
+                        if (!groupIds[1].Contains(leBC.Id))
+                        {
+                            groupIds[1].Add(leBC.Id);
+                        }
+                        break;
+                }
+            }
+            LeStep.AddIds(groupIds[0].ToArray(), groupIds[1].ToArray(), groupIds[2].ToArray());
         }
 
         public string ToCnt()
@@ -80,6 +108,7 @@ namespace Lemur.Control
                 sb.AppendLine(leBC.ToCnt());
             }
 
+            sb.AppendLine(LeStep.ToCnt());
             sb.AppendLine(LeSolver.ToCnt());
             sb.AppendLine(VtkOutput());
             sb.AppendLine($"!END");

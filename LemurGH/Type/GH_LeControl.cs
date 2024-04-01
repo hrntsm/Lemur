@@ -72,8 +72,10 @@ namespace LemurGH.Type
             {
                 sb.AppendLine($"  - TargetGroup:{leBC.TargetGroupName}, Type:{leBC.Type}");
             }
+            sb.AppendLine($"- LeStep:");
+            sb.AppendLine($"  - SubSteps: {Value.LeStep.SubSteps}, MaxIter: {Value.LeStep.MaxIter}, Converg: {Value.LeStep.Convergence}");
             sb.AppendLine($"- LeSolver:");
-            sb.AppendLine($" {Value.LeSolver.Method}, {Value.LeSolver.Precondition}, {Value.LeSolver.MaxIter}, {Value.LeSolver.Residual}");
+            sb.AppendLine($"  - {Value.LeSolver.Method}, {Value.LeSolver.Precondition}, {Value.LeSolver.MaxIter}, {Value.LeSolver.Residual}");
 
             return sb.ToString();
         }

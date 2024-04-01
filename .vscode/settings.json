@@ -4,6 +4,7 @@
         "BBAR",
         "CGSTAB",
         "CLOAD",
+        "CONVERG",
         "DLOAD",
         "EGROUP",
         "EGRP",
@@ -23,6 +24,7 @@
         "ISTRESS",
         "ITERLOG",
         "KMETIS",
+        "MAXITER",
         "mkl",
         "mpiexec",
         "MSMPI",
@@ -43,6 +45,7 @@
         "SGRP",
         "SSOR",
         "STATICEIGEN",
+        "SUBSTEPS",
         "TIMELOG",
         "Topologic"
     ]
