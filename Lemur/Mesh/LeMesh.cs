@@ -298,5 +298,39 @@ namespace Lemur.Mesh
             }
             return sb.ToString();
         }
+
+        public void Merge(LeMesh other)
+        {
+            if (other == null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            int baseNodeIdMax = Nodes.Max(n => n.Id);
+            int otherNodeIdMin = other.Nodes.Min(n => n.Id);
+            int nodeIdDiff = baseNodeIdMax - otherNodeIdMin;
+            int nodeOffset = nodeIdDiff >= 0 ? nodeIdDiff + 1 : 0;
+
+            int baseElementIdMax = AllElements.Max(e => e.Id);
+            int otherElementIdMin = other.AllElements.Min(e => e.Id);
+            int elemIdDiff = baseElementIdMax - otherElementIdMin;
+            int elemOffset = elemIdDiff >= 0 ? elemIdDiff + 1 : 0;
+
+            foreach (LeNode node in other.Nodes)
+            {
+                Nodes.Add(new LeNode(node.Id + nodeOffset, node.X, node.Y, node.Z));
+            }
+
+            foreach (LeElementList otherElems in other._elements)
+            {
+                foreach (LeElementBase otherElem in otherElems)
+                {
+                    otherElem.ShiftIds(elemOffset, nodeOffset);
+                    AddElement(otherElem);
+                }
+            }
+
+            ComputeFaceMesh();
+        }
     }
 }

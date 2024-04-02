@@ -45,8 +45,8 @@ namespace LemurGH.Component.Mesh
 
             if (!(iMInput is IMesh iMesh)) return;
 
-            ConvertINodeToFNode(leMesh, iMesh);
-            ConvertIElementToFElement(leMesh, iMesh);
+            ConvertINodeToLeNode(leMesh, iMesh);
+            ConvertIElementToLeElement(leMesh, iMesh);
 
             leMesh.ComputeNodeFaceDataStructure();
             Rhino.Geometry.Mesh mesh = Utils.Preview.LeFaceToRhinoMesh(leMesh, leMesh.FaceMesh);
@@ -55,7 +55,7 @@ namespace LemurGH.Component.Mesh
             DA.SetData(1, mesh);
         }
 
-        private static void ConvertINodeToFNode(LeMesh leMesh, IMesh iMesh)
+        private static void ConvertINodeToLeNode(LeMesh leMesh, IMesh iMesh)
         {
             List<ITopologicVertex> vertices = iMesh.Vertices;
             foreach (ITopologicVertex vertex in vertices)
@@ -65,7 +65,7 @@ namespace LemurGH.Component.Mesh
             }
         }
 
-        private static void ConvertIElementToFElement(LeMesh leMesh, IMesh iMesh)
+        private static void ConvertIElementToLeElement(LeMesh leMesh, IMesh iMesh)
         {
             List<IElement> elements = iMesh.Elements;
             foreach (IElement element in elements)

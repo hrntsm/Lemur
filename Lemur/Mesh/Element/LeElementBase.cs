@@ -42,5 +42,13 @@ namespace Lemur.Mesh.Element
             return sb.ToString();
         }
 
+        public void ShiftIds(int elemShift, int nodeShift)
+        {
+            Id += elemShift;
+            for (int i = 0; i < NodeIds.Length; i++)
+            {
+                NodeIds[i] += nodeShift;
+            }
+        }
     }
 }
