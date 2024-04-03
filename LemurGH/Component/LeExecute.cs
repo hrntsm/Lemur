@@ -51,12 +51,22 @@ namespace LemurGH.Component
 
             if (run)
             {
+                CreateDirectory(dir);
                 LeAssemble leAsm = ghLeAssemble.Value;
                 LeMPIType mpiType = process == 1 ? LeMPIType.Serial : LeMPIType.MSMPI;
                 leAsm?.LeHecmwControl.SetMPIValues(mpiType, process);
                 leAsm?.Serialize(dir);
                 ExecuteAnalysis(dir, thread, mpiType, process);
             }
+        }
+
+        private static void CreateDirectory(string dir)
+        {
+            if (Directory.Exists(dir))
+            {
+                Directory.Delete(dir, true);
+            }
+            Directory.CreateDirectory(dir);
         }
 
         private static void ExecuteAnalysis(string dir, int thread, LeMPIType mpiType, int process)
