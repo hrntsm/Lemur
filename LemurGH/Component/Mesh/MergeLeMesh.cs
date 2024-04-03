@@ -27,6 +27,7 @@ namespace LemurGH.Component.Mesh
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
             pManager.AddParameter(new Param_LeMesh(), "LeMesh", "LeMesh", "LeMesh object", GH_ParamAccess.item);
+            pManager.AddMeshParameter("Mesh", "Mesh", "Mesh object", GH_ParamAccess.item);
         }
 
         protected override void SolveInstance(IGH_DataAccess DA)
@@ -42,7 +43,10 @@ namespace LemurGH.Component.Mesh
             LeMesh leMesh2 = ghLeMesh2.Value;
 
             leMesh1.Merge(leMesh2);
+            leMesh1.ComputeNodeFaceDataStructure();
+            Rhino.Geometry.Mesh mesh = Utils.Preview.LeFaceToRhinoMesh(leMesh1, leMesh1.FaceMesh);
             DA.SetData(0, new GH_LeMesh(leMesh1));
+            DA.SetData(1, mesh);
         }
 
         public override Guid ComponentGuid => new Guid("35e877a1-07b9-4e37-8dbd-e810def4aa48");

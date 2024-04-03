@@ -82,6 +82,7 @@ namespace LemurGH.Component.Group
                 case 0:
                     group = new NGroup(name, groupNodes.ToArray());
                     geometry = Utils.Preview.LeNodeToRhinoPointCloud(leMesh, ((NGroup)group).Ids);
+                    Message = $"NGRP:{groupNodes.Count}items";
                     break;
                 case 1:
                     AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Element group is not implemented yet.");
@@ -89,6 +90,7 @@ namespace LemurGH.Component.Group
                 case 2:
                     group = ComputeSurfaceGroup(name, leMesh, groupNodes.ToArray());
                     geometry = Utils.Preview.LeFaceToRhinoMesh(leMesh, ((SGroup)group).Ids);
+                    Message = $"SGRP:{groupNodes.Count}items";
                     break;
             }
 

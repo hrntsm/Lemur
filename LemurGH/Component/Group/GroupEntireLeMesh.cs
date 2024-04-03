@@ -39,6 +39,7 @@ namespace LemurGH.Component.Group
             Lemur.Mesh.LeMesh leMesh = ghLeMesh.Value;
 
             var group = new EGroup(name, leMesh.AllElements.Select(e => e.Id).ToArray());
+            Message = $"EGRP:{group.Ids.Length}items";
             DA.SetData(0, new GH_LeGroup(group));
         }
 
