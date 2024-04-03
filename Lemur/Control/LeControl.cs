@@ -88,6 +88,10 @@ namespace Lemur.Control
                         break;
                 }
             }
+            if (LeContactControl != null)
+            {
+                groupIds[2].Add(1);
+            }
             LeStep.AddIds(groupIds[0].ToArray(), groupIds[1].ToArray(), groupIds[2].ToArray());
         }
 
