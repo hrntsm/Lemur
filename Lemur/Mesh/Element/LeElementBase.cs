@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 
+using Lemur.Post.Mesh;
+
 
 namespace Lemur.Mesh.Element
 {
@@ -10,7 +12,8 @@ namespace Lemur.Mesh.Element
         public abstract LeElementType ElementType { get; }
         public int Id { get; private set; }
         public int[] NodeIds { get; private set; }
-        public Dictionary<string, double[]> Results { get; private set; } = new Dictionary<string, double[]>();
+        public LeElementalResult[] ElementalResults => _elementalResults.ToArray();
+        private readonly List<LeElementalResult> _elementalResults = new List<LeElementalResult>();
 
         public LeElementBase(int[] nodeIds)
         {
@@ -49,6 +52,11 @@ namespace Lemur.Mesh.Element
             {
                 NodeIds[i] += nodeShift;
             }
+        }
+
+        public void AddElementalResult(LeElementalResult elementalResult)
+        {
+            _elementalResults.Add(elementalResult);
         }
     }
 }

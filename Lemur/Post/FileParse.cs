@@ -90,7 +90,7 @@ namespace Lemur.Post
         public Dictionary<int, Dictionary<string, double[]>> GetNodeDataByLabel()
         {
             var nodeDataByLabel = new Dictionary<int, Dictionary<string, double[]>>();
-            foreach(KeyValuePair<int, double[]> item in NodeData)
+            foreach (KeyValuePair<int, double[]> item in NodeData)
             {
                 int nodeId = item.Key;
                 double[] allValues = item.Value;

@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.Globalization;
 
+using Lemur.Post.Mesh;
+
 namespace Lemur.Mesh
 {
     public class LeNode
@@ -9,7 +11,9 @@ namespace Lemur.Mesh
         public double X { get; set; }
         public double Y { get; set; }
         public double Z { get; set; }
-        public Dictionary<string, double[]> Results { get; private set; } = new Dictionary<string, double[]>();
+        public LeNodalResult[] NodalResults => _nodalResults.ToArray();
+
+        private readonly List<LeNodalResult> _nodalResults = new List<LeNodalResult>();
 
         public LeNode(int id, double x, double y, double z)
         {
@@ -17,6 +21,11 @@ namespace Lemur.Mesh
             X = x;
             Y = y;
             Z = z;
+        }
+
+        public void AddResult(LeNodalResult nodalResult)
+        {
+            _nodalResults.Add(nodalResult);
         }
 
         public string ToMsh()

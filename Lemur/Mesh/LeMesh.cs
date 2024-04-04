@@ -6,6 +6,7 @@ using System.Text;
 
 using Lemur.Mesh.Element;
 using Lemur.Mesh.Group;
+using Lemur.Post.Mesh;
 
 namespace Lemur.Mesh
 {
@@ -333,6 +334,28 @@ namespace Lemur.Mesh
             }
 
             ComputeFaceMesh();
+        }
+
+        public void AddNodalResult(int stepId, Dictionary<int, Dictionary<string, double[]>> nodalResults)
+        {
+            foreach (LeNode node in Nodes)
+            {
+                if (nodalResults.TryGetValue(node.Id, out Dictionary<string, double[]> value))
+                {
+                    node.AddResult(new LeNodalResult(stepId, value));
+                }
+            }
+        }
+
+        public void AddElementalResult(int stepId, Dictionary<int, Dictionary<string, double[]>> elementalResults)
+        {
+            foreach (LeElementBase element in AllElements)
+            {
+                if (elementalResults.TryGetValue(element.Id, out Dictionary<string, double[]> value))
+                {
+                    element.AddElementalResult(new LeElementalResult(stepId, value));
+                }
+            }
         }
     }
 }

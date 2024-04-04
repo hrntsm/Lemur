@@ -9,8 +9,8 @@ namespace Lemur.Post.Tests
         {
             var fileParser = new ResFileParser();
             fileParser.Parse("TestFile/Result/lemur.res.0.1");
-            var nodeData = fileParser.GetNodeDataByLabel();
-            var elemData = fileParser.GetElemDataByLabel();
+            Dictionary<int, Dictionary<string, double[]>> nodeData = fileParser.GetNodeDataByLabel();
+            Dictionary<int, Dictionary<string, double[]>> elemData = fileParser.GetElemDataByLabel();
         }
     }
 }
