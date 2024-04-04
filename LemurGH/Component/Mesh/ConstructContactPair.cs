@@ -49,6 +49,8 @@ namespace LemurGH.Component.Mesh
 
             var contactPair = new LeContactMesh(name, slave, master);
             var contactControl = new LeContactControl((LeContactAlgorithm)algorithm, (LeContactInteraction)interaction, name);
+
+            Message = $"{contactPair.Slave}->{contactPair.Master}";
             DA.SetData(0, new GH_LeContactMesh(contactPair));
             DA.SetData(1, new GH_LeContactControl(contactControl));
         }

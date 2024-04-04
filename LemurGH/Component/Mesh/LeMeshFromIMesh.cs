@@ -51,6 +51,7 @@ namespace LemurGH.Component.Mesh
             leMesh.ComputeNodeFaceDataStructure();
             Rhino.Geometry.Mesh mesh = Utils.Preview.LeFaceToRhinoMesh(leMesh, leMesh.FaceMesh);
 
+            Message = $"{leMesh.Nodes.Count} nodes, {leMesh.AllElements.Length} elems";
             DA.SetData(0, new GH_LeMesh(leMesh));
             DA.SetData(1, mesh);
         }
