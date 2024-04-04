@@ -93,6 +93,7 @@ namespace LemurGH.Component
             var partition = new Process();
             partition.StartInfo.FileName = partitionPath;
             partition.StartInfo.WorkingDirectory = dir;
+            partition.WaitForExit();
             partition.Start();
 
             var fistr = new Process();
@@ -106,6 +107,7 @@ namespace LemurGH.Component
 
             fistr.StartInfo.Arguments = $"-np {process} {fistrPath} -t {nt}";
             fistr.StartInfo.WorkingDirectory = dir;
+            fistr.WaitForExit();
             fistr.Start();
         }
 
@@ -120,6 +122,7 @@ namespace LemurGH.Component
                 fistr.StartInfo.Arguments = $"-t {thread}";
             }
             fistr.StartInfo.WorkingDirectory = dir;
+            fistr.WaitForExit();
             fistr.Start();
         }
 
