@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 
+using Iguana.IguanaMesh.ITypes;
+
 namespace Lemur.Mesh.Element
 {
     public class Prism351 : LeSolidElementBase
@@ -26,12 +28,31 @@ namespace Lemur.Mesh.Element
         {
         }
 
+        public Prism351(int id, int[] nodeIds) : base(id, nodeIds)
+        {
+        }
+
         protected override void CheckNodeLength(int length)
         {
             if (length != 6)
             {
                 throw new ArgumentException("Prism351 requires 6 nodes.");
             }
+        }
+
+        public static Prism351 FromIguanaElement(IPrismElement element)
+        {
+            int id = element.Key;
+            int[] nodeIds = new int[]
+            {
+                element.Vertices[2],
+                element.Vertices[0],
+                element.Vertices[1],
+                element.Vertices[5],
+                element.Vertices[3],
+                element.Vertices[4]
+            };
+            return new Prism351(id, nodeIds);
         }
     }
 }

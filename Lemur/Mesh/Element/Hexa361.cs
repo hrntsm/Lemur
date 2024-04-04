@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 
+using Iguana.IguanaMesh.ITypes;
+
 namespace Lemur.Mesh.Element
 {
-    public class Hex361 : LeSolidElementBase
+    public class Hexa361 : LeSolidElementBase
     {
         public override LeElementType ElementType => LeElementType.Hex361;
         public override Dictionary<int, int[]> FaceNodes => new Dictionary<int, int[]>{
@@ -26,7 +28,11 @@ namespace Lemur.Mesh.Element
             new int[] { 2, 5, 6 },
         };
 
-        public Hex361(int[] nodeIds) : base(nodeIds)
+        public Hexa361(int[] nodeIds) : base(nodeIds)
+        {
+        }
+
+        public Hexa361(int id, int[] nodeIds) : base(id, nodeIds)
         {
         }
 
@@ -36,6 +42,23 @@ namespace Lemur.Mesh.Element
             {
                 throw new ArgumentException("Hex361 requires 8 nodes.");
             }
+        }
+
+        public static Hexa361 FromIguanaElement(IHexahedronElement element)
+        {
+            int id = element.Key;
+            int[] nodeIds = new int[]
+            {
+                element.Vertices[4],
+                element.Vertices[5],
+                element.Vertices[1],
+                element.Vertices[0],
+                element.Vertices[7],
+                element.Vertices[6],
+                element.Vertices[2],
+                element.Vertices[3]
+            };
+            return new Hexa361(id, nodeIds);
         }
     }
 }

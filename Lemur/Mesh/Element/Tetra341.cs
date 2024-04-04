@@ -50,6 +50,5 @@ namespace Lemur.Mesh.Element
             };
             return new Tetra341(id, nodeIds);
         }
-
     }
 }

@@ -22,6 +22,7 @@
         "GMRES",
         "GRPID",
         "Hecmw",
+        "Hexa",
         "ISTRAIN",
         "ISTRESS",
         "ITERLOG",

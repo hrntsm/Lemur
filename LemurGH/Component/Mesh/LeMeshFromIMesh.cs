@@ -76,6 +76,14 @@ namespace LemurGH.Component.Mesh
                     case ITetrahedronElement iTetra:
                         leMesh.AddElement(Tetra341.FromIguanaElement(iTetra));
                         break;
+                    case IPrismElement iPrism:
+                        leMesh.AddElement(Prism351.FromIguanaElement(iPrism));
+                        break;
+                    case IHexahedronElement iHexa:
+                        leMesh.AddElement(Hexa361.FromIguanaElement(iHexa));
+                        break;
+                    default:
+                        throw new NotImplementedException($"Element type {element.GetType()} is not implemented.");
                 }
             }
         }

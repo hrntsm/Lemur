@@ -26,7 +26,7 @@ namespace Lemur.Mesh.Element.Tests
         public void AddElementWithMismatchElementTypeTest()
         {
             var elementList = new LeElementList(LeElementType.Tetra341);
-            var element = new Hex361([1, 2, 3, 4, 5, 6, 7, 8]);
+            var element = new Hexa361([1, 2, 3, 4, 5, 6, 7, 8]);
             Assert.Throws<ArgumentException>(() => elementList.AddElement(element));
         }
 
