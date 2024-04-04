@@ -33,7 +33,7 @@ namespace LemurGH.Component
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddGenericParameter("Result", "Result", "Result of execution", GH_ParamAccess.item);
+            pManager.AddTextParameter("Dir", "Dir", "Directory path to save results", GH_ParamAccess.item);
         }
 
         protected override void SolveInstance(IGH_DataAccess DA)
@@ -49,6 +49,7 @@ namespace LemurGH.Component
             if (!DA.GetData(3, ref dir)) return;
             if (!DA.GetData(4, ref run)) return;
 
+            string resultDir = string.Empty;
             if (run)
             {
                 CreateDirectory(dir);
@@ -57,7 +58,10 @@ namespace LemurGH.Component
                 leAsm?.LeHecmwControl.SetMPIValues(mpiType, process);
                 leAsm?.Serialize(dir);
                 ExecuteAnalysis(dir, thread, mpiType, process);
+                resultDir = dir;
             }
+
+            DA.SetData(0, resultDir);
         }
 
         private static void CreateDirectory(string dir)
