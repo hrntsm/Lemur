@@ -97,6 +97,8 @@ namespace Lemur.Mesh
 
         public void AddContact(LeContactMesh contact)
         {
+            contact.SetTypeUsingGroups(_groups.ToArray());
+
             Contact = contact
              ?? throw new ArgumentNullException(nameof(contact));
         }
