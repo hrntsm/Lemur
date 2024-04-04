@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 using Grasshopper.Kernel;
 
-using Lemur.Control;
 using Lemur.Control.BoundaryCondition;
 
 using LemurGH.Param;
@@ -51,6 +51,19 @@ namespace LemurGH.Component.Control
             double[] values = new double[] { vector.X, vector.Y, vector.Z };
             var leBC = new LeBoundaryCondition(targetGroupName, (LeBCType)type, values, constraints.ToArray());
 
+            var msg = new List<string>();
+            for (int i = 0; i < leBC.Constraints.Length; i++)
+            {
+                if (leBC.Constraints[i])
+                {
+                    msg.Add(leBC.Values[i].ToString(CultureInfo.InvariantCulture));
+                }
+                else
+                {
+                    msg.Add("-");
+                }
+            }
+            Message = $"{leBC.Type}:({string.Join(",", msg)})";
             DA.SetData(0, new GH_LeBC(leBC));
         }
 

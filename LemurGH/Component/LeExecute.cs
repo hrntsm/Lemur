@@ -93,8 +93,8 @@ namespace LemurGH.Component
             var partition = new Process();
             partition.StartInfo.FileName = partitionPath;
             partition.StartInfo.WorkingDirectory = dir;
-            partition.WaitForExit();
             partition.Start();
+            partition.WaitForExit();
 
             var fistr = new Process();
             fistr.StartInfo.FileName = mpiPath;
@@ -107,8 +107,8 @@ namespace LemurGH.Component
 
             fistr.StartInfo.Arguments = $"-np {process} {fistrPath} -t {nt}";
             fistr.StartInfo.WorkingDirectory = dir;
-            fistr.WaitForExit();
             fistr.Start();
+            fistr.WaitForExit();
         }
 
         private static void ExecuteSerial(string dir, int thread)
@@ -122,8 +122,8 @@ namespace LemurGH.Component
                 fistr.StartInfo.Arguments = $"-t {thread}";
             }
             fistr.StartInfo.WorkingDirectory = dir;
-            fistr.WaitForExit();
             fistr.Start();
+            fistr.WaitForExit();
         }
 
         public override Guid ComponentGuid => new Guid("20aab5a3-c180-4a1f-806b-4b3c16cc8f28");
