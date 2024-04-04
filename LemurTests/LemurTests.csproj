@@ -23,4 +23,19 @@
     <ProjectReference Include="..\Lemur\Lemur.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="TestFile\Result\lemur.res.0.0">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="TestFile\Result\lemur.res.0.1">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="TestFile\Result\lemur.res.1.0">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="TestFile\Result\lemur.res.1.1">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
