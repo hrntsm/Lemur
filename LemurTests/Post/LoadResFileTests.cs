@@ -2,13 +2,15 @@ using Xunit;
 
 namespace Lemur.Post.Tests
 {
-    public class LoadResFileTests
+    public class FileParserTests
     {
         [Fact]
-        public void LoadResFileTest()
+        public void FileParserTest()
         {
-            var loadResFile = new LoadResFile("TestFile/Result");
-            int aa = 1;
+            var fileParser = new ResFileParser();
+            fileParser.Parse("TestFile/Result/lemur.res.0.1");
+            var nodeData = fileParser.GetNodeDataByLabel();
+            var elemData = fileParser.GetElemDataByLabel();
         }
     }
 }
