@@ -7,6 +7,7 @@ using Grasshopper.Kernel;
 
 using Lemur;
 using Lemur.Hecmw;
+using Lemur.Post;
 
 using LemurGH.Param;
 using LemurGH.Type;
@@ -33,6 +34,7 @@ namespace LemurGH.Component
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
+            pManager.AddParameter(new Param_LeMesh(), "LeMesh", "LeMesh", "Output Lemur Mesh", GH_ParamAccess.item);
             pManager.AddTextParameter("Dir", "Dir", "Directory path to save results", GH_ParamAccess.item);
         }
 
@@ -59,9 +61,11 @@ namespace LemurGH.Component
                 leAsm?.Serialize(dir);
                 ExecuteAnalysis(dir, thread, mpiType, process);
                 resultDir = dir;
-            }
 
-            DA.SetData(0, resultDir);
+                _ = new LePost(leAsm.LeMesh, dir);
+                DA.SetData(0, leAsm.LeMesh);
+            }
+            DA.SetData(1, resultDir);
         }
 
         private static void CreateDirectory(string dir)

@@ -56,8 +56,9 @@ namespace LemurGH.Type
 
         public override string ToString()
         {
+            string hasResult = Value.Nodes[0].NodalResults.Length > 0 ? "Include Results" : string.Empty;
             var sb = new StringBuilder();
-            sb.AppendLine($"LeMesh:");
+            sb.AppendLine($"LeMesh: {hasResult}");
             sb.AppendLine($"- {Value.Nodes.Count} nodes");
             AppendElement(sb);
             AppendGroup(sb);
