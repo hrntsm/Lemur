@@ -11,11 +11,11 @@ using LemurGH.Type;
 
 namespace LemurGH.Component.Post
 {
-    public class ShowResultContour : GH_Component
+    public class ResultContour : GH_Component
     {
-        public ShowResultContour()
-          : base("Show Result Contour", "LeContour",
-              "Show Result Contour",
+        public ResultContour()
+          : base("ResultContour", "LeContour",
+              "Result Contour",
               "Lemur", "Post")
         {
         }

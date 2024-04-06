@@ -114,7 +114,10 @@ namespace Lemur.Control
             {
                 sb.AppendLine(leBC.ToCnt());
             }
-            sb.AppendLine(LeContactControl.ToCnt());
+            if (LeContactControl != null)
+            {
+                sb.AppendLine(LeContactControl.ToCnt());
+            }
             sb.AppendLine(LeStep.ToCnt());
             sb.AppendLine(LeSolver.ToCnt());
             sb.AppendLine(VtkOutput());

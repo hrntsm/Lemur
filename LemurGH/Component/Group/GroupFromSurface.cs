@@ -39,6 +39,7 @@ namespace LemurGH.Component.Group
         {
             pManager.AddParameter(new Param_LeGroup(), "Group", "Gr", "Group", GH_ParamAccess.item);
             pManager.AddGeometryParameter("Geometry", "Geom", "Preview group", GH_ParamAccess.item);
+            pManager.AddIntegerParameter("NodeIds", "NIds", "Include node Ids", GH_ParamAccess.list);
         }
 
         protected override void SolveInstance(IGH_DataAccess DA)
@@ -96,6 +97,7 @@ namespace LemurGH.Component.Group
 
             DA.SetData(0, new GH_LeGroup(group));
             DA.SetData(1, geometry);
+            DA.SetDataList(2, groupNodes);
         }
 
         private static SGroup ComputeSurfaceGroup(string name, LeMesh leMesh, int[] targetNodeIds)

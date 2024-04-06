@@ -29,9 +29,10 @@ namespace LemurGH.Component.Control
         {
             pManager.AddIntegerParameter("SolutionType", "SolType", "0:STATIC, 1:NLSTATIC, 3:EIGEN", GH_ParamAccess.item, 0);
             pManager.AddParameter(new Param_LeBC(), "BoundaryConditions", "BC", "Boundary Conditions", GH_ParamAccess.list);
-            pManager.AddParameter(new Param_LeContactControl(), "ContactControl", "CCnt", "Contact Control", GH_ParamAccess.item);
-            pManager.AddParameter(new Param_LeStep(), "Step", "Stp", "Step", GH_ParamAccess.item);
+            pManager.AddParameter(new Param_LeContactControl(), "ContactControl", "Contact", "Contact Control", GH_ParamAccess.item);
+            pManager.AddParameter(new Param_LeStep(), "Step", "Step", "Step", GH_ParamAccess.item);
             pManager.AddParameter(new Param_LeSolver(), "Solver", "Solver", "Solver", GH_ParamAccess.item);
+            Params.Input[2].Optional = true;
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
@@ -48,9 +49,10 @@ namespace LemurGH.Component.Control
             var ghSolver = new GH_LeSolver();
             if (!DA.GetData(0, ref solType)) return;
             if (!DA.GetDataList(1, ghBCList)) return;
-            if (!DA.GetData(2, ref ghContact)) return;
             if (!DA.GetData(3, ref ghStep)) return;
             if (!DA.GetData(4, ref ghSolver)) return;
+
+            DA.GetData(2, ref ghContact);
 
             var leBCList = ghBCList.Select(x => x.Value).ToList();
             LeContactControl leContact = ghContact.Value;
