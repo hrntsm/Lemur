@@ -108,8 +108,7 @@ namespace Lemur.Control
                 sb.AppendLine(leWrite.ToCnt());
             }
 
-            // 多分フォーマットがあってなくてFistrでエラーになる
-            // sb.AppendLine(LeSection.ToCnt());
+            sb.AppendLine(LeSection.ToCnt());
 
             foreach (LeBoundaryCondition leBC in _leBC)
             {

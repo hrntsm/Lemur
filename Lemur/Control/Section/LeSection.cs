@@ -1,11 +1,12 @@
+using System;
 using System.Text;
 
 namespace Lemur.Control.Section
 {
     public class LeSection
     {
-        public LeForm341Type Form341Type { get; } = LeForm341Type.FI;
-        public LeForm361Type Form361Type { get; } = LeForm361Type.FI;
+        public LeForm341Type Form341Type { get; } = LeForm341Type.SELECTIVE_ESNS;
+        public LeForm361Type Form361Type { get; } = LeForm361Type.Default;
 
         public LeSection()
         {
@@ -20,15 +21,16 @@ namespace Lemur.Control.Section
         public string ToCnt()
         {
             var sb = new StringBuilder();
-            sb.AppendLine($"!SECTION");
+            sb.Append($"!SECTION, SECNUM=1, ");
             if (Form341Type != LeForm341Type.Default)
             {
-                sb.AppendLine($" FORM341={Form341Type}");
+                sb.Append($"FORM341={Form341Type}");
             }
             if (Form361Type != LeForm361Type.Default)
             {
-                sb.AppendLine($" FORM361={Form361Type}");
+                sb.Append($" FORM361={Form361Type}");
             }
+            sb.AppendLine(Environment.NewLine);
             return sb.ToString();
         }
     }

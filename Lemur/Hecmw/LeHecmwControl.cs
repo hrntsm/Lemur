@@ -120,7 +120,7 @@ namespace Lemur.Hecmw
                     break;
             }
             string method = _partitionMethod.ToString();
-            sb.AppendLine($"!PARTITION, TYPE={type}, METHOD={method}, DOMAIN={_numProcess}");
+            sb.AppendLine($"!PARTITION, TYPE={type}, METHOD={method}, DOMAIN={_numProcess}, DEPTH=2");
             return sb.ToString();
         }
 
