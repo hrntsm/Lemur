@@ -75,15 +75,15 @@ namespace Lemur.Control.Output
                 case LeWriteType.VISUAL:
                     LeOutputTypes = new LeOutputType[]
                      {
-                        LeOutputType.DISP,
-                        LeOutputType.NSTRESS, LeOutputType.NMISES
+                        LeOutputType.DISP, LeOutputType.REACTION,
+                        LeOutputType.NSTRAIN, LeOutputType.NSTRESS, LeOutputType.NMISES
                      };
                     break;
                 case LeWriteType.RESULT:
                     LeOutputTypes = new LeOutputType[]
                     {
-                        LeOutputType.DISP,
-                        LeOutputType.NSTRESS, LeOutputType.NMISES,
+                        LeOutputType.DISP, LeOutputType.REACTION,
+                        LeOutputType.NSTRAIN, LeOutputType.NSTRESS, LeOutputType.NMISES,
                         LeOutputType.ESTRESS, LeOutputType.EMISES
                     };
                     break;
