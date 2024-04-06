@@ -1,4 +1,5 @@
 using System;
+using System.Drawing;
 
 using Grasshopper.Kernel;
 
@@ -30,7 +31,9 @@ namespace LemurGH.Component.Post
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddMeshParameter("Contour", "Contour", "Contour", GH_ParamAccess.item);
+            pManager.AddMeshParameter("Mesh", "Mesh", "Mesh", GH_ParamAccess.item);
+            pManager.AddColourParameter("Color", "C", "Color", GH_ParamAccess.list);
+            pManager.AddTextParameter("Text", "T", "Text", GH_ParamAccess.list);
         }
 
         protected override void SolveInstance(IGH_DataAccess DA)
@@ -55,10 +58,12 @@ namespace LemurGH.Component.Post
 
             leMesh.ComputeNodeFaceDataStructure();
             var set = (ContourSet)contourSet;
-            Rhino.Geometry.Mesh mesh = Utils.Preview.LeMeshResultToRhinoMesh(leMesh, step, resultName, set, scale);
+            (Rhino.Geometry.Mesh mesh, Color[] color, string[] text) = Utils.Preview.LeMeshResultToRhinoMesh(leMesh, step, resultName, set, scale);
             Message = $"{resultName} at {step}:{set}";
 
             DA.SetData(0, mesh);
+            DA.SetDataList(1, color);
+            DA.SetDataList(2, text);
         }
 
         public override Guid ComponentGuid => new Guid("3a67d651-72b7-4ec5-8941-c4505023c340");

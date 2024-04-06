@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 
 using Lemur.Mesh;
@@ -36,9 +37,10 @@ namespace LemurGH.Utils
             return rhinoMesh;
         }
 
-        public static Mesh LeMeshResultToRhinoMesh(LeMesh leMesh, int step, string resultName, ContourSet contourSet, double scale)
+        public static (Mesh, Color[], string[]) LeMeshResultToRhinoMesh(LeMesh leMesh, int step, string resultName, ContourSet contourSet, double scale)
         {
             LeSolidElementBase[] solids = leMesh.AllElements.OfType<LeSolidElementBase>().ToArray();
+            (double min, double max) = leMesh.NodalResultSummary[step][resultName];
 
             var rhinoMesh = new Mesh();
 
@@ -61,8 +63,7 @@ namespace LemurGH.Utils
                     continue;
                 }
                 double[] data = result.NodalData[resultName];
-                double[] summary = leMesh.NodalResultSummary[step][resultName];
-                double normalizedValue = (data[0] - summary[0]) / (summary[1] - summary[0]);
+                double normalizedValue = (data[0] - min) / (max - min);
 
                 var contouring = new Contouring(ContoursData.ColorContours[contourSet.ToString()]);
                 Color color = contouring.GetColor(normalizedValue);
@@ -83,7 +84,11 @@ namespace LemurGH.Utils
             }
             rhinoMesh.UnifyNormals();
             rhinoMesh.Normals.ComputeNormals();
-            return rhinoMesh;
+
+            (Color color, double position)[] colorContour = ContoursData.ColorContours[contourSet.ToString()];
+            Color[] colors = colorContour.Select(c => c.color).Reverse().ToArray();
+            string[] texts = colorContour.Select(c => (c.position * (max - min) - min).ToString("0.0000E+00", CultureInfo.InvariantCulture)).Reverse().ToArray();
+            return (rhinoMesh, colors, texts);
         }
 
         public static PointCloud LeNodeToRhinoPointCloud(LeMesh leMesh, int[] nodeIds)

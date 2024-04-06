@@ -25,7 +25,7 @@ namespace Lemur.Mesh
         public SGroup[] SurfaceGroups => _groups.Where(g => g.Type == LeGroupType.Surface).Cast<SGroup>().ToArray();
         public LeMaterial[] Materials => _materials.ToArray();
         public LeContactMesh Contact { get; private set; }
-        public Dictionary<int, Dictionary<string, double[]>> NodalResultSummary { get; private set; }
+        public Dictionary<int, Dictionary<string, (double min, double max)>> NodalResultSummary { get; private set; } = new Dictionary<int, Dictionary<string, (double, double)>>();
 
         private readonly string _header;
         private readonly List<LeElementList> _elements;
@@ -347,10 +347,15 @@ namespace Lemur.Mesh
                     mises.Add(value[0]);
                 }
             }
-            NodalResultSummary = new Dictionary<int, Dictionary<string, double[]>>
+
+            if (NodalResultSummary.TryGetValue(stepId, out Dictionary<string, (double, double)> resultValue))
             {
-                { stepId, new Dictionary<string, double[]> { { "NodalMISES", new[] { mises.Min(), mises.Max(), mises.Average() } } } }
-            };
+                resultValue["NodalMISES"] = (mises.Min(), mises.Max());
+            }
+            else
+            {
+                NodalResultSummary[stepId] = new Dictionary<string, (double, double)> { { "NodalMISES", (mises.Min(), mises.Max()) } };
+            }
 
             foreach (LeNode node in Nodes)
             {
