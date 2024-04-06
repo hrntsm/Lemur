@@ -16,9 +16,13 @@ namespace Lemur.Post.ColorContour
         public Color GetColor(double value)
         {
             if (value <= 0)
+            {
                 return _colors[0].color;
+            }
             if (value >= 1)
+            {
                 return _colors.Last().color;
+            }
 
             for (int i = 0; i < _colors.Length - 1; i++)
             {

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
@@ -63,7 +64,12 @@ namespace LemurGH.Utils
                     continue;
                 }
                 double[] data = result.NodalData[resultName];
-                double normalizedValue = (data[0] - min) / (max - min);
+                double norm = Math.Sqrt(data.Sum(d => d * d));
+                double normalizedValue = (norm - min) / (max - min);
+                if (double.IsNaN(normalizedValue))
+                {
+                    normalizedValue = 0;
+                }
 
                 var contouring = new Contouring(ContoursData.ColorContours[contourSet.ToString()]);
                 Color color = contouring.GetColor(normalizedValue);

@@ -51,7 +51,7 @@ namespace LemurGH.Component.Post
                     AddRuntimeMessage(GH_RuntimeMessageLevel.Error, $"Node {nodeID} not found");
                     return;
                 }
-                double[] result = node.NodalResults[step].NodalData[target];
+                double[] result = node.NodalResults.FirstOrDefault(r => r.StepNumber == step)?.NodalData[target];
                 results.AppendRange(result.Select(r => new GH_Number(r)), new GH_Path(0, nodeID));
             }
 

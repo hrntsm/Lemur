@@ -339,31 +339,56 @@ namespace Lemur.Mesh
 
         public void AddNodalResult(int stepId, Dictionary<int, Dictionary<string, double[]>> nodalResults)
         {
+            SetMISESResults(stepId, nodalResults);
+            SetDispResults(stepId, nodalResults);
+
+            foreach (LeNode node in Nodes)
+            {
+                if (nodalResults.TryGetValue(node.Id, out Dictionary<string, double[]> value))
+                {
+                    node.AddResult(new LeNodalResult(stepId, value));
+                }
+            }
+        }
+
+        private void SetDispResults(int stepId, Dictionary<int, Dictionary<string, double[]>> nodalResults)
+        {
+            var disp = new List<double>();
+            foreach (Dictionary<string, double[]> pair in nodalResults.Values)
+            {
+                if (pair.TryGetValue("DISPLACEMENT", out double[] value))
+                {
+                    disp.Add(Math.Sqrt(value.Sum(d => d * d)));
+                }
+            }
+            SetResults(stepId, disp, "DISPLACEMENT");
+        }
+
+        private void SetMISESResults(int stepId, Dictionary<int, Dictionary<string, double[]>> nodalResults)
+        {
             var mises = new List<double>();
             foreach (Dictionary<string, double[]> pair in nodalResults.Values)
             {
                 if (pair.TryGetValue("NodalMISES", out double[] value))
                 {
-                    mises.AddRange(value);
+                    mises.Add(value[0]);
                 }
             }
+            SetResults(stepId, mises, "NodalMISES");
+        }
 
+        private void SetResults(int stepId, List<double> summary, string key)
+        {
             if (NodalResultSummary.TryGetValue(stepId, out Dictionary<string, (double, double)> resultValue))
             {
-                resultValue["NodalMISES"] = (mises.Min(), mises.Max());
+                resultValue[key] = (summary.Min(), summary.Max());
             }
             else
             {
-                NodalResultSummary[stepId] = new Dictionary<string, (double, double)> { { "NodalMISES", (mises.Min(), mises.Max()) } };
-            }
-
-            foreach (LeNode node in Nodes)
-            {
-                node.ClearResults();
-                if (nodalResults.TryGetValue(node.Id, out Dictionary<string, double[]> value))
+                NodalResultSummary[stepId] = new Dictionary<string, (double, double)>
                 {
-                    node.AddResult(new LeNodalResult(stepId, value));
-                }
+                    { key, (summary.Min(), summary.Max()) }
+                };
             }
         }
 
