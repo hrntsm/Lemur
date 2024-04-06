@@ -25,6 +25,7 @@ namespace LemurGH.Component.Post
             pManager.AddIntegerParameter("Step", "Step", "Step", GH_ParamAccess.item, 0);
             pManager.AddTextParameter("ResultName", "ResultName", "ResultName", GH_ParamAccess.item, "NodalMISES");
             pManager.AddIntegerParameter("ContourSet", "ContourSet", "ContourSet", GH_ParamAccess.item, 0);
+            pManager.AddNumberParameter("DispScale", "Scale", "Scale", GH_ParamAccess.item, 1.0);
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
@@ -38,10 +39,12 @@ namespace LemurGH.Component.Post
             int step = 0;
             string resultName = string.Empty;
             int contourSet = 0;
+            double scale = 1.0;
             if (!DA.GetData(0, ref ghLeMesh)) return;
             if (!DA.GetData(1, ref step)) return;
             if (!DA.GetData(2, ref resultName)) return;
             if (!DA.GetData(3, ref contourSet)) return;
+            if (!DA.GetData(4, ref scale)) return;
 
             LeMesh leMesh = ghLeMesh.Value;
             if (leMesh.Nodes[0].NodalResults.Length == 0)
@@ -52,7 +55,7 @@ namespace LemurGH.Component.Post
 
             leMesh.ComputeNodeFaceDataStructure();
             var set = (ContourSet)contourSet;
-            Rhino.Geometry.Mesh mesh = Utils.Preview.LeMeshResultToRhinoMesh(leMesh, step, resultName, set);
+            Rhino.Geometry.Mesh mesh = Utils.Preview.LeMeshResultToRhinoMesh(leMesh, step, resultName, set, scale);
             Message = $"{resultName} at {step}:{set}";
 
             DA.SetData(0, mesh);

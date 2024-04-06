@@ -28,6 +28,25 @@ namespace Lemur.Mesh
             _nodalResults.Add(nodalResult);
         }
 
+        public LeNode GetDeformedNode(int step, double scale)
+        {
+            var deformedNode = new LeNode(Id, X, Y, Z);
+            foreach (LeNodalResult nodalResult in _nodalResults)
+            {
+                if (nodalResult.StepNumber == step)
+                {
+                    if (nodalResult.NodalData.TryGetValue("DISPLACEMENT", out double[] value))
+                    {
+                        double[] displacement = value;
+                        deformedNode.X += displacement[0] * scale;
+                        deformedNode.Y += displacement[1] * scale;
+                        deformedNode.Z += displacement[2] * scale;
+                    }
+                }
+            }
+            return deformedNode;
+        }
+
         public string ToMsh()
         {
             string id = Id.ToString(CultureInfo.InvariantCulture).PadLeft(9, ' ');

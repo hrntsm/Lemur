@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 
@@ -35,12 +36,15 @@ namespace LemurGH.Utils
             return rhinoMesh;
         }
 
-        public static Mesh LeMeshResultToRhinoMesh(LeMesh leMesh, int step, string resultName, ContourSet contourSet)
+        public static Mesh LeMeshResultToRhinoMesh(LeMesh leMesh, int step, string resultName, ContourSet contourSet, double scale)
         {
             LeSolidElementBase[] solids = leMesh.AllElements.OfType<LeSolidElementBase>().ToArray();
 
             var rhinoMesh = new Mesh();
-            rhinoMesh.Vertices.AddVertices(leMesh.Nodes.Select(n => new Point3d(n.X, n.Y, n.Z)));
+
+            IEnumerable<LeNode> deformedNodes = leMesh.Nodes.Select(n => n.GetDeformedNode(step, scale));
+            rhinoMesh.Vertices.AddVertices(deformedNodes.Select(n => new Point3d(n.X, n.Y, n.Z)));
+
             foreach (LeNode node in leMesh.Nodes)
             {
                 if (node.NodalResults.Length == 0)
