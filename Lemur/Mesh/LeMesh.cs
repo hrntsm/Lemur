@@ -344,7 +344,7 @@ namespace Lemur.Mesh
             {
                 if (pair.TryGetValue("NodalMISES", out double[] value))
                 {
-                    mises.Add(value[0]);
+                    mises.AddRange(value);
                 }
             }
 
@@ -359,6 +359,7 @@ namespace Lemur.Mesh
 
             foreach (LeNode node in Nodes)
             {
+                node.ClearResults();
                 if (nodalResults.TryGetValue(node.Id, out Dictionary<string, double[]> value))
                 {
                     node.AddResult(new LeNodalResult(stepId, value));
@@ -370,9 +371,10 @@ namespace Lemur.Mesh
         {
             foreach (LeElementBase element in AllElements)
             {
+                element.ClearResults();
                 if (elementalResults.TryGetValue(element.Id, out Dictionary<string, double[]> value))
                 {
-                    element.AddElementalResult(new LeElementalResult(stepId, value));
+                    element.AddResult(new LeElementalResult(stepId, value));
                 }
             }
         }

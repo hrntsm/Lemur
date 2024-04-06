@@ -54,9 +54,14 @@ namespace Lemur.Mesh.Element
             }
         }
 
-        public void AddElementalResult(LeElementalResult elementalResult)
+        public void AddResult(LeElementalResult elementalResult)
         {
             _elementalResults.Add(elementalResult);
+        }
+
+        public void ClearResults()
+        {
+            _elementalResults.Clear();
         }
     }
 }

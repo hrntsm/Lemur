@@ -28,6 +28,11 @@ namespace Lemur.Mesh
             _nodalResults.Add(nodalResult);
         }
 
+        public void ClearResults()
+        {
+            _nodalResults.Clear();
+        }
+
         public LeNode GetDeformedNode(int step, double scale)
         {
             var deformedNode = new LeNode(Id, X, Y, Z);
