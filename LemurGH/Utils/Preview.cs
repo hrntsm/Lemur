@@ -1,9 +1,9 @@
-using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 
 using Lemur.Mesh;
 using Lemur.Mesh.Element;
+using Lemur.Post.ColorContour;
 using Lemur.Post.Mesh;
 
 using Rhino.Geometry;
@@ -35,7 +35,7 @@ namespace LemurGH.Utils
             return rhinoMesh;
         }
 
-        public static Mesh LeMeshResultToRhinoMesh(LeMesh leMesh, (int, int)[] faceNodes, int step, string resultName)
+        public static Mesh LeMeshResultToRhinoMesh(LeMesh leMesh, int step, string resultName, ContourSet contourSet)
         {
             LeSolidElementBase[] solids = leMesh.AllElements.OfType<LeSolidElementBase>().ToArray();
 
@@ -59,14 +59,16 @@ namespace LemurGH.Utils
                 double[] data = result.NodalData[resultName];
                 double[] summary = leMesh.NodalResultSummary[step][resultName];
                 double normalizedValue = (data[0] - summary[0]) / (summary[1] - summary[0]);
-                var color = Color.FromArgb((int)(normalizedValue * 255), 0, 0);
+
+                var contouring = new Contouring(ContoursData.ColorContours[contourSet.ToString()]);
+                Color color = contouring.GetColor(normalizedValue);
                 rhinoMesh.VertexColors.Add(color);
             }
 
-            foreach ((int, int) faceNode in faceNodes)
+            foreach ((int elementId, int faceId) in leMesh.FaceMesh)
             {
-                LeSolidElementBase solid = solids.FirstOrDefault(elem => elem.Id == faceNode.Item1);
-                int[] nodes = solid?.FaceToNodes(faceNode.Item2);
+                LeSolidElementBase solid = solids.FirstOrDefault(elem => elem.Id == elementId);
+                int[] nodes = solid?.FaceToNodes(faceId);
                 if (nodes != null)
                 {
                     if (nodes.Length == 3)

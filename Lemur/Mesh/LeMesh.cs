@@ -15,11 +15,11 @@ namespace Lemur.Mesh
         public LeNodeList Nodes { get; }
         public LeElementList[] Elements => _elements.ToArray();
         public LeElementBase[] AllElements => _elements.SelectMany(e => e).ToArray();
-        public (int, int)[] FaceMesh => ComputeFaceMesh();
+        public (int elementId, int faceId)[] FaceMesh => ComputeFaceMesh();
         /// <summary>
         /// key:nodeId, value:(elementId, faceId)[]
         /// </summary>
-        public Dictionary<int, (int, int)[]> NodeFaces { get; private set; }
+        public Dictionary<int, (int elementId, int faceId)[]> NodeFaces { get; private set; }
         public NGroup[] NodeGroups => _groups.Where(g => g.Type == LeGroupType.Node).Cast<NGroup>().ToArray();
         public EGroup[] ElementGroups => _groups.Where(g => g.Type == LeGroupType.Element).Cast<EGroup>().ToArray();
         public SGroup[] SurfaceGroups => _groups.Where(g => g.Type == LeGroupType.Surface).Cast<SGroup>().ToArray();
@@ -254,7 +254,7 @@ namespace Lemur.Mesh
         /// Compute face mesh from solid elements.
         /// </summary>
         /// <returns>(element id, face id)[]</returns>
-        private (int, int)[] ComputeFaceMesh()
+        private (int elementId, int faceId)[] ComputeFaceMesh()
         {
             var elements = new List<LeElementBase>();
             foreach (LeElementList elementList in _elements)
