@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 using Grasshopper.Kernel;
 
@@ -39,24 +40,26 @@ namespace LemurGH.Component.Mesh
             if (!DA.GetData(1, ref tghMesh)) return;
 
             var leMesh = new LeMesh(header);
+            var nodes = new LeNode[tghMesh.Vertices.Count];
             for (int i = 0; i < tghMesh.Vertices.Count; i++)
             {
                 Rhino.Geometry.Point3f v = tghMesh.Vertices[i];
                 var node = new LeNode(i + 1, v.X, v.Y, v.Z);
-                leMesh.AddNode(node);
+                nodes[i] = node;
             }
 
+            var elems = new List<LeElementBase>();
             int[] connection = tghMesh.UserDictionary["tets"] as int[];
             int elemId = 1;
             for (int i = 0; i < connection.Length; i += 4)
             {
                 var element = new Tetra341(elemId, new[] { connection[i] + 1, connection[i + 1] + 1, connection[i + 2] + 1, connection[i + 3] + 1 });
-                leMesh.AddElement(element);
+                elems.Add(element);
                 elemId++;
             }
 
-            leMesh.ComputeNodeFaceDataStructure();
-            Rhino.Geometry.Mesh mesh = Utils.Preview.LeFaceToRhinoMesh(leMesh, leMesh.FaceMesh);
+            leMesh.BuildMesh(nodes, elems.ToArray());
+            Rhino.Geometry.Mesh mesh = Utils.Preview.LeFaceToRhinoMesh(leMesh);
 
             Message = $"{leMesh.Nodes.Count} nodes, {leMesh.AllElements.Length} elems";
             DA.SetData(0, new GH_LeMesh(leMesh));

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using Grasshopper.Kernel;
 
@@ -45,47 +46,51 @@ namespace LemurGH.Component.Mesh
 
             if (!(iMInput is IMesh iMesh)) return;
 
-            ConvertINodeToLeNode(leMesh, iMesh);
-            ConvertIElementToLeElement(leMesh, iMesh);
+            LeNode[] nodes = ConvertINodeToLeNode(iMesh);
+            LeElementBase[] elems = ConvertIElementToLeElement(iMesh);
+            leMesh.BuildMesh(nodes, elems);
 
-            leMesh.ComputeNodeFaceDataStructure();
-            Rhino.Geometry.Mesh mesh = Utils.Preview.LeFaceToRhinoMesh(leMesh, leMesh.FaceMesh);
+            Rhino.Geometry.Mesh mesh = Utils.Preview.LeFaceToRhinoMesh(leMesh);
 
             Message = $"{leMesh.Nodes.Count} nodes, {leMesh.AllElements.Length} elems";
             DA.SetData(0, new GH_LeMesh(leMesh));
             DA.SetData(1, mesh);
         }
 
-        private static void ConvertINodeToLeNode(LeMesh leMesh, IMesh iMesh)
+        private static LeNode[] ConvertINodeToLeNode(IMesh iMesh)
         {
+            var nodes = new HashSet<LeNode>();
             List<ITopologicVertex> vertices = iMesh.Vertices;
             foreach (ITopologicVertex vertex in vertices)
             {
                 var node = new LeNode(vertex.Key, vertex.X, vertex.Y, vertex.Z);
-                leMesh.AddNode(node);
+                nodes.Add(node);
             }
+            return nodes.ToArray();
         }
 
-        private static void ConvertIElementToLeElement(LeMesh leMesh, IMesh iMesh)
+        private static LeElementBase[] ConvertIElementToLeElement(IMesh iMesh)
         {
-            List<IElement> elements = iMesh.Elements;
-            foreach (IElement element in elements)
+            var leElems = new HashSet<LeElementBase>();
+            List<IElement> iElems = iMesh.Elements;
+            foreach (IElement iElem in iElems)
             {
-                switch (element)
+                switch (iElem)
                 {
                     case ITetrahedronElement iTetra:
-                        leMesh.AddElement(Tetra341.FromIguanaElement(iTetra));
+                        leElems.Add(Tetra341.FromIguanaElement(iTetra));
                         break;
                     case IPrismElement iPrism:
-                        leMesh.AddElement(Prism351.FromIguanaElement(iPrism));
+                        leElems.Add(Prism351.FromIguanaElement(iPrism));
                         break;
                     case IHexahedronElement iHexa:
-                        leMesh.AddElement(Hexa361.FromIguanaElement(iHexa));
+                        leElems.Add(Hexa361.FromIguanaElement(iHexa));
                         break;
                     default:
-                        throw new NotImplementedException($"Element type {element.GetType()} is not implemented.");
+                        throw new NotImplementedException($"Element type {iElem.GetType()} is not implemented.");
                 }
             }
+            return leElems.ToArray();
         }
 
         protected override System.Drawing.Bitmap Icon => null;

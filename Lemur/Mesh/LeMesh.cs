@@ -13,13 +13,9 @@ namespace Lemur.Mesh
     public class LeMesh
     {
         public LeNodeList Nodes { get; }
+        public LeFace[] Faces => _faceMap.Values.ToArray();
         public LeElementList[] Elements => _elements.ToArray();
         public LeElementBase[] AllElements => _elements.SelectMany(e => e).ToArray();
-        public (int elementId, int faceId)[] FaceMesh => ComputeFaceMesh();
-        /// <summary>
-        /// key:nodeId, value:(elementId, faceId)[]
-        /// </summary>
-        public Dictionary<int, (int elementId, int faceId)[]> NodeFaces { get; private set; }
         public NGroup[] NodeGroups => _groups.Where(g => g.Type == LeGroupType.Node).Cast<NGroup>().ToArray();
         public EGroup[] ElementGroups => _groups.Where(g => g.Type == LeGroupType.Element).Cast<EGroup>().ToArray();
         public SGroup[] SurfaceGroups => _groups.Where(g => g.Type == LeGroupType.Surface).Cast<SGroup>().ToArray();
@@ -31,6 +27,7 @@ namespace Lemur.Mesh
         private readonly List<LeElementList> _elements;
         private readonly List<LeGroupBase> _groups;
         private readonly List<LeMaterial> _materials;
+        private readonly Dictionary<string, LeFace> _faceMap;
 
         public LeMesh(string header)
         {
@@ -39,6 +36,7 @@ namespace Lemur.Mesh
             _elements = new List<LeElementList>();
             _groups = new List<LeGroupBase>();
             _materials = new List<LeMaterial>();
+            _faceMap = new Dictionary<string, LeFace>();
         }
 
         public LeMesh(LeMesh other)
@@ -48,6 +46,43 @@ namespace Lemur.Mesh
             _elements = new List<LeElementList>(other._elements);
             _groups = new List<LeGroupBase>(other._groups);
             _materials = new List<LeMaterial>(other._materials);
+            _faceMap = new Dictionary<string, LeFace>(other._faceMap);
+        }
+
+        public void BuildMesh(IEnumerable<LeNode> nodes, IEnumerable<LeElementBase> elements)
+        {
+            Nodes.AddRange(nodes);
+            foreach (LeElementBase element in elements)
+            {
+                AddElement(element);
+                if (element is LeSolidElementBase solidElement)
+                {
+                    AddFace(solidElement);
+                }
+            }
+        }
+
+        private void AddFace(LeSolidElementBase element)
+        {
+            for (int i = 1; i <= element.FaceCount; i++)
+            {
+                int[] faceNodeIds = element.FaceToNodes(i);
+                Array.Sort(faceNodeIds);
+                string hash = string.Join(",", faceNodeIds);
+
+                if (_faceMap.TryGetValue(hash, out LeFace face))
+                {
+                    face.ElementFaceIds.Add((element.Id, i));
+                }
+                else
+                {
+                    int id = _faceMap.Count + 1;
+                    LeNode[] nodes = faceNodeIds.Select(nId => Nodes.FirstOrDefault(target => target.Id == nId)).ToArray();
+                    face = new LeFace(id, nodes);
+                    face.ElementFaceIds.Add((element.Id, i));
+                    _faceMap[hash] = face;
+                }
+            }
         }
 
         public void AddNode(LeNode node)
@@ -60,7 +95,7 @@ namespace Lemur.Mesh
             Nodes.AddRange(nodes);
         }
 
-        public void AddElement(LeElementBase element)
+        private void AddElement(LeElementBase element)
         {
             CheckNodeExistence(element);
             LeElementList list = _elements.Find(e => e.ElementType == element.ElementType);
@@ -224,85 +259,6 @@ namespace Lemur.Mesh
             File.WriteAllText(Path.Combine(dir, name), ToMsh());
         }
 
-        public void ComputeNodeFaceDataStructure()
-        {
-            var elements = new List<LeElementBase>();
-            foreach (LeElementList elementList in _elements)
-            {
-                elements.AddRange(elementList);
-            }
-
-            var nodeFaces = new Dictionary<int, List<(int, int)>>();
-            foreach (LeSolidElementBase element in elements.Where(e => e is LeSolidElementBase).Cast<LeSolidElementBase>())
-            {
-                Dictionary<int, int[]> nf = element.NodeFaces;
-                foreach (KeyValuePair<int, int[]> pair in nf)
-                {
-                    if (!nodeFaces.TryGetValue(pair.Key, out List<(int, int)> value))
-                    {
-                        value = new List<(int, int)>();
-                        nodeFaces[pair.Key] = value;
-                    }
-                    value.AddRange(pair.Value.Select(faceId => (element.Id, faceId)));
-                }
-            }
-
-            NodeFaces = nodeFaces.ToDictionary(pair => pair.Key, pair => pair.Value.ToArray());
-        }
-
-        /// <summary>
-        /// Compute face mesh from solid elements.
-        /// </summary>
-        /// <returns>(element id, face id)[]</returns>
-        private (int elementId, int faceId)[] ComputeFaceMesh()
-        {
-            var elements = new List<LeElementBase>();
-            foreach (LeElementList elementList in _elements)
-            {
-                elements.AddRange(elementList);
-            }
-
-            var nodeFace = new Dictionary<string, List<(int, int)>>();
-            foreach (LeSolidElementBase element in elements.Where(e => e is LeSolidElementBase).Cast<LeSolidElementBase>())
-            {
-                for (int i = 1; i <= element.FaceCount; i++)
-                {
-                    int[] faceNodeIds = element.FaceToNodes(i);
-                    Array.Sort(faceNodeIds);
-                    string key = CreateKey(faceNodeIds);
-                    if (!nodeFace.TryGetValue(key, out List<(int, int)> value))
-                    {
-                        value = new List<(int, int)>();
-                        nodeFace[key] = value;
-                    }
-
-                    value.Add((element.Id, i));
-                }
-            }
-
-            var face = new List<(int, int)>();
-            foreach (KeyValuePair<string, List<(int, int)>> pair in nodeFace)
-            {
-                if (pair.Value.Count == 1)
-                {
-                    face.Add(pair.Value[0]);
-                }
-            }
-
-            return face.ToArray();
-        }
-
-        private static string CreateKey(int[] faceNodeIds)
-        {
-            var sb = new StringBuilder();
-            foreach (int id in faceNodeIds)
-            {
-                sb.Append(id);
-                sb.Append(',');
-            }
-            return sb.ToString();
-        }
-
         public void Merge(LeMesh other)
         {
             if (other == null)
@@ -320,21 +276,23 @@ namespace Lemur.Mesh
             int elemIdDiff = baseElementIdMax - otherElementIdMin;
             int elemOffset = elemIdDiff >= 0 ? elemIdDiff + 1 : 0;
 
+            var offsetNodes = new List<LeNode>();
             foreach (LeNode node in other.Nodes)
             {
-                Nodes.Add(new LeNode(node.Id + nodeOffset, node.X, node.Y, node.Z));
+                offsetNodes.Add(new LeNode(node.Id + nodeOffset, node.X, node.Y, node.Z));
             }
 
+            var offsetElements = new List<LeElementBase>();
             foreach (LeElementList otherElems in other._elements)
             {
                 foreach (LeElementBase otherElem in otherElems)
                 {
                     otherElem.ShiftIds(elemOffset, nodeOffset);
-                    AddElement(otherElem);
+                    offsetElements.Add(otherElem);
                 }
             }
 
-            ComputeFaceMesh();
+            BuildMesh(offsetNodes, offsetElements);
         }
 
         public void AddNodalResult(int stepId, Dictionary<int, Dictionary<string, double[]>> nodalResults)

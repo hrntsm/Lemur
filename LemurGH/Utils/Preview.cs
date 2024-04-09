@@ -15,16 +15,21 @@ namespace LemurGH.Utils
 {
     public static class Preview
     {
-        public static Mesh LeFaceToRhinoMesh(LeMesh leMesh, (int, int)[] faceNodes)
+        public static Mesh LeFaceToRhinoMesh(LeMesh leMesh)
         {
-            LeSolidElementBase[] solids = leMesh.AllElements.OfType<LeSolidElementBase>().ToArray();
+            IEnumerable<LeFace> face = leMesh.Faces.Where(f => f.IsSurface);
+            return LeFaceToRhinoMesh(leMesh, face.Select(f => f.ElementFaceIds).SelectMany(f => f).ToArray());
+        }
 
+        public static Mesh LeFaceToRhinoMesh(LeMesh leMesh, (int elementId, int faceId)[] faceIds)
+        {
             var rhinoMesh = new Mesh();
             rhinoMesh.Vertices.AddVertices(leMesh.Nodes.Select(n => new Point3d(n.X, n.Y, n.Z)));
-            foreach ((int, int) faceNode in faceNodes)
+
+            foreach ((int elementId, int faceId) in faceIds)
             {
-                LeSolidElementBase solid = solids.FirstOrDefault(elem => elem.Id == faceNode.Item1);
-                int[] nodes = solid?.FaceToNodes(faceNode.Item2);
+                LeSolidElementBase solid = leMesh.AllElements.OfType<LeSolidElementBase>().FirstOrDefault(elem => elem.Id == elementId);
+                int[] nodes = solid?.FaceToNodes(faceId);
                 if (nodes != null)
                 {
                     if (nodes.Length == 3)
@@ -33,6 +38,7 @@ namespace LemurGH.Utils
                         rhinoMesh.Faces.AddFace(new MeshFace(nodes[0] - 1, nodes[1] - 1, nodes[2] - 1, nodes[3] - 1));
                 }
             }
+
             rhinoMesh.UnifyNormals();
             rhinoMesh.Normals.ComputeNormals();
             return rhinoMesh;
@@ -76,7 +82,7 @@ namespace LemurGH.Utils
                 rhinoMesh.VertexColors.Add(color);
             }
 
-            foreach ((int elementId, int faceId) in leMesh.FaceMesh)
+            foreach ((int elementId, int faceId) in leMesh.Faces.Where(f => f.IsSurface).Select(f => f.ElementFaceIds[0]))
             {
                 LeSolidElementBase solid = solids.FirstOrDefault(elem => elem.Id == elementId);
                 int[] nodes = solid?.FaceToNodes(faceId);

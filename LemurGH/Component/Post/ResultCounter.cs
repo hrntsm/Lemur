@@ -56,7 +56,6 @@ namespace LemurGH.Component.Post
                 return;
             }
 
-            leMesh.ComputeNodeFaceDataStructure();
             var set = (ContourSet)contourSet;
             (Rhino.Geometry.Mesh mesh, Color[] color, string[] text) = Utils.Preview.LeMeshResultToRhinoMesh(leMesh, step, resultName, set, scale);
             Message = $"{resultName} at {step}:{set}";

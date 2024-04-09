@@ -102,42 +102,22 @@ namespace LemurGH.Component.Group
 
         private static SGroup ComputeSurfaceGroup(string name, LeMesh leMesh, int[] targetNodeIds)
         {
-            var faces = new List<(int, int)>();
-            Dictionary<int, (int, int)[]> nf = leMesh.NodeFaces;
-            var fn = new Dictionary<(int, int), List<int>>();
-
-            foreach (int nodeId in targetNodeIds)
+            var targetFaces = new HashSet<LeFace>();
+            IEnumerable<LeFace> surface = leMesh.Faces.Where(f => f.IsSurface);
+            foreach (int targetNodeId in targetNodeIds)
             {
-                if (nf.TryGetValue(nodeId, out (int, int)[] value))
+                foreach (LeFace face in surface)
                 {
-                    foreach ((int, int) v in value)
+                    int[] nodeIds = face.GetNodeIds();
+                    if (nodeIds.Contains(targetNodeId))
                     {
-                        if (!fn.TryGetValue(v, out List<int> nodes))
-                        {
-                            nodes = new List<int>();
-                            fn[v] = nodes;
-                        }
-                        nodes.Add(nodeId);
+                        targetFaces.Add(face);
                     }
                 }
             }
 
-            var elements = new List<LeElementBase>();
-            foreach (LeElementList elementList in leMesh.Elements)
-            {
-                elements.AddRange(elementList);
-            }
-
-            foreach (KeyValuePair<(int, int), List<int>> p in fn)
-            {
-                LeElementBase elem = elements.FirstOrDefault(e => e.Id == p.Key.Item1);
-                if (elem is LeSolidElementBase solid && solid.FaceToNodes(p.Key.Item2).Length == p.Value.Count)
-                {
-                    faces.Add(p.Key);
-                }
-            }
-
-            return new SGroup(name, faces.ToArray());
+            (int, int)[] faceElementIds = targetFaces.Select(f => f.ElementFaceIds[0]).ToArray();
+            return new SGroup(name, faceElementIds);
         }
 
         public override Guid ComponentGuid => new Guid("4d94af90-ebab-4f0e-a601-8f6d468eb240");

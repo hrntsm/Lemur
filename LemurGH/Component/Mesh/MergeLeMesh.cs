@@ -40,10 +40,9 @@ namespace LemurGH.Component.Mesh
             LeMesh leMesh2 = ghLeMesh2.Value;
 
             leMesh1.Merge(leMesh2);
-            leMesh1.ComputeNodeFaceDataStructure();
 
             Message = $"{leMesh1.Nodes.Count} nodes, {leMesh1.AllElements.Length} elems";
-            Rhino.Geometry.Mesh mesh = Utils.Preview.LeFaceToRhinoMesh(leMesh1, leMesh1.FaceMesh);
+            Rhino.Geometry.Mesh mesh = Utils.Preview.LeFaceToRhinoMesh(leMesh1);
             DA.SetData(0, new GH_LeMesh(leMesh1));
             DA.SetData(1, mesh);
         }

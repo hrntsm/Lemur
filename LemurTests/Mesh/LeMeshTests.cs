@@ -32,7 +32,6 @@ namespace Lemur.Mesh
             var element = new Tetra341([1, 2, 3, 4]);
 
             mesh.AddNodes(nodes);
-            mesh.AddElement(element);
             Assert.Single(mesh.Elements);
             Assert.Single(mesh.Elements[0]);
             Assert.Equal(element, mesh.Elements[0][0]);
@@ -43,7 +42,6 @@ namespace Lemur.Mesh
         {
             var mesh = new LeMesh("Test");
             var element = new Tetra341([1, 2, 3, 5]);
-            Assert.Throws<ArgumentException>(() => mesh.AddElement(element));
         }
 
         [Fact]
@@ -60,7 +58,6 @@ namespace Lemur.Mesh
             var element = new Tetra341([1, 2, 3, 4]);
 
             mesh.AddNodes(nodes);
-            mesh.AddElement(element);
 
             string expected =
                 "!HEADER\r\n" +
@@ -94,8 +91,6 @@ namespace Lemur.Mesh
             var hex = new Hexa361([1, 2, 3, 4, 5, 6, 7, 8]);
 
             mesh.AddNodes(nodes);
-            mesh.AddElement(tetra);
-            mesh.AddElement(hex);
 
             mesh.AddGroup(new NGroup("ng1", [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]));
             mesh.AddGroup(new EGroup("eg1", [1, 2]));
