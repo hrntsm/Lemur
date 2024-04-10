@@ -25,7 +25,11 @@ namespace Lemur.Mesh
 
         public void AddResult(LeNodalResult nodalResult)
         {
-            _nodalResults.Add(nodalResult);
+            List<LeNodalResult> steps = _nodalResults.FindAll(n => n.StepNumber == nodalResult.StepNumber);
+            if (steps.Count == 0)
+            {
+                _nodalResults.Add(nodalResult);
+            }
         }
 
         public void ClearResults()
