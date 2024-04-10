@@ -111,7 +111,11 @@ namespace LemurGH.Component.Group
                     int[] nodeIds = face.GetNodeIds();
                     if (nodeIds.Contains(targetNodeId))
                     {
-                        targetFaces.Add(face);
+                        int contain = nodeIds.Where(nodeId => targetNodeIds.Contains(nodeId)).Count();
+                        if (contain == nodeIds.Length)
+                        {
+                            targetFaces.Add(face);
+                        }
                     }
                 }
             }
