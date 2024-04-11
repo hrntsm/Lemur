@@ -8,7 +8,7 @@ namespace Lemur.Mesh
         public int Id { get; }
         public LeNode[] Nodes { get; }
         public int[] GetNodeIds() => Nodes.Select(n => n.Id).ToArray();
-        public List<(int ElementId, int LocalFaceId)> ElementFaceIds { get; }
+        public HashSet<(int ElementId, int LocalFaceId)> ElementFaceIds { get; }
         public bool IsSurface => ElementFaceIds.Count == 1;
         public bool IsInternal => ElementFaceIds.Count > 1;
 
@@ -16,7 +16,7 @@ namespace Lemur.Mesh
         {
             Id = id;
             Nodes = nodes;
-            ElementFaceIds = new List<(int ElementId, int LocalFaceId)>();
+            ElementFaceIds = new HashSet<(int ElementId, int LocalFaceId)>();
         }
     }
 }

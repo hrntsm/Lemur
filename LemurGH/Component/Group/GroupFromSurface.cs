@@ -120,7 +120,7 @@ namespace LemurGH.Component.Group
                 }
             }
 
-            (int, int)[] faceElementIds = targetFaces.Select(f => f.ElementFaceIds[0]).ToArray();
+            (int, int)[] faceElementIds = targetFaces.Select(f => f.ElementFaceIds.First()).ToArray();
             return new SGroup(name, faceElementIds);
         }
 

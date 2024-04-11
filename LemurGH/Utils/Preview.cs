@@ -82,7 +82,7 @@ namespace LemurGH.Utils
                 rhinoMesh.VertexColors.Add(color);
             }
 
-            foreach ((int elementId, int faceId) in leMesh.Faces.Where(f => f.IsSurface).Select(f => f.ElementFaceIds[0]))
+            foreach ((int elementId, int faceId) in leMesh.Faces.Where(f => f.IsSurface).Select(f => f.ElementFaceIds.First()))
             {
                 LeSolidElementBase solid = solids.FirstOrDefault(elem => elem.Id == elementId);
                 int[] nodes = solid?.FaceToNodes(faceId);
