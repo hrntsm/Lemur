@@ -12,7 +12,7 @@ namespace Lemur.Mesh
 {
     public class LeMesh
     {
-        public LeNodeList Nodes { get; }
+        public LeNodeList Nodes { get; private set; }
         public LeFace[] Faces => _faceMap.Values.ToArray();
         public LeElementList[] Elements => _elements.ToArray();
         public LeElementBase[] AllElements => _elements.SelectMany(e => e).ToArray();
@@ -28,6 +28,7 @@ namespace Lemur.Mesh
         private readonly List<LeGroupBase> _groups;
         private readonly List<LeMaterial> _materials;
         private readonly Dictionary<string, LeFace> _faceMap;
+        private HashSet<int> _nodeIds;
 
         public LeMesh(string header)
         {
@@ -51,7 +52,8 @@ namespace Lemur.Mesh
 
         public void BuildMesh(IEnumerable<LeNode> nodes, IEnumerable<LeElementBase> elements)
         {
-            Nodes.AddRange(nodes);
+            Nodes = new LeNodeList(nodes);
+            _nodeIds = Nodes.Select(n => n.Id).ToHashSet();
             foreach (LeElementBase element in elements)
             {
                 AddElement(element);
@@ -88,11 +90,16 @@ namespace Lemur.Mesh
         public void AddNode(LeNode node)
         {
             Nodes.Add(node);
+            _nodeIds.Add(node.Id);
         }
 
         public void AddNodes(IEnumerable<LeNode> nodes)
         {
             Nodes.AddRange(nodes);
+            foreach (LeNode node in nodes)
+            {
+                _nodeIds.Add(node.Id);
+            }
         }
 
         private void AddElement(LeElementBase element)
@@ -142,10 +149,9 @@ namespace Lemur.Mesh
 
         private void CheckNodeExistence(LeElementBase element)
         {
-            IEnumerable<int> nodeIds = Nodes.Select(n => n.Id);
             foreach (int nodeId in element.NodeIds)
             {
-                if (!nodeIds.Contains(nodeId))
+                if (!_nodeIds.Contains(nodeId))
                 {
                     throw new ArgumentException($"NodeID:{nodeId} does not exist in this mesh node list.");
                 }

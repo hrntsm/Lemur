@@ -25,6 +25,11 @@ namespace Lemur.Mesh
             _nodes = new List<LeNode>();
         }
 
+        public LeNodeList(IEnumerable<LeNode> nodes)
+        {
+            _nodes = new List<LeNode>(nodes);
+        }
+
         public LeNodeList(LeNodeList other)
         {
             _nodes = new List<LeNode>(other._nodes);
