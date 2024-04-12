@@ -47,6 +47,7 @@ namespace Lemur.Hecmw
             AppendForMesh(sb);
             AppendForSolver(sb);
             AppendForResult(sb);
+            sb.AppendLine("!SUBDIR, ON");
 
             return sb.ToString();
         }
