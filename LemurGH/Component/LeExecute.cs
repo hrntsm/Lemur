@@ -60,6 +60,7 @@ namespace LemurGH.Component
                 leAsm?.LeHecmwControl.SetMPIValues(mpiType, process);
                 leAsm?.Serialize(dir);
                 ExecuteAnalysis(dir, thread, mpiType, process);
+                MergeResult(dir, process, leAsm.LeControl.LeStep.SubSteps);
                 resultDir = dir;
 
                 _ = new LePost(leAsm.LeMesh, dir);
@@ -72,7 +73,14 @@ namespace LemurGH.Component
         {
             if (Directory.Exists(dir))
             {
-                Directory.Delete(dir, true);
+                try
+                {
+                    Directory.Delete(dir, true);
+                }
+                catch (Exception)
+                {
+                    // ignored
+                }
             }
             Directory.CreateDirectory(dir);
         }
@@ -132,6 +140,18 @@ namespace LemurGH.Component
             fistr.StartInfo.WorkingDirectory = dir;
             fistr.Start();
             fistr.WaitForExit();
+        }
+
+        private static void MergeResult(string dir, int process, int subSteps)
+        {
+            string assemblePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            string rmergePath = Path.Combine(assemblePath, "Lib", "fistr_serial", "rmerge.exe");
+            var rmerge = new Process();
+            rmerge.StartInfo.FileName = rmergePath;
+            rmerge.StartInfo.WorkingDirectory = dir;
+            rmerge.StartInfo.Arguments = $" -o text -n {process} -e {subSteps} lemur_rmerge.res";
+            rmerge.Start();
+            rmerge.WaitForExit();
         }
 
         public override Guid ComponentGuid => new Guid("20aab5a3-c180-4a1f-806b-4b3c16cc8f28");
