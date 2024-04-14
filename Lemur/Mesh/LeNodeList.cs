@@ -9,6 +9,7 @@ namespace Lemur.Mesh
     public class LeNodeList : IList<LeNode>
     {
         public bool IsReadOnly => true;
+        private readonly Dictionary<int, LeNode> _nodeDict;
 
         public int Count => _nodes.Count;
 
@@ -23,16 +24,34 @@ namespace Lemur.Mesh
         public LeNodeList()
         {
             _nodes = new List<LeNode>();
+            _nodeDict = new Dictionary<int, LeNode>();
         }
 
         public LeNodeList(IEnumerable<LeNode> nodes)
         {
             _nodes = new List<LeNode>(nodes);
+            _nodeDict = new Dictionary<int, LeNode>();
+            foreach (LeNode node in _nodes)
+            {
+                _nodeDict[node.Id] = node;
+            }
         }
 
         public LeNodeList(LeNodeList other)
         {
             _nodes = new List<LeNode>(other._nodes);
+            _nodeDict = new Dictionary<int, LeNode>();
+            foreach (LeNode node in _nodes)
+            {
+                _nodeDict[node.Id] = node;
+            }
+        }
+
+        public LeNode GetLeNodeById(int id)
+        {
+            return _nodeDict.TryGetValue(id, out LeNode value)
+                ? value
+                : null;
         }
 
         private void CheckIndex(int id)

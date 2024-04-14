@@ -79,7 +79,7 @@ namespace Lemur.Mesh
                 else
                 {
                     int id = _faceMap.Count + 1;
-                    LeNode[] nodes = faceNodeIds.Select(nId => Nodes.FirstOrDefault(target => target.Id == nId)).ToArray();
+                    LeNode[] nodes = faceNodeIds.Select(nId => Nodes.GetLeNodeById(nId)).ToArray();
                     face = new LeFace(id, nodes);
                     face.ElementFaceIds.Add((element.Id, i));
                     _faceMap[hash] = face;
