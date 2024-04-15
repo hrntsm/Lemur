@@ -17,7 +17,7 @@ namespace LemurGH.Utils
     {
         public static Mesh LeFaceToRhinoMesh(LeMesh leMesh)
         {
-            IEnumerable<LeFace> face = leMesh.Faces.Where(f => f.IsSurface);
+            IEnumerable<LeFace> face = leMesh.SurfaceFaces;
             return LeFaceToRhinoMesh(leMesh, face.Select(f => f.ElementFaceIds).SelectMany(f => f).ToArray());
         }
 
@@ -82,7 +82,7 @@ namespace LemurGH.Utils
                 rhinoMesh.VertexColors.Add(color);
             }
 
-            foreach ((int elementId, int faceId) in leMesh.Faces.Where(f => f.IsSurface).Select(f => f.ElementFaceIds.First()))
+            foreach ((int elementId, int faceId) in leMesh.SurfaceFaces.Select(f => f.ElementFaceIds.First()))
             {
                 LeSolidElementBase solid = solids.FirstOrDefault(elem => elem.Id == elementId);
                 int[] nodes = solid?.FaceToNodes(faceId);

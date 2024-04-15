@@ -103,7 +103,7 @@ namespace LemurGH.Component.Group
         private static SGroup ComputeSurfaceGroup(string name, LeMesh leMesh, int[] targetNodeIds)
         {
             var targetFaces = new HashSet<LeFace>();
-            IEnumerable<LeFace> surface = leMesh.Faces.Where(f => f.IsSurface);
+            IEnumerable<LeFace> surface = leMesh.SurfaceFaces;
             foreach (int targetNodeId in targetNodeIds)
             {
                 foreach (LeFace face in surface)

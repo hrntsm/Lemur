@@ -14,6 +14,7 @@ namespace Lemur.Mesh
     {
         public LeNodeList Nodes { get; private set; }
         public LeFace[] Faces => _faceMap.Values.ToArray();
+        public IEnumerable<LeFace> SurfaceFaces { get; private set; }
         public LeElementList[] Elements => _elements.ToArray();
         public LeElementBase[] AllElements => _elements.SelectMany(e => e).ToArray();
         public NGroup[] NodeGroups => _groups.Where(g => g.Type == LeGroupType.Node).Cast<NGroup>().ToArray();
@@ -71,6 +72,7 @@ namespace Lemur.Mesh
                     AddFace(solidElement);
                 }
             }
+            SurfaceFaces = _faceMap.Values.Where(f => f.IsSurface);
         }
 
         private void AddFace(LeSolidElementBase element)
