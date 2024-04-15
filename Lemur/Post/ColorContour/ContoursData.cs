@@ -9,16 +9,16 @@ namespace Lemur.Post.ColorContour
         {
             ["Rainbow"] = new (Color color, double position)[]
             {
-            (Color.FromArgb(255, 0, 0), 0.0),
-            (Color.FromArgb(255, 63, 0), 0.11),
-            (Color.FromArgb(255, 127, 0), 0.22),
-            (Color.FromArgb(255, 191, 0), 0.33),
-            (Color.FromArgb(255, 255, 0), 0.44),
-            (Color.FromArgb(127, 255, 0), 0.55),
-            (Color.FromArgb(0, 255, 0), 0.66),
-            (Color.FromArgb(0, 127, 255), 0.77),
-            (Color.FromArgb(0, 0, 255), 0.88),
-            (Color.FromArgb(143, 0, 255), 1.0)
+            (Color.FromArgb(143, 0, 255), 0.0),
+            (Color.FromArgb(0, 0, 255), 0.11),
+            (Color.FromArgb(0, 127, 255), 0.22),
+            (Color.FromArgb(0, 255, 0), 0.33),
+            (Color.FromArgb(127, 255, 0), 0.44),
+            (Color.FromArgb(255, 255, 0), 0.55),
+            (Color.FromArgb(255, 191, 0), 0.66),
+            (Color.FromArgb(255, 127, 0), 0.77),
+            (Color.FromArgb(255, 63, 0), 0.88),
+            (Color.FromArgb(255, 0, 0), 1.0)
             },
             ["HeatMap"] = new (Color color, double position)[]
             {
