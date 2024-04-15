@@ -50,10 +50,19 @@ namespace Lemur.Mesh
             _faceMap = new Dictionary<string, LeFace>(other._faceMap);
         }
 
-        public void BuildMesh(IEnumerable<LeNode> nodes, IEnumerable<LeElementBase> elements)
+        public void BuildMesh(IEnumerable<LeNode> nodes, IEnumerable<LeElementBase> elements, bool isMerge = false)
         {
-            Nodes = new LeNodeList(nodes);
-            _nodeIds = Nodes.Select(n => n.Id).ToHashSet();
+            if (isMerge)
+            {
+                Nodes.AddRange(nodes);
+                _nodeIds.UnionWith(Nodes.Select(n => n.Id));
+            }
+            else
+            {
+                Nodes = new LeNodeList(nodes);
+                _nodeIds = Nodes.Select(n => n.Id).ToHashSet();
+            }
+
             foreach (LeElementBase element in elements)
             {
                 AddElement(element);
@@ -298,7 +307,7 @@ namespace Lemur.Mesh
                 }
             }
 
-            BuildMesh(offsetNodes, offsetElements);
+            BuildMesh(offsetNodes, offsetElements, true);
         }
 
         public void AddNodalResult(int stepId, Dictionary<int, Dictionary<string, double[]>> nodalResults)

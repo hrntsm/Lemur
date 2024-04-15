@@ -96,12 +96,7 @@ namespace Lemur.Mesh
         {
             CheckIndex(item.Id);
             _nodes.Add(item);
-        }
-
-        public void Add(double x, double y, double z)
-        {
-            int id = _nodes.Max(n => n.Id) + 1;
-            Add(id, x, y, z);
+            _nodeDict[item.Id] = item;
         }
 
         public void Add(int id, double x, double y, double z)
