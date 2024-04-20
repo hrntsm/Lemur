@@ -28,6 +28,8 @@ namespace Lemur.Mesh.Element
             new int[] { 2, 5, 6 },
         };
 
+        public override Dictionary<int, int[]> EdgeNodes => throw new NotImplementedException();
+
         public Hexa361(int[] nodeIds) : base(nodeIds)
         {
         }

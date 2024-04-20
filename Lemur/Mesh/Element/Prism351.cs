@@ -24,6 +24,8 @@ namespace Lemur.Mesh.Element
             new int[] { 2, 4, 5 }
         };
 
+        public override Dictionary<int, int[]> EdgeNodes => throw new NotImplementedException();
+
         public Prism351(int[] nodeIds) : base(nodeIds)
         {
         }

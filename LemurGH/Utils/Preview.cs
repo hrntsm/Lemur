@@ -23,24 +23,11 @@ namespace LemurGH.Utils
 
         public static Mesh LeFaceToRhinoMesh(LeMesh leMesh, (int elementId, int faceId)[] faceIds)
         {
+            LeSolidElementBase[] solids = leMesh.AllElements.OfType<LeSolidElementBase>().ToArray();
             var rhinoMesh = new Mesh();
             rhinoMesh.Vertices.AddVertices(leMesh.Nodes.Select(n => new Point3d(n.X, n.Y, n.Z)));
 
-            foreach ((int elementId, int faceId) in faceIds)
-            {
-                LeSolidElementBase solid = leMesh.AllElements.OfType<LeSolidElementBase>().FirstOrDefault(elem => elem.Id == elementId);
-                int[] nodes = solid?.FaceToNodes(faceId);
-                if (nodes != null)
-                {
-                    if (nodes.Length == 3)
-                        rhinoMesh.Faces.AddFace(new MeshFace(nodes[0] - 1, nodes[1] - 1, nodes[2] - 1));
-                    else if (nodes.Length == 4)
-                        rhinoMesh.Faces.AddFace(new MeshFace(nodes[0] - 1, nodes[1] - 1, nodes[2] - 1, nodes[3] - 1));
-                }
-            }
-
-            rhinoMesh.UnifyNormals();
-            rhinoMesh.Normals.ComputeNormals();
+            SetMeshFaces(faceIds, solids, rhinoMesh);
             return rhinoMesh;
         }
 
@@ -82,7 +69,18 @@ namespace LemurGH.Utils
                 rhinoMesh.VertexColors.Add(color);
             }
 
-            foreach ((int elementId, int faceId) in leMesh.SurfaceFaces.Select(f => f.ElementFaceIds.First()))
+            (int ElementId, int LocalFaceId)[] faceIds = leMesh.SurfaceFaces.Select(f => f.ElementFaceIds.First()).ToArray();
+            SetMeshFaces(faceIds, solids, rhinoMesh);
+
+            (Color color, double position)[] colorContour = ContoursData.ColorContours[contourSet.ToString()];
+            Color[] colors = colorContour.Select(c => c.color).Reverse().ToArray();
+            string[] texts = colorContour.Select(c => (c.position * (max - min) - min).ToString("0.0000E+00", CultureInfo.InvariantCulture)).Reverse().ToArray();
+            return (rhinoMesh, colors, texts);
+        }
+
+        private static void SetMeshFaces((int elementId, int faceId)[] faceIds, LeSolidElementBase[] solids, Mesh rhinoMesh)
+        {
+            foreach ((int elementId, int faceId) in faceIds)
             {
                 LeSolidElementBase solid = solids.FirstOrDefault(elem => elem.Id == elementId);
                 int[] nodes = solid?.FaceToNodes(faceId);
@@ -92,16 +90,14 @@ namespace LemurGH.Utils
                         rhinoMesh.Faces.AddFace(new MeshFace(nodes[0] - 1, nodes[1] - 1, nodes[2] - 1));
                     else if (nodes.Length == 4)
                         rhinoMesh.Faces.AddFace(new MeshFace(nodes[0] - 1, nodes[1] - 1, nodes[2] - 1, nodes[3] - 1));
+                    else if (nodes.Length == 6)
+                        rhinoMesh.Faces.AddFace(new MeshFace(nodes[0] - 1, nodes[2] - 1, nodes[4] - 1));
                 }
             }
             rhinoMesh.UnifyNormals();
             rhinoMesh.Normals.ComputeNormals();
-
-            (Color color, double position)[] colorContour = ContoursData.ColorContours[contourSet.ToString()];
-            Color[] colors = colorContour.Select(c => c.color).Reverse().ToArray();
-            string[] texts = colorContour.Select(c => (c.position * (max - min) - min).ToString("0.0000E+00", CultureInfo.InvariantCulture)).Reverse().ToArray();
-            return (rhinoMesh, colors, texts);
         }
+
 
         public static PointCloud LeNodeToRhinoPointCloud(LeMesh leMesh, int[] nodeIds)
         {

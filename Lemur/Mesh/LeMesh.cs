@@ -12,7 +12,9 @@ namespace Lemur.Mesh
 {
     public class LeMesh
     {
+        public string Header => _header;
         public LeNodeList Nodes { get; private set; }
+        public LeEdge[] Edges => _edgeMap.Values.ToArray();
         public LeFace[] Faces => _faceMap.Values.ToArray();
         public IEnumerable<LeFace> SurfaceFaces { get; private set; }
         public LeElementList[] Elements => _elements.ToArray();
@@ -28,6 +30,7 @@ namespace Lemur.Mesh
         private readonly List<LeElementList> _elements;
         private readonly List<LeGroupBase> _groups;
         private readonly List<LeMaterial> _materials;
+        private readonly Dictionary<string, LeEdge> _edgeMap;
         private readonly Dictionary<string, LeFace> _faceMap;
         private HashSet<int> _nodeIds;
 
@@ -38,6 +41,7 @@ namespace Lemur.Mesh
             _elements = new List<LeElementList>();
             _groups = new List<LeGroupBase>();
             _materials = new List<LeMaterial>();
+            _edgeMap = new Dictionary<string, LeEdge>();
             _faceMap = new Dictionary<string, LeFace>();
         }
 
@@ -45,10 +49,14 @@ namespace Lemur.Mesh
         {
             _header = other._header;
             Nodes = new LeNodeList(other.Nodes);
+            SurfaceFaces = other.SurfaceFaces;
             _elements = new List<LeElementList>(other._elements);
             _groups = new List<LeGroupBase>(other._groups);
             _materials = new List<LeMaterial>(other._materials);
+            _edgeMap = new Dictionary<string, LeEdge>(other._edgeMap);
             _faceMap = new Dictionary<string, LeFace>(other._faceMap);
+            Contact = other.Contact;
+            NodalResultSummary = new Dictionary<int, Dictionary<string, (double, double)>>(other.NodalResultSummary);
         }
 
         public void BuildMesh(IEnumerable<LeNode> nodes, IEnumerable<LeElementBase> elements, bool isMerge = false)
@@ -69,10 +77,34 @@ namespace Lemur.Mesh
                 AddElement(element);
                 if (element is LeSolidElementBase solidElement)
                 {
+                    AddEdge(solidElement);
                     AddFace(solidElement);
                 }
             }
             SurfaceFaces = _faceMap.Values.Where(f => f.IsSurface);
+        }
+
+        private void AddEdge(LeSolidElementBase solidElement)
+        {
+            for (int i = 1; i <= solidElement.EdgeCount; i++)
+            {
+                int[] edgeNodeIds = solidElement.EdgeToNodes(i);
+                Array.Sort(edgeNodeIds);
+                string hash = string.Join(",", edgeNodeIds);
+
+                if (_edgeMap.TryGetValue(hash, out LeEdge edge))
+                {
+                    edge.ElementIds.Add(solidElement.Id);
+                }
+                else
+                {
+                    int id = _edgeMap.Count + 1;
+                    LeNode[] nodes = edgeNodeIds.Select(nId => Nodes.GetLeNodeById(nId)).ToArray();
+                    edge = new LeEdge(id, nodes);
+                    edge.ElementIds.Add(solidElement.Id);
+                    _edgeMap[hash] = edge;
+                }
+            }
         }
 
         private void AddFace(LeSolidElementBase element)
@@ -378,5 +410,6 @@ namespace Lemur.Mesh
                 }
             }
         }
+
     }
 }

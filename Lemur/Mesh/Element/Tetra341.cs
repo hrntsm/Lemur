@@ -8,6 +8,17 @@ namespace Lemur.Mesh.Element
     public class Tetra341 : LeSolidElementBase
     {
         public override LeElementType ElementType => LeElementType.Tetra341;
+
+        public override Dictionary<int, int[]> EdgeNodes => new Dictionary<int, int[]>
+        {
+            { 1, new int[] { NodeIds[0], NodeIds[1] } },
+            { 2, new int[] { NodeIds[0], NodeIds[2] } },
+            { 3, new int[] { NodeIds[0], NodeIds[3] } },
+            { 4, new int[] { NodeIds[1], NodeIds[2] } },
+            { 5, new int[] { NodeIds[1], NodeIds[3] } },
+            { 6, new int[] { NodeIds[2], NodeIds[3] } }
+        };
+
         public override Dictionary<int, int[]> FaceNodes => new Dictionary<int, int[]>{
             { 1, new int[] { NodeIds[0], NodeIds[1], NodeIds[2] } },
             { 2, new int[] { NodeIds[0], NodeIds[1], NodeIds[3] } },
