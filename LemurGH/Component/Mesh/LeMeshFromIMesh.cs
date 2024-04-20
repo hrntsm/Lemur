@@ -73,18 +73,27 @@ namespace LemurGH.Component.Mesh
         {
             var leElems = new HashSet<LeElementBase>();
             List<IElement> iElems = iMesh.Elements;
+            int idOffset = 0;
             foreach (IElement iElem in iElems)
             {
                 switch (iElem)
                 {
                     case ITetrahedronElement iTetra:
-                        leElems.Add(Tetra341.FromIguanaElement(iTetra));
+                        leElems.Add(Tetra341.FromIguanaElement(iTetra, idOffset));
                         break;
                     case IPrismElement iPrism:
-                        leElems.Add(Prism351.FromIguanaElement(iPrism));
+                        leElems.Add(Prism351.FromIguanaElement(iPrism, idOffset));
                         break;
                     case IHexahedronElement iHexa:
-                        leElems.Add(Hexa361.FromIguanaElement(iHexa));
+                        leElems.Add(Hexa361.FromIguanaElement(iHexa, idOffset));
+                        break;
+                    case IPyramidElement iPyramid:
+                        Tetra341[] elems = Tetra341.FromIguanaElement(iPyramid, idOffset);
+                        for (int i = 0; i < elems.Length; i++)
+                        {
+                            leElems.Add(elems[i]);
+                        }
+                        idOffset++;
                         break;
                     default:
                         throw new NotImplementedException($"Element type {iElem.GetType()} is not implemented.");

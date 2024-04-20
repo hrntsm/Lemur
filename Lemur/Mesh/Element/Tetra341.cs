@@ -38,9 +38,9 @@ namespace Lemur.Mesh.Element
             }
         }
 
-        public static Tetra341 FromIguanaElement(ITetrahedronElement element)
+        public static Tetra341 FromIguanaElement(ITetrahedronElement element, int idOffset)
         {
-            int id = element.Key;
+            int id = element.Key + idOffset;
             int[] nodeIds = new int[]
             {
                 element.Vertices[3],
@@ -49,6 +49,33 @@ namespace Lemur.Mesh.Element
                 element.Vertices[2]
             };
             return new Tetra341(id, nodeIds);
+        }
+
+        public static Tetra341[] FromIguanaElement(IPyramidElement element, int idOffset)
+        {
+            var tetras = new Tetra341[2];
+
+            int id1 = element.Key + idOffset;
+            int[] nodeIds1 = new int[]
+            {
+                element.Vertices[1],
+                element.Vertices[3],
+                element.Vertices[0],
+                element.Vertices[4]
+            };
+            tetras[0] = new Tetra341(id1, nodeIds1);
+
+            int id2 = element.Key + 1 + idOffset;
+            int[] nodeIds2 = new int[]
+            {
+                element.Vertices[1],
+                element.Vertices[2],
+                element.Vertices[3],
+                element.Vertices[4]
+            };
+            tetras[1] = new Tetra341(id2, nodeIds2);
+
+            return tetras;
         }
     }
 }

@@ -40,9 +40,9 @@ namespace Lemur.Mesh.Element
             }
         }
 
-        public static Prism351 FromIguanaElement(IPrismElement element)
+        public static Prism351 FromIguanaElement(IPrismElement element, int idOffset)
         {
-            int id = element.Key;
+            int id = element.Key + idOffset;
             int[] nodeIds = new int[]
             {
                 element.Vertices[2],

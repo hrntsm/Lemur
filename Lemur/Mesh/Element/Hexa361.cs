@@ -44,9 +44,9 @@ namespace Lemur.Mesh.Element
             }
         }
 
-        public static Hexa361 FromIguanaElement(IHexahedronElement element)
+        public static Hexa361 FromIguanaElement(IHexahedronElement element, int idOffset)
         {
-            int id = element.Key;
+            int id = element.Key + idOffset;
             int[] nodeIds = new int[]
             {
                 element.Vertices[4],
