@@ -108,7 +108,7 @@ namespace LemurGH.Utils
                 LeNode node = nodes.FirstOrDefault(n => n.Id == nodeId);
                 if (node != null)
                 {
-                    pointCloud.Add(new Point3d(node.X, node.Y, node.Z));
+                    pointCloud.Add(new Point3d(node.X, node.Y, node.Z), Color.Black);
                 }
             }
 
