@@ -9,6 +9,8 @@ using Lemur.Mesh.Element;
 using LemurGH.Param;
 using LemurGH.Type;
 
+using Rhino.Geometry;
+
 namespace LemurGH.Component.Mesh
 {
     public class LeMeshFromTetraGHMesh : GH_Component
@@ -30,6 +32,7 @@ namespace LemurGH.Component.Mesh
         {
             pManager.AddParameter(new Param_LeMesh(), "LeMesh", "LeMesh", "Lemur mesh object", GH_ParamAccess.item);
             pManager.AddMeshParameter("Mesh", "Mesh", "Mesh object", GH_ParamAccess.item);
+            pManager.AddLineParameter("Edges", "Edges", "Mesh edges", GH_ParamAccess.list);
         }
 
         protected override void SolveInstance(IGH_DataAccess DA)
@@ -60,10 +63,12 @@ namespace LemurGH.Component.Mesh
 
             leMesh.BuildMesh(nodes, elems.ToArray());
             Rhino.Geometry.Mesh mesh = Utils.Preview.LeFaceToRhinoMesh(leMesh);
+            List<Line> edges = Utils.Preview.LeEdgesToRhinoLines(leMesh);
 
             Message = $"{leMesh.Nodes.Count} nodes, {leMesh.AllElements.Length} elems";
             DA.SetData(0, new GH_LeMesh(leMesh));
             DA.SetData(1, mesh);
+            DA.SetDataList(2, edges);
         }
 
         public override Guid ComponentGuid => new Guid("a7fb6c25-ce8e-46de-afd8-b88ccaba8137");

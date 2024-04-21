@@ -87,15 +87,42 @@ namespace LemurGH.Utils
                 if (nodes != null)
                 {
                     if (nodes.Length == 3)
-                        rhinoMesh.Faces.AddFace(new MeshFace(nodes[0] - 1, nodes[1] - 1, nodes[2] - 1));
+                    {
+                        rhinoMesh.Faces.AddFace(nodes[0] - 1, nodes[1] - 1, nodes[2] - 1);
+                    }
                     else if (nodes.Length == 4)
-                        rhinoMesh.Faces.AddFace(new MeshFace(nodes[0] - 1, nodes[1] - 1, nodes[2] - 1, nodes[3] - 1));
+                    {
+                        rhinoMesh.Faces.AddFace(nodes[0] - 1, nodes[1] - 1, nodes[2] - 1, nodes[3] - 1);
+                    }
                     else if (nodes.Length == 6)
-                        rhinoMesh.Faces.AddFace(new MeshFace(nodes[0] - 1, nodes[2] - 1, nodes[4] - 1));
+                    {
+                        switch (faceId)
+                        {
+                            case 1:
+                                rhinoMesh.Faces.AddFace(new MeshFace(nodes[0] - 1, nodes[5] - 1, nodes[1] - 1));
+                                rhinoMesh.Faces.AddFace(new MeshFace(nodes[2] - 1, nodes[3] - 1, nodes[1] - 1));
+                                rhinoMesh.Faces.AddFace(new MeshFace(nodes[4] - 1, nodes[5] - 1, nodes[3] - 1));
+                                rhinoMesh.Faces.AddFace(new MeshFace(nodes[3] - 1, nodes[5] - 1, nodes[1] - 1));
+                                break;
+                            case 2:
+                            case 3:
+                                rhinoMesh.Faces.AddFace(new MeshFace(nodes[0] - 1, nodes[5] - 1, nodes[1] - 1));
+                                rhinoMesh.Faces.AddFace(new MeshFace(nodes[2] - 1, nodes[1] - 1, nodes[3] - 1));
+                                rhinoMesh.Faces.AddFace(new MeshFace(nodes[4] - 1, nodes[3] - 1, nodes[5] - 1));
+                                rhinoMesh.Faces.AddFace(new MeshFace(nodes[1] - 1, nodes[5] - 1, nodes[3] - 1));
+                                break;
+                            case 4:
+                                rhinoMesh.Faces.AddFace(new MeshFace(nodes[0] - 1, nodes[3] - 1, nodes[1] - 1));
+                                rhinoMesh.Faces.AddFace(new MeshFace(nodes[2] - 1, nodes[1] - 1, nodes[5] - 1));
+                                rhinoMesh.Faces.AddFace(new MeshFace(nodes[4] - 1, nodes[5] - 1, nodes[3] - 1));
+                                rhinoMesh.Faces.AddFace(new MeshFace(nodes[1] - 1, nodes[3] - 1, nodes[5] - 1));
+                                break;
+                        }
+                    }
                 }
             }
             rhinoMesh.UnifyNormals();
-            rhinoMesh.Normals.ComputeNormals();
+            rhinoMesh.FaceNormals.ComputeFaceNormals();
         }
 
 
@@ -113,6 +140,21 @@ namespace LemurGH.Utils
             }
 
             return pointCloud;
+        }
+
+        internal static List<Line> LeEdgesToRhinoLines(LeMesh leMesh)
+        {
+            var lines = new List<Line>();
+            foreach (LeEdge edge in leMesh.Edges)
+            {
+                LeNode node1 = edge.Nodes[0];
+                LeNode node2 = edge.Nodes[1];
+                if (node1 != null && node2 != null)
+                {
+                    lines.Add(new Line(node1.X, node1.Y, node1.Z, node2.X, node2.Y, node2.Z));
+                }
+            }
+            return lines;
         }
     }
 }

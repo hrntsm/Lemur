@@ -12,7 +12,7 @@ namespace Lemur.Mesh
 {
     public class LeMesh
     {
-        public string Header => _header;
+        public string Header { get; }
         public LeNodeList Nodes { get; private set; }
         public LeEdge[] Edges => _edgeMap.Values.ToArray();
         public LeFace[] Faces => _faceMap.Values.ToArray();
@@ -26,7 +26,6 @@ namespace Lemur.Mesh
         public LeContactMesh Contact { get; private set; }
         public Dictionary<int, Dictionary<string, (double min, double max)>> NodalResultSummary { get; private set; } = new Dictionary<int, Dictionary<string, (double, double)>>();
 
-        private readonly string _header;
         private readonly List<LeElementList> _elements;
         private readonly List<LeGroupBase> _groups;
         private readonly List<LeMaterial> _materials;
@@ -36,7 +35,7 @@ namespace Lemur.Mesh
 
         public LeMesh(string header)
         {
-            _header = header;
+            Header = header;
             Nodes = new LeNodeList();
             _elements = new List<LeElementList>();
             _groups = new List<LeGroupBase>();
@@ -47,7 +46,7 @@ namespace Lemur.Mesh
 
         public LeMesh(LeMesh other)
         {
-            _header = other._header;
+            Header = other.Header;
             Nodes = new LeNodeList(other.Nodes);
             SurfaceFaces = other.SurfaceFaces;
             _elements = new List<LeElementList>(other._elements);
@@ -82,26 +81,30 @@ namespace Lemur.Mesh
                 }
             }
             SurfaceFaces = _faceMap.Values.Where(f => f.IsSurface);
+            foreach (LeFace surface in SurfaceFaces)
+            {
+                surface.Edges.ToList().ForEach(e => e.IsNaked = true);
+            }
         }
 
-        private void AddEdge(LeSolidElementBase solidElement)
+        private void AddEdge(LeSolidElementBase element)
         {
-            for (int i = 1; i <= solidElement.EdgeCount; i++)
+            for (int i = 1; i <= element.EdgeCount; i++)
             {
-                int[] edgeNodeIds = solidElement.EdgeToNodes(i);
+                int[] edgeNodeIds = element.EdgeToNodes(i);
                 Array.Sort(edgeNodeIds);
                 string hash = string.Join(",", edgeNodeIds);
 
                 if (_edgeMap.TryGetValue(hash, out LeEdge edge))
                 {
-                    edge.ElementIds.Add(solidElement.Id);
+                    edge.ElementIds.Add(element.Id);
                 }
                 else
                 {
                     int id = _edgeMap.Count + 1;
                     LeNode[] nodes = edgeNodeIds.Select(nId => Nodes.GetLeNodeById(nId)).ToArray();
                     edge = new LeEdge(id, nodes);
-                    edge.ElementIds.Add(solidElement.Id);
+                    edge.ElementIds.Add(element.Id);
                     _edgeMap[hash] = edge;
                 }
             }
@@ -126,6 +129,19 @@ namespace Lemur.Mesh
                     face = new LeFace(id, nodes);
                     face.ElementFaceIds.Add((element.Id, i));
                     _faceMap[hash] = face;
+                }
+
+                Dictionary<int, int[]> edgeIds = face.GetEdgeIds();
+                foreach (int[] edgeNodeIds in edgeIds.Values)
+                {
+                    Array.Sort(edgeNodeIds);
+                    string eHash = string.Join(",", edgeNodeIds);
+
+                    if (_edgeMap.TryGetValue(eHash, out LeEdge edge))
+                    {
+                        edge.Faces.Add(face);
+                        face.Edges.Add(edge);
+                    }
                 }
             }
         }
@@ -244,7 +260,7 @@ namespace Lemur.Mesh
         {
             var sb = new StringBuilder();
             sb.AppendLine("!HEADER");
-            sb.AppendLine(" " + _header);
+            sb.AppendLine(" " + Header);
             sb.AppendLine(Nodes.ToMsh());
             int startId = 1;
             foreach (LeElementList elementList in _elements)

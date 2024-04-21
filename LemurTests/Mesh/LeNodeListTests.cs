@@ -22,7 +22,6 @@ namespace Lemur.Mesh.Tests
             var nodeList = new LeNodeList
             {
                 { 100, 0, 0, 0 },
-                { 0, 0, 0 }
             };
             Assert.Equal(2, nodeList.Count);
             Assert.Equal(101, nodeList[1].Id);

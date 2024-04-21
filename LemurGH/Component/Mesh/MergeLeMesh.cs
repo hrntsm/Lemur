@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 using Grasshopper.Kernel;
 
@@ -6,6 +7,8 @@ using Lemur.Mesh;
 
 using LemurGH.Param;
 using LemurGH.Type;
+
+using Rhino.Geometry;
 
 namespace LemurGH.Component.Mesh
 {
@@ -27,6 +30,7 @@ namespace LemurGH.Component.Mesh
         {
             pManager.AddParameter(new Param_LeMesh(), "LeMesh", "LeMesh", "LeMesh object", GH_ParamAccess.item);
             pManager.AddMeshParameter("Mesh", "Mesh", "Mesh object", GH_ParamAccess.item);
+            pManager.AddLineParameter("Edges", "Edges", "Mesh edges", GH_ParamAccess.list);
         }
 
         protected override void SolveInstance(IGH_DataAccess DA)
@@ -43,8 +47,11 @@ namespace LemurGH.Component.Mesh
 
             Message = $"{leMesh1.Nodes.Count} nodes, {leMesh1.AllElements.Length} elems";
             Rhino.Geometry.Mesh mesh = Utils.Preview.LeFaceToRhinoMesh(leMesh1);
+            List<Line> edges = Utils.Preview.LeEdgesToRhinoLines(leMesh1);
+
             DA.SetData(0, new GH_LeMesh(leMesh1));
             DA.SetData(1, mesh);
+            DA.SetDataList(2, edges);
         }
 
         public override Guid ComponentGuid => new Guid("35e877a1-07b9-4e37-8dbd-e810def4aa48");

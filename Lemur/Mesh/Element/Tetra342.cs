@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Lemur.Mesh.Element
 {
@@ -120,39 +119,6 @@ namespace Lemur.Mesh.Element
             {
                 throw new ArgumentException("Invalid edge node.");
             }
-        }
-
-        public static LeMesh ConvertFromTetra341(LeMesh baseMesh)
-        {
-            var nodes = new LeNodeList(baseMesh.Nodes);
-            LeElementList tetLinear = baseMesh.Elements.FirstOrDefault(e => e.ElementType == LeElementType.Tetra341);
-            Dictionary<int, Tetra342> tetQuadric = CreateFromLinearElementList(tetLinear);
-            int nodeMaxId = baseMesh.Nodes.Max(n => n.Id);
-            int idOffset = 1;
-
-            foreach (LeEdge edge in baseMesh.Edges)
-            {
-                LeNode[] edgeNodes = edge.Nodes;
-                var edgeNode1 = new LeNode(nodeMaxId + idOffset++, (edgeNodes[0].X + edgeNodes[1].X) / 2, (edgeNodes[0].Y + edgeNodes[1].Y) / 2, (edgeNodes[0].Z + edgeNodes[1].Z) / 2);
-                nodes.Add(edgeNode1);
-
-                foreach (int elementId in edge.ElementIds)
-                {
-                    if (tetQuadric.TryGetValue(elementId, out Tetra342 tetra))
-                    {
-                        int[] eNodeIds = tetra.NodeIds;
-                        int index1 = Array.IndexOf(eNodeIds, edgeNodes[0].Id);
-                        int index2 = Array.IndexOf(eNodeIds, edgeNodes[1].Id);
-
-                        tetra.SetNodeId(GetEdgeNodeIndex(index1, index2), edgeNode1.Id);
-                    }
-                }
-            }
-
-            var newMesh = new LeMesh(baseMesh.Header);
-            newMesh.BuildMesh(nodes, tetQuadric.Values);
-
-            return newMesh;
         }
     }
 }
