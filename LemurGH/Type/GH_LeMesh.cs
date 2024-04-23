@@ -1,5 +1,7 @@
 using System.Text;
 
+using GH_IO.Serialization;
+
 using Grasshopper.Kernel.Types;
 
 using Lemur.Mesh;
@@ -27,12 +29,12 @@ namespace LemurGH.Type
         public override string TypeName => "LeMesh";
         public override string TypeDescription => "Lemur Mesh";
         public override IGH_GooProxy EmitProxy() => new GH_LeMeshProxy(this);
-        public override IGH_Goo Duplicate() => new GH_LeMesh(Value);
-        public override bool CastTo<Q>(ref Q target)
+        public override IGH_Goo Duplicate() => new GH_LeMesh(this);
+        public override bool CastTo<T>(ref T target)
         {
-            if (typeof(LeMesh).IsAssignableFrom(typeof(Q)))
+            if (typeof(LeMesh).IsAssignableFrom(typeof(T)))
             {
-                target = (Q)(object)new LeMesh(Value);
+                target = (T)(object)new LeMesh(Value);
                 return true;
             }
             else
@@ -52,6 +54,22 @@ namespace LemurGH.Type
             {
                 return base.CastFrom(source);
             }
+        }
+
+        public override bool Write(GH_IWriter writer)
+        {
+            writer.SetString("LeMesh_bin", LeMesh.ToBase64(Value));
+            return true;
+        }
+
+        public override bool Read(GH_IReader reader)
+        {
+            string base64 = string.Empty;
+            if (reader.TryGetString("LeMesh_bin", ref base64))
+            {
+                Value = LeMesh.FromBase64(base64);
+            }
+            return true;
         }
 
         public override string ToString()
