@@ -1,7 +1,9 @@
+using System;
 using System.Text;
 
 namespace Lemur.Mesh
 {
+    [Serializable]
     public class LeMaterial
     {
         public string Name { get; }

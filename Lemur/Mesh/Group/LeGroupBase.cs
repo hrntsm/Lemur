@@ -1,5 +1,8 @@
+using System;
+
 namespace Lemur.Mesh.Group
 {
+    [Serializable]
     public abstract class LeGroupBase
     {
         public LeGroupType Type { get; }

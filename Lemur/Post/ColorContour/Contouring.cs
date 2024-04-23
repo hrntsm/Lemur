@@ -4,6 +4,7 @@ using System.Linq;
 
 namespace Lemur.Post.ColorContour
 {
+    [Serializable]
     public class Contouring
     {
         private readonly (Color color, double position)[] _colors;

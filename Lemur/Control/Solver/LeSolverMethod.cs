@@ -1,5 +1,8 @@
+using System;
+
 namespace Lemur.Control.Solver
 {
+    [Serializable]
     public enum LeSolverMethod
     {
         CG = 0,

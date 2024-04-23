@@ -5,6 +5,7 @@ using System.Text;
 
 namespace Lemur.Mesh
 {
+    [Serializable]
     public class LeNodeList : IList<LeNode>
     {
         public bool IsReadOnly => true;

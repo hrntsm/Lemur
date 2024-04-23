@@ -6,6 +6,7 @@ using Lemur.Mesh.Group;
 
 namespace Lemur.Mesh
 {
+    [Serializable]
     public class LeContactMesh
     {
         public string Name { get; }

@@ -5,6 +5,7 @@ using Iguana.IguanaMesh.ITypes;
 
 namespace Lemur.Mesh.Element
 {
+    [Serializable]
     public class Prism351 : LeSolidElementBase
     {
         public override LeElementType ElementType => LeElementType.Prism351;

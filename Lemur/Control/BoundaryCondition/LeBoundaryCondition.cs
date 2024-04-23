@@ -1,8 +1,10 @@
+using System;
 using System.Globalization;
 using System.Text;
 
 namespace Lemur.Control.BoundaryCondition
 {
+    [Serializable]
     public class LeBoundaryCondition
     {
         public int Id { get; }

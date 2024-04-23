@@ -4,6 +4,7 @@ using System.Text;
 
 namespace Lemur.Hecmw
 {
+    [Serializable]
     public class LeHecmwControl
     {
         private string _meshFile;

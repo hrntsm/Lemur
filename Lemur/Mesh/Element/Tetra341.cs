@@ -5,6 +5,7 @@ using Iguana.IguanaMesh.ITypes;
 
 namespace Lemur.Mesh.Element
 {
+    [Serializable]
     public class Tetra341 : LeSolidElementBase
     {
         public override LeElementType ElementType => LeElementType.Tetra341;

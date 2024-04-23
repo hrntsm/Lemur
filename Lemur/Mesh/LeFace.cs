@@ -4,6 +4,7 @@ using System.Linq;
 
 namespace Lemur.Mesh
 {
+    [Serializable]
     public class LeFace
     {
         public int Id { get; }

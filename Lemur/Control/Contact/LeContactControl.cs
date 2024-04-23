@@ -1,7 +1,9 @@
+using System;
 using System.Text;
 
 namespace Lemur.Control.Contact
 {
+    [Serializable]
     public class LeContactControl
     {
         public LeContactAlgorithm Algorithm { get; }

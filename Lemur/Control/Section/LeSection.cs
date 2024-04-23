@@ -3,6 +3,7 @@ using System.Text;
 
 namespace Lemur.Control.Section
 {
+    [Serializable]
     public class LeSection
     {
         public LeForm341Type Form341Type { get; } = LeForm341Type.SELECTIVE_ESNS;

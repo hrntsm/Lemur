@@ -1,5 +1,8 @@
+using System;
+
 namespace Lemur.Mesh.Element
 {
+    [Serializable]
     public enum LeElementType
     {
         Line111 = 111,

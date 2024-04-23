@@ -1,7 +1,9 @@
+using System;
 using System.Text;
 
 namespace Lemur.Control.Step
 {
+    [Serializable]
     public class LeStep
     {
         public int[] BoundaryIds { get; private set; }

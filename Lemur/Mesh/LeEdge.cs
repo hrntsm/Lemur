@@ -1,8 +1,10 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Lemur.Mesh
 {
+    [Serializable]
     public class LeEdge
     {
         public int Id { get; }

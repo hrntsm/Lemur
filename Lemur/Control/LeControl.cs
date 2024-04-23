@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -12,6 +13,7 @@ using Lemur.Control.Step;
 
 namespace Lemur.Control
 {
+    [Serializable]
     public class LeControl
     {
         public int Version { get; } = 5;

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
@@ -7,6 +8,7 @@ using Lemur.Post.Mesh;
 
 namespace Lemur.Mesh.Element
 {
+    [Serializable]
     public abstract class LeElementBase
     {
         public abstract LeElementType ElementType { get; }

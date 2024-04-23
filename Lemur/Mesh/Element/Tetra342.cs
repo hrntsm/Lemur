@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace Lemur.Mesh.Element
 {
+    [Serializable]
     public class Tetra342 : LeSolidElementBase
     {
         public override LeElementType ElementType => LeElementType.Tetra342;

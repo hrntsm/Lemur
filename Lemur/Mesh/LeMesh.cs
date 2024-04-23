@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 
 using Lemur.Mesh.Element;
@@ -10,13 +11,14 @@ using Lemur.Post.Mesh;
 
 namespace Lemur.Mesh
 {
+    [Serializable]
     public class LeMesh
     {
         public string Header { get; }
         public LeNodeList Nodes { get; private set; }
         public LeEdge[] Edges => _edgeMap.Values.ToArray();
         public LeFace[] Faces => _faceMap.Values.ToArray();
-        public IEnumerable<LeFace> SurfaceFaces { get; private set; }
+        public LeFace[] SurfaceFaces { get; private set; }
         public LeElementList[] Elements => _elements.ToArray();
         public LeElementBase[] AllElements => _elements.SelectMany(e => e).ToArray();
         public NGroup[] NodeGroups => _groups.Where(g => g.Type == LeGroupType.Node).Cast<NGroup>().ToArray();
@@ -80,7 +82,7 @@ namespace Lemur.Mesh
                     AddFace(solidElement);
                 }
             }
-            SurfaceFaces = _faceMap.Values.Where(f => f.IsSurface);
+            SurfaceFaces = _faceMap.Values.Where(f => f.IsSurface).ToArray();
             foreach (LeFace surface in SurfaceFaces)
             {
                 surface.Edges.ToList().ForEach(e => e.IsNaked = true);
@@ -427,5 +429,22 @@ namespace Lemur.Mesh
             }
         }
 
+        public static string ToBase64(LeMesh leMesh)
+        {
+            using (var ms = new MemoryStream())
+            {
+                new BinaryFormatter().Serialize(ms, leMesh);
+                return Convert.ToBase64String(ms.ToArray());
+            }
+        }
+
+        public static LeMesh FromBase64(string base64)
+        {
+            byte[] bytes = Convert.FromBase64String(base64);
+            using (var ms = new MemoryStream(bytes))
+            {
+                return (LeMesh)new BinaryFormatter().Deserialize(ms);
+            }
+        }
     }
 }

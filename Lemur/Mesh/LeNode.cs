@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 
@@ -5,6 +6,7 @@ using Lemur.Post.Mesh;
 
 namespace Lemur.Mesh
 {
+    [Serializable]
     public class LeNode
     {
         public int Id { get; set; }

@@ -1,7 +1,9 @@
+using System;
 using System.Text;
 
 namespace Lemur.Control.Solver
 {
+    [Serializable]
     public class LeSolver
     {
         public LeSolverMethod Method { get; }

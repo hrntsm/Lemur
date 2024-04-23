@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 
 namespace Lemur.Post.Mesh
 {
+    [Serializable]
     public class LeNodalResult
     {
         public int StepNumber { get; private set; }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace Lemur.Mesh.Element
 {
+    [Serializable]
     public abstract class LeSolidElementBase : LeElementBase
     {
         public int FaceCount { get { return FaceNodes.Count; } }

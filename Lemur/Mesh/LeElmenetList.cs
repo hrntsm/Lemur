@@ -7,6 +7,7 @@ using Lemur.Mesh.Element;
 
 namespace Lemur.Mesh
 {
+    [Serializable]
     public class LeElementList : IList<LeElementBase>
     {
         public LeElementType ElementType { get; }

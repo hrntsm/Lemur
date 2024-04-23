@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -6,6 +7,7 @@ using Lemur.Mesh;
 
 namespace Lemur.Post
 {
+    [Serializable]
     public class LePost
     {
         private readonly Dictionary<int, string> _resFile = new Dictionary<int, string>();

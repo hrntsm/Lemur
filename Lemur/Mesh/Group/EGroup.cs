@@ -4,6 +4,7 @@ using System.Text;
 
 namespace Lemur.Mesh.Group
 {
+    [Serializable]
     public class EGroup : LeGroupBase
     {
         public int[] Ids { get; }

@@ -5,6 +5,7 @@ using Iguana.IguanaMesh.ITypes;
 
 namespace Lemur.Mesh.Element
 {
+    [Serializable]
     public class Hexa361 : LeSolidElementBase
     {
         public override LeElementType ElementType => LeElementType.Hex361;

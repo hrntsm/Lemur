@@ -4,6 +4,7 @@ using System.Text;
 
 namespace Lemur.Control.Output
 {
+    [Serializable]
     public class LeWrite
     {
         public LeWriteType LeWriteType { get; }

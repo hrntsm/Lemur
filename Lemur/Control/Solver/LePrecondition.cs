@@ -1,5 +1,8 @@
+using System;
+
 namespace Lemur.Control.Solver
 {
+    [Serializable]
     public enum LePrecondition
     {
         SSOR = 1,

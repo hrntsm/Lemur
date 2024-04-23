@@ -6,6 +6,7 @@ using System.Linq;
 
 namespace Lemur.Post
 {
+    [Serializable]
     public class ResFileParser
     {
         public int NNode { get; private set; }
