@@ -4,7 +4,6 @@ using Grasshopper.Kernel.Types;
 
 using Lemur.Control.BoundaryCondition;
 
-
 namespace LemurGH.Type
 {
     public class GH_LeBC : GH_Goo<LeBoundaryCondition>

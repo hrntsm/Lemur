@@ -1,20 +1,17 @@
 using System;
-using System.Collections.Generic;
 
 using Grasshopper.Kernel;
-
-using Lemur.Mesh;
 
 using LemurGH.Param;
 using LemurGH.Type;
 
 namespace LemurGH.Component.Material
 {
-    public class ConstructLeMaterial : GH_Component
+    public class LeMaterialElastic : GH_Component
     {
-        public ConstructLeMaterial()
-          : base("ConstructLeMaterial", "ConLeMat",
-            "Construct Lemur Material",
+        public LeMaterialElastic()
+          : base("LeMaterial_Elastic", "LeMat_Elastic",
+            "Construct Elastic Lemur Material",
             "Lemur", "Material")
         {
         }
@@ -25,7 +22,6 @@ namespace LemurGH.Component.Material
             pManager.AddNumberParameter("Density", "Dens", "Material Density", GH_ParamAccess.item);
             pManager.AddNumberParameter("YoungsModulus", "E", "Material Youngs Modulus", GH_ParamAccess.item);
             pManager.AddNumberParameter("PoissonRatio", "nu", "Material Poisson Ratio", GH_ParamAccess.item);
-            pManager.AddTextParameter("TargetEGroup", "TrgEGrp", "Target Element Group Names", GH_ParamAccess.list);
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
@@ -39,15 +35,13 @@ namespace LemurGH.Component.Material
             double density = 0;
             double youngsModulus = 0;
             double poissonRatio = 0;
-            var targetEGroup = new List<string>();
 
             if (!DA.GetData(0, ref name)) return;
             if (!DA.GetData(1, ref density)) return;
             if (!DA.GetData(2, ref youngsModulus)) return;
             if (!DA.GetData(3, ref poissonRatio)) return;
-            if (!DA.GetDataList(4, targetEGroup)) return;
 
-            var leMat = new LeMaterial(name, density, youngsModulus, poissonRatio, targetEGroup.ToArray());
+            var leMat = new Lemur.Material.LeMaterialElastic(name, density, youngsModulus, poissonRatio);
             DA.SetData(0, new GH_LeMaterial(leMat));
         }
 

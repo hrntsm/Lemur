@@ -1,6 +1,6 @@
 using System;
 
-namespace Lemur.Control.Section
+namespace Lemur.Section
 {
     [Serializable]
     public enum LeForm341Type

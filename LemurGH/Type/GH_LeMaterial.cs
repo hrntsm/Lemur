@@ -2,17 +2,17 @@ using System.Text;
 
 using Grasshopper.Kernel.Types;
 
-using Lemur.Mesh;
+using Lemur.Material;
 
 namespace LemurGH.Type
 {
-    public class GH_LeMaterial : GH_Goo<LeMaterial>
+    public class GH_LeMaterial : GH_Goo<LeMaterialBase>
     {
         public GH_LeMaterial()
         {
         }
 
-        public GH_LeMaterial(LeMaterial leMaterial)
+        public GH_LeMaterial(LeMaterialBase leMaterial)
          : base(leMaterial)
         {
         }
@@ -27,11 +27,11 @@ namespace LemurGH.Type
         public override string TypeDescription => "Lemur Material";
         public override IGH_GooProxy EmitProxy() => new GH_LeMaterialProxy(this);
         public override IGH_Goo Duplicate() => new GH_LeMaterial(Value);
-        public override bool CastTo<Q>(ref Q target)
+        public override bool CastTo<T>(ref T target)
         {
-            if (typeof(LeMaterial).IsAssignableFrom(typeof(Q)))
+            if (typeof(LeMaterialElastic).IsAssignableFrom(typeof(T)))
             {
-                target = (Q)(object)new LeMaterial(Value);
+                target = (T)(object)new LeMaterialElastic(Value);
                 return true;
             }
             else
@@ -42,7 +42,7 @@ namespace LemurGH.Type
 
         public override bool CastFrom(object source)
         {
-            if (source is LeMaterial leMaterial)
+            if (source is LeMaterialElastic leMaterial)
             {
                 Value = leMaterial;
                 return true;
@@ -61,7 +61,6 @@ namespace LemurGH.Type
             sb.AppendLine($"Density: {Value.Density}");
             sb.AppendLine($"YoungsModulus: {Value.YoungsModulus}");
             sb.AppendLine($"PoissonRatio: {Value.PoissonRatio}");
-            sb.AppendLine($"TargetEGroups: {string.Join(", ", Value.TargetEGroups)}");
             return sb.ToString();
         }
 

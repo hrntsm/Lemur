@@ -8,6 +8,7 @@ using System.Text;
 using Lemur.Mesh.Element;
 using Lemur.Mesh.Group;
 using Lemur.Post.Mesh;
+using Lemur.Section;
 
 namespace Lemur.Mesh
 {
@@ -24,13 +25,13 @@ namespace Lemur.Mesh
         public NGroup[] NodeGroups => _groups.Where(g => g.Type == LeGroupType.Node).Cast<NGroup>().ToArray();
         public EGroup[] ElementGroups => _groups.Where(g => g.Type == LeGroupType.Element).Cast<EGroup>().ToArray();
         public SGroup[] SurfaceGroups => _groups.Where(g => g.Type == LeGroupType.Surface).Cast<SGroup>().ToArray();
-        public LeMaterial[] Materials => _materials.ToArray();
+        public LeSection[] Sections => _sections.ToArray();
         public LeContactMesh Contact { get; private set; }
         public Dictionary<int, Dictionary<string, (double min, double max)>> NodalResultSummary { get; private set; } = new Dictionary<int, Dictionary<string, (double, double)>>();
 
         private readonly List<LeElementList> _elements;
         private readonly List<LeGroupBase> _groups;
-        private readonly List<LeMaterial> _materials;
+        private readonly List<LeSection> _sections;
         private readonly Dictionary<string, LeEdge> _edgeMap;
         private readonly Dictionary<string, LeFace> _faceMap;
         private HashSet<int> _nodeIds;
@@ -41,7 +42,7 @@ namespace Lemur.Mesh
             Nodes = new LeNodeList();
             _elements = new List<LeElementList>();
             _groups = new List<LeGroupBase>();
-            _materials = new List<LeMaterial>();
+            _sections = new List<LeSection>();
             _edgeMap = new Dictionary<string, LeEdge>();
             _faceMap = new Dictionary<string, LeFace>();
         }
@@ -53,7 +54,7 @@ namespace Lemur.Mesh
             SurfaceFaces = other.SurfaceFaces;
             _elements = new List<LeElementList>(other._elements);
             _groups = new List<LeGroupBase>(other._groups);
-            _materials = new List<LeMaterial>(other._materials);
+            _sections = new List<LeSection>(other._sections);
             _edgeMap = new Dictionary<string, LeEdge>(other._edgeMap);
             _faceMap = new Dictionary<string, LeFace>(other._faceMap);
             Contact = other.Contact;
@@ -190,14 +191,14 @@ namespace Lemur.Mesh
             _groups.Clear();
         }
 
-        public void AddMaterial(LeMaterial material)
+        public void AddSection(LeSection section)
         {
-            _materials.Add(material);
+            _sections.Add(section);
         }
 
         public void ClearMaterial()
         {
-            _materials.Clear();
+            _sections.Clear();
         }
 
         public void AddContact(LeContactMesh contact)
@@ -280,11 +281,11 @@ namespace Lemur.Mesh
 
         private void AppendMaterial(StringBuilder sb)
         {
-            if (_materials.Count > 0)
+            if (_sections.Count > 0)
             {
-                foreach (LeMaterial material in _materials)
+                foreach (LeSection section in _sections)
                 {
-                    sb.AppendLine(material.ToMsh());
+                    sb.AppendLine(section.ToMsh());
                 }
             }
         }

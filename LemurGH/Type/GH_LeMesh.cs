@@ -6,6 +6,7 @@ using Grasshopper.Kernel.Types;
 
 using Lemur.Mesh;
 using Lemur.Mesh.Group;
+using Lemur.Section;
 
 namespace LemurGH.Type
 {
@@ -97,14 +98,14 @@ namespace LemurGH.Type
         private void AppendMaterial(StringBuilder sb)
         {
             sb.AppendLine($"- Material:");
-            if (Value.Materials != null)
+            if (Value.Sections != null)
             {
-                foreach (LeMaterial material in Value.Materials)
+                foreach (LeSection section in Value.Sections)
                 {
-                    string targets = material.TargetEGroups != null
-                        ? string.Join(", ", material.TargetEGroups)
+                    string targets = section.TargetEGroups != null
+                        ? string.Join(", ", section.TargetEGroups)
                         : "None";
-                    sb.AppendLine($"  - {material.Name}: {targets}");
+                    sb.AppendLine($"  - {section.Id}: {targets}");
                 }
             }
         }

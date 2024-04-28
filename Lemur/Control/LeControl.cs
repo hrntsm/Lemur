@@ -6,10 +6,10 @@ using System.Text;
 using Lemur.Control.BoundaryCondition;
 using Lemur.Control.Contact;
 using Lemur.Control.Output;
-using Lemur.Control.Section;
 using Lemur.Control.Solution;
 using Lemur.Control.Solver;
 using Lemur.Control.Step;
+using Lemur.Section;
 
 namespace Lemur.Control
 {
@@ -19,12 +19,13 @@ namespace Lemur.Control
         public int Version { get; } = 5;
         public LeSolutionType SolutionType { get; }
         public LeWrite[] LeWrites { get; }
-        public LeSection LeSection { get; }
+        public LeSection[] LeSection => _leSections.ToArray();
         public LeBoundaryCondition[] LeBoundaryConditions => _leBC.ToArray();
         public LeContactControl LeContactControl { get; }
         public LeStep LeStep { get; }
         public LeSolver LeSolver { get; }
 
+        private readonly List<LeSection> _leSections = new List<LeSection>();
         private readonly List<LeBoundaryCondition> _leBC;
 
         public LeControl(LeSolutionType solutionType, LeContactControl leContact, LeStep leStep, LeSolver leSolver)
@@ -36,7 +37,6 @@ namespace Lemur.Control
                 new LeWrite(LeWriteType.RESULT),
                 new LeWrite(LeWriteType.LOG),
             };
-            LeSection = new LeSection();
             _leBC = new List<LeBoundaryCondition>();
             LeContactControl = leContact;
             LeStep = leStep;
@@ -52,9 +52,9 @@ namespace Lemur.Control
             {
                 LeWrites[i] = new LeWrite(other.LeWrites[i]);
             }
-            LeSection = new LeSection(other.LeSection);
+            _leSections = new List<LeSection>(other.LeSection);
             _leBC = new List<LeBoundaryCondition>(other.LeBoundaryConditions);
-            LeContactControl = new LeContactControl(other.LeContactControl);
+            LeContactControl = other.LeContactControl != null ? new LeContactControl(other.LeContactControl) : null;
             LeStep = new LeStep(other.LeStep);
             LeSolver = new LeSolver(other.LeSolver);
         }
@@ -67,6 +67,17 @@ namespace Lemur.Control
         public void ClearBC()
         {
             _leBC.Clear();
+        }
+
+        public void AddSection(LeSection leSection)
+        {
+            leSection.Id = _leSections.Count + 1;
+            _leSections.Add(leSection);
+        }
+
+        public void ClearSection()
+        {
+            _leSections.Clear();
         }
 
         public void UpdateStepGroupIds()
@@ -110,7 +121,10 @@ namespace Lemur.Control
                 sb.AppendLine(leWrite.ToCnt());
             }
 
-            sb.AppendLine(LeSection.ToCnt());
+            foreach (LeSection leSection in _leSections)
+            {
+                sb.AppendLine(leSection.ToCnt());
+            }
 
             foreach (LeBoundaryCondition leBC in _leBC)
             {
