@@ -5,6 +5,7 @@ using Grasshopper.Kernel.Types;
 using Lemur.Control;
 using Lemur.Control.BoundaryCondition;
 using Lemur.Control.Output;
+using Lemur.Section;
 
 
 namespace LemurGH.Type
@@ -30,11 +31,11 @@ namespace LemurGH.Type
         public override string TypeDescription => "Lemur Control settings";
         public override IGH_GooProxy EmitProxy() => new GH_LeControlProxy(this);
         public override IGH_Goo Duplicate() => new GH_LeControl(Value);
-        public override bool CastTo<Q>(ref Q target)
+        public override bool CastTo<T>(ref T target)
         {
-            if (typeof(LeControl).IsAssignableFrom(typeof(Q)))
+            if (typeof(LeControl).IsAssignableFrom(typeof(T)))
             {
-                target = (Q)(object)new LeControl(Value);
+                target = (T)(object)new LeControl(Value);
                 return true;
             }
             else
@@ -67,7 +68,11 @@ namespace LemurGH.Type
                 sb.AppendLine($"  - {leWrite.LeWriteType}");
             }
             sb.AppendLine($"- LeSection:");
-            sb.AppendLine($"  - {Value.LeSection}");
+            foreach (LeSection leSection in Value.LeSection)
+            {
+                sb.AppendLine($"  - Id:{leSection.Id}");
+                sb.AppendLine($"  - Material:{leSection.Material.Name}");
+            }
             sb.AppendLine($"- LeBC:");
             foreach (LeBoundaryCondition leBC in Value.LeBoundaryConditions)
             {

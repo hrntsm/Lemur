@@ -34,7 +34,7 @@ namespace LemurGH.Component
             pManager.AddParameter(new Param_LeGroup(), "LeGroup", "LeGrp", "Input Lemur Group settings", GH_ParamAccess.list);
             pManager.AddParameter(new Param_LeContactMesh(), "LeCntMsh", "ContactMsh", "Input Lemur Contact Mesh settings", GH_ParamAccess.item);
             pManager.AddParameter(new Param_LeSection(), "LeSection", "LeSec", "Input Lemur section settings", GH_ParamAccess.list);
-            pManager.AddParameter(new Param_LeControl(), "LeControl", "Control", "Input Lemur Control settings", GH_ParamAccess.item);
+            pManager.AddParameter(new Param_LeControl(), "LeControl", "LeCtrl", "Input Lemur Control settings", GH_ParamAccess.item);
             Params.Input[2].Optional = true;
         }
 

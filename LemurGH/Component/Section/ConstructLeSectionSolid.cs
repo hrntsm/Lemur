@@ -33,7 +33,7 @@ namespace LemurGH.Component.Section
 
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            var eGroups = new List<string>{};
+            var eGroups = new List<string>();
             var ghLeMaterial = new GH_LeMaterial();
             if (!DA.GetDataList(0, eGroups)) return;
             if (!DA.GetData(1, ref ghLeMaterial)) return;

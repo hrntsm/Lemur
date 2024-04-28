@@ -82,7 +82,7 @@ namespace LemurGH.Type
             AppendElement(sb);
             AppendGroup(sb);
             AppendContact(sb);
-            AppendMaterial(sb);
+            AppendSection(sb);
             return sb.ToString();
         }
 
@@ -95,9 +95,9 @@ namespace LemurGH.Type
             }
         }
 
-        private void AppendMaterial(StringBuilder sb)
+        private void AppendSection(StringBuilder sb)
         {
-            sb.AppendLine($"- Material:");
+            sb.AppendLine($"- Section:");
             if (Value.Sections != null)
             {
                 foreach (LeSection section in Value.Sections)
@@ -105,7 +105,7 @@ namespace LemurGH.Type
                     string targets = section.TargetEGroups != null
                         ? string.Join(", ", section.TargetEGroups)
                         : "None";
-                    sb.AppendLine($"  - {section.Id}: {targets}");
+                    sb.AppendLine($"  - {section.Id}: {targets}, {section.Material.Name}");
                 }
             }
         }

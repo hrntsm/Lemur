@@ -32,6 +32,7 @@
         "mkl",
         "mpiexec",
         "MSMPI",
+        "MULTILINEAR",
         "NFORCE",
         "NGROUP",
         "NGRP",
