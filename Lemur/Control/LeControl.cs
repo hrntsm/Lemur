@@ -147,7 +147,7 @@ namespace Lemur.Control
             sb.AppendLine("!VISUAL,method=PSR");
             sb.AppendLine("!surface_num=1");
             sb.AppendLine("!surface 1");
-            sb.AppendLine("!output_type=VTK");
+            sb.AppendLine("!output_type=BIN_VTK");
             return sb.ToString();
         }
 
