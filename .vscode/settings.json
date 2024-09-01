@@ -33,6 +33,8 @@
         "mpiexec",
         "MSMPI",
         "MULTILINEAR",
+        "netcore",
+        "netfx",
         "NFORCE",
         "NGROUP",
         "NGRP",
