@@ -21,123 +21,92 @@ namespace LemurRhino.Views
             Title = GetType().Name;
 
             var layout = new DynamicLayout { DefaultSpacing = new Size(5, 5), Padding = new Padding(10) };
-            var analysis = new TreeGridItem(
-                new object[] { "Analysis" }
-                );
-            var aa = new Label { Text = "Analysis" };
-            TreeGridItem result = CreateResultTree();
-            var treeList = new TreeGridItemCollection
-            {
-                analysis,
-                result
-            };
 
-            var view = new TreeGridView { DataStore = treeList };
+            var view = new TreeGridView();
             view.Columns.Add(new GridColumn
             {
-                HeaderText = "Name",
-                DataCell = new TextBoxCell(0)
+                DataCell = new TextBoxCell { Binding = Binding.Property<MyTreeGridItem, string>(item => item.Name) },
+                HeaderText = "Name"
             });
+
+            var treeCollection = new TreeGridItemCollection();
+            var model = new MyTreeGridItem { Name = "Model" };
+            var analysis = new MyTreeGridItem { Name = "Analysis" };
+            var result = new MyTreeGridItem { Name = "Result" };
+            result.Children.Add(new MyTreeGridItem { Name = "Mises Stress" });
+            treeCollection.Add(model);
+            treeCollection.Add(analysis);
+            treeCollection.Add(result);
+            view.DataStore = treeCollection;
+
+
             layout.AddRow(new Label { Text = "Model Tree" });
             layout.AddRow(view);
 
-            var tree = new TreeGridView();
-            tree.Columns.Add(new GridColumn
-            {
-                HeaderText = "Name",
-                DataCell = new TextBoxCell(0)
-            });
-            layout.AddRow(new Label { Text = "Property" });
-            layout.AddRow(tree);
-
-            var contextMenu = new ContextMenu();
-            var editItem = new ButtonMenuItem { Text = "編集" };
-            editItem.Click += (sender, e) => MessageBox.Show("編集が選択されました");
-            var deleteItem = new ButtonMenuItem { Text = "削除" };
-            deleteItem.Click += (sender, e) => MessageBox.Show("削除が選択されました");
-            contextMenu.Items.Add(editItem);
-            contextMenu.Items.Add(deleteItem);
-
             view.CellClick += (sender, e) =>
             {
-                if (e.Buttons == MouseButtons.Alternate)
+                if (e.Buttons == MouseButtons.Alternate && e.Item is MyTreeGridItem item)
                 {
+                    ContextMenu contextMenu = CreateContextMenu(item.Name);
                     contextMenu.Show(view);
                 }
             };
 
-
             Content = layout;
         }
 
-        private static TreeGridItem CreateResultTree()
+        private static ContextMenu CreateContextMenu(string name)
         {
-            var stress = new TreeGridItem(
-                new object[] { "Stress" }
-                );
-            stress.Children.Add(new TreeGridItem(
-                new object[] { "Mises" }
-                ));
-            stress.Children.Add(new TreeGridItem(
-                new object[] { "XX" }
-                ));
+            var contextMenu = new ContextMenu();
 
-            var displacement = new TreeGridItem(
-                new object[] { "Displacement" }
-                );
-            displacement.Children.Add(new TreeGridItem(
-                new object[] { "Total" }
-                ));
-            displacement.Children.Add(new TreeGridItem(
-                new object[] { "X" }
-                ));
-            displacement.Children.Add(new TreeGridItem(
-                new object[] { "Y" }
-                ));
-            displacement.Children.Add(new TreeGridItem(
-                new object[] { "Z" }
-                ));
-
-
-            var result = new TreeGridItem(new object[] { "Result" });
-            result.Children.Add(stress);
-            result.Children.Add(displacement);
-            return result;
-        }
-
-        protected void OnHelloButton()
-        {
-            Dialogs.ShowMessage("Hello Rhino!", Title);
-        }
-
-        /// <summary>
-        /// Sample of how to display a child Eto dialog
-        /// </summary>
-        protected void OnChildButton()
-        {
-            var dialog = new Dialog
+            switch (name)
             {
-                Title = "Child Dialog",
-                Content = new Label { Text = "This is a child dialog" },
-                ClientSize = new Size(200, 100)
-            };
-            dialog.ShowModal(Application.Instance.MainForm);
+                case "Model":
+                    var openItem = new ButtonMenuItem { Text = "Open Fistr File" };
+                    openItem.Click += (sender, e) => MessageBox.Show("Load Fistr File");
+                    contextMenu.Items.Add(openItem);
+                    break;
+                case "Analysis":
+                    var editItem = new ButtonMenuItem { Text = "Run" };
+                    editItem.Click += (sender, e) => MessageBox.Show("Run Analysis");
+                    contextMenu.Items.Add(editItem);
+                    break;
+                case "Result":
+                    var loadItem = new ButtonMenuItem { Text = "Load" };
+                    loadItem.Click += (sender, e) => MessageBox.Show("Load Result");
+                    contextMenu.Items.Add(loadItem);
+                    break;
+                case "Mises Stress":
+                    var shoeItem = new ButtonMenuItem { Text = "Show" };
+                    shoeItem.Click += (sender, e) => MessageBox.Show("Show Result");
+                    contextMenu.Items.Add(shoeItem);
+                    break;
+                default:
+                    break;
+            }
+
+            var propertiesItem = new ButtonMenuItem { Text = "Property" };
+            propertiesItem.Click += (sender, e) => MessageBox.Show($"Show {name} properties");
+            contextMenu.Items.Add(propertiesItem);
+
+            return contextMenu;
         }
 
         public void PanelShown(uint documentSerialNumber, ShowPanelReason reason)
         {
-            Rhino.RhinoApp.WriteLine("Show Lemur panel");
         }
 
         public void PanelHidden(uint documentSerialNumber, ShowPanelReason reason)
         {
-            Rhino.RhinoApp.WriteLine("Close Lemur panel");
         }
 
         public void PanelClosing(uint documentSerialNumber, bool onCloseDocument)
         {
-            // Called when the document or panel container is closed/destroyed
-            Rhino.RhinoApp.WriteLine($"Panel closing for document {documentSerialNumber}, this serial number {_document_sn} should be the same");
         }
+    }
+
+    public class MyTreeGridItem : TreeGridItem
+    {
+        public string Name { get; set; }
     }
 }
