@@ -5,10 +5,10 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Run Rhino8",
+      "name": "Rhino8 GH Debug",
       "type": "coreclr",
       "request": "launch",
-      "preLaunchTask": "build",
+      "preLaunchTask": "GH build",
       "program": "C:/Program Files/Rhino 8/System/Rhino.exe",
       "args": ["/nosplash"],
       "cwd": "${workspaceFolder}",
@@ -16,15 +16,29 @@
       "stopAtEntry": true
     },
     {
-      "name": "Run Rhino7",
+      "name": "Rhino7 GH Debug",
       "type": "coreclr",
       "request": "launch",
-      "preLaunchTask": "build",
+      "preLaunchTask": "GH build",
       "program": "C:/Program Files/Rhino 7/System/Rhino.exe",
       "args": ["/nosplash"],
       "cwd": "${workspaceFolder}",
       "console": "internalConsole",
       "stopAtEntry": true
     },
+    {
+      "name": "Rhino8 UI Debug",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "UI build",
+      "program": "C:/Program Files/Rhino 8/System/Rhino.exe",
+      "args": ["/nosplash", "/netcore"],
+      "cwd": "${workspaceFolder}",
+      "console": "internalConsole",
+      "stopAtEntry": true,
+      "env": {
+        "RHINO_PACKAGE_DIRS": "$(ProjectDir)$(OutputPath)\\"
+      }
+    }
   ]
 }

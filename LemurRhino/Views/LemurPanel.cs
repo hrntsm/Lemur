@@ -20,20 +20,17 @@ namespace LemurRhino.Views
 
             Title = GetType().Name;
 
-            //var hello_button = new Button { Text = "Hello..." };
-            //hello_button.Click += (sender, e) => OnHelloButton();
-
-            //var child_button = new Button { Text = "Child Dialog..." };
-            //child_button.Click += (sender, e) => OnChildButton();
-
-            //var checkBox = new CheckBox { Text = "Check me" };
-
             var layout = new DynamicLayout { DefaultSpacing = new Size(5, 5), Padding = new Padding(10) };
-            var item = new TreeGridItem(
-                new object[] { "foo", true, 42 }
+            var analysis = new TreeGridItem(
+                new object[] { "Analysis" }
                 );
-            var treeList = new TreeGridItemCollection();
-            treeList.Add(item);
+            var aa = new Label { Text = "Analysis" };
+            TreeGridItem result = CreateResultTree();
+            var treeList = new TreeGridItemCollection
+            {
+                analysis,
+                result
+            };
 
             var view = new TreeGridView { DataStore = treeList };
             view.Columns.Add(new GridColumn
@@ -41,26 +38,72 @@ namespace LemurRhino.Views
                 HeaderText = "Name",
                 DataCell = new TextBoxCell(0)
             });
-            view.Columns.Add(new GridColumn
-            {
-                HeaderText = "Folder",
-                DataCell = new CheckBoxCell(1)
-            });
-            view.Columns.Add(new GridColumn
-            {
-                HeaderText = "Size",
-                DataCell = new TextBoxCell(2)
-            });
+            layout.AddRow(new Label { Text = "Model Tree" });
+            layout.AddRow(view);
 
-            layout.Add(view, true, true);
+            var tree = new TreeGridView();
+            tree.Columns.Add(new GridColumn
+            {
+                HeaderText = "Name",
+                DataCell = new TextBoxCell(0)
+            });
+            layout.AddRow(new Label { Text = "Property" });
+            layout.AddRow(tree);
 
-            //layout.AddSeparateRow(hello_button, null);
-            //layout.AddSeparateRow(child_button, null);
-            //layout.AddSeparateRow(checkBox, null);
-            layout.Add(null);
+            var contextMenu = new ContextMenu();
+            var editItem = new ButtonMenuItem { Text = "編集" };
+            editItem.Click += (sender, e) => MessageBox.Show("編集が選択されました");
+            var deleteItem = new ButtonMenuItem { Text = "削除" };
+            deleteItem.Click += (sender, e) => MessageBox.Show("削除が選択されました");
+            contextMenu.Items.Add(editItem);
+            contextMenu.Items.Add(deleteItem);
+
+            view.CellClick += (sender, e) =>
+            {
+                if (e.Buttons == MouseButtons.Alternate)
+                {
+                    contextMenu.Show(view);
+                }
+            };
+
+
             Content = layout;
         }
 
+        private static TreeGridItem CreateResultTree()
+        {
+            var stress = new TreeGridItem(
+                new object[] { "Stress" }
+                );
+            stress.Children.Add(new TreeGridItem(
+                new object[] { "Mises" }
+                ));
+            stress.Children.Add(new TreeGridItem(
+                new object[] { "XX" }
+                ));
+
+            var displacement = new TreeGridItem(
+                new object[] { "Displacement" }
+                );
+            displacement.Children.Add(new TreeGridItem(
+                new object[] { "Total" }
+                ));
+            displacement.Children.Add(new TreeGridItem(
+                new object[] { "X" }
+                ));
+            displacement.Children.Add(new TreeGridItem(
+                new object[] { "Y" }
+                ));
+            displacement.Children.Add(new TreeGridItem(
+                new object[] { "Z" }
+                ));
+
+
+            var result = new TreeGridItem(new object[] { "Result" });
+            result.Children.Add(stress);
+            result.Children.Add(displacement);
+            return result;
+        }
 
         protected void OnHelloButton()
         {
