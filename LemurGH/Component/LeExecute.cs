@@ -3,7 +3,10 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 
+using Grasshopper.GUI;
+using Grasshopper.GUI.Canvas;
 using Grasshopper.Kernel;
+using Grasshopper.Kernel.Attributes;
 
 using Lemur;
 using Lemur.Hecmw;
@@ -11,6 +14,7 @@ using Lemur.Post;
 
 using LemurGH.Param;
 using LemurGH.Type;
+using LemurGH.UI.View;
 
 namespace LemurGH.Component
 {
@@ -155,5 +159,26 @@ namespace LemurGH.Component
         }
 
         public override Guid ComponentGuid => new Guid("20aab5a3-c180-4a1f-806b-4b3c16cc8f28");
+
+        public override void CreateAttributes()
+        {
+            m_attributes = new UIOptimizerComponentAttributes(this);
+        }
+
+        private sealed class UIOptimizerComponentAttributes : GH_ComponentAttributes
+        {
+            public UIOptimizerComponentAttributes(IGH_Component component)
+              : base(component)
+            {
+            }
+
+            public override GH_ObjectResponse RespondToMouseDoubleClick(GH_Canvas _, GH_CanvasMouseEvent e)
+            {
+                var window = new MainWindow();
+                window.Show();
+                window.Topmost = true;
+                return GH_ObjectResponse.Handled;
+            }
+        }
     }
 }

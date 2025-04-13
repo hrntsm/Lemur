@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Form
+  xmlns="http://schema.picoe.ca/eto.forms"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  Title="GH-FrontISTR UI"
+  ClientSize="600, 400"
+  Padding="10">
+  <TabControl>
+    <TabPage Text="Material">
+      <StackLayout Orientation="Vertical" Padding="10" Spacing="10">
+        <Label Text="Material Items" Font="Bold" />
+        <GroupBox Text="Default Materials">
+          <StackLayout Orientation="Vertical" Spacing="5">
+            <CheckBox Text="Steel" />
+            <CheckBox Text="RC" />
+            <CheckBox Text="Wood" />
+          </StackLayout>
+        </GroupBox>
+        <Button Text="Add Material" />
+      </StackLayout>
+    </TabPage>
+    <TabPage Text="Control">
+      <StackLayout Orientation="Vertical" Padding="10" Spacing="10">
+        <Label Text="Execute Analysis" Font="Bold" />
+        <GroupBox Text="設定">
+          <StackLayout Orientation="Vertical" Spacing="5">
+            <StackLayout Orientation="Horizontal" Spacing="5">
+              <Label Text="パラメータ1:" VerticalAlignment="Center" />
+              <TextBox Width="200" />
+            </StackLayout>
+            <StackLayout Orientation="Horizontal" Spacing="5">
+              <Label Text="パラメータ2:" VerticalAlignment="Center" />
+              <TextBox Width="200" />
+            </StackLayout>
+            <RadioButtonList Orientation="Vertical">
+              <ListItem Text="オプション1" />
+              <ListItem Text="オプション2" />
+              <ListItem Text="オプション3" />
+            </RadioButtonList>
+          </StackLayout>
+        </GroupBox>
+        <Button Text="設定を適用" />
+      </StackLayout>
+    </TabPage>
+    <TabPage Text="Execute">
+      <StackLayout Orientation="Vertical" Padding="10" Spacing="10">
+        <Label Text="Execute Analysis" Font="Bold" />
+        <StackLayout Orientation="Horizontal" Spacing="10">
+          <Button Text="Run" ID="startButton" />
+          <Button Text="Stop" ID="stopButton" />
+        </StackLayout>
+        <TextArea ID="logTextArea" Height="150" Width="300" ReadOnly="true"
+                  Text="Show analysis log here..." />
+      </StackLayout>
+    </TabPage>
+  </TabControl>
+</Form>

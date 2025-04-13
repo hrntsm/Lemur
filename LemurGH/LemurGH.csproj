@@ -13,6 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Eto.Serialization.Xaml" Version="2.9.0" />
     <PackageReference Include="Grasshopper" Version="7.13.21348.13001" IncludeAssets="compile;build" />
   </ItemGroup>
 
@@ -172,4 +173,8 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
   </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="UI\View\MainWindow.xeto" />
+  </ItemGroup>
 </Project>
